@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_AfectadoDomicilioSiniestro" idField="adsId" modelAttribute="afectadoDomicilioSiniestro" path="/afectadodomiciliosiniestroes" versionField="none" z="hSsjMvtXkF69idJiSlduxZLYrek=">
+        <field:select field="adsDomId" id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsDomId" itemValue="domId" items="${domicilios}" path="/domicilios" z="gmCDIqRyrZmWNXNHvqO47eZC4NI="/>
+        <field:select field="adsPerId" id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsPerId" itemValue="perId" items="${personae}" path="/personae" z="JhrNJ0A2qC/uFo7q3SVjI7qWxOk="/>
+        <field:select field="adsSinId" id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsSinId" itemValue="sinId" items="${siniestroes}" path="/siniestroes" z="xmcjCdlJ4Ruym9upUiVpmKlxDFA="/>
+        <field:select field="adsTafId" id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsTafId" itemValue="tafId" items="${tipoafectacions}" path="/tipoafectacions" z="i0NJaSYPsxr0bwH0FZm4VRhc2o0="/>
+    </form:update>
+</div>

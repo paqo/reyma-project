@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_reyma_gestion_dao_LineaFactura" items="${lineafacturas}" z="KJy9oJBbI8wmcZ75FylSVasW6KA=">
+        <table:table data="${lineafacturas}" id="l_com_reyma_gestion_dao_LineaFactura" path="/lineafacturas" typeIdFieldName="linId" z="O4y+43wlA7xw8uuNLB90uVFmzzc=">
+            <table:column id="c_com_reyma_gestion_dao_LineaFactura_linFacId" property="linFacId" z="Dy/ykI+OvfolesBPV5ChrTIdEKk="/>
+            <table:column id="c_com_reyma_gestion_dao_LineaFactura_linIvaId" property="linIvaId" z="4801GYlbgMAIVbCyHEs8HJjEp7Y="/>
+            <table:column id="c_com_reyma_gestion_dao_LineaFactura_linConcepto" property="linConcepto" z="eewJXcL/EBldEYGF16TU3o9sz1k="/>
+            <table:column id="c_com_reyma_gestion_dao_LineaFactura_linImporte" property="linImporte" z="DfRGL3h1YFlncSlJjIvTQNFNpt8="/>
+        </table:table>
+    </page:list>
+</div>

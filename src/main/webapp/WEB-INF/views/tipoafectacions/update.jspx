@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_TipoAfectacion" idField="tafId" modelAttribute="tipoAfectacion" path="/tipoafectacions" versionField="none" z="DHBZTnyNkb9gS0jZCZv2cZsbUnk=">
+        <field:simple field="afectadoDomicilioSiniestroes" id="c_com_reyma_gestion_dao_TipoAfectacion_afectadoDomicilioSiniestroes" messageCode="entity_reference_not_managed" messageCodeAttribute="Afectado Domicilio Siniestro" z="oYxgphR9qJlyEjH/xLElW8MfMFw="/>
+        <field:input field="tafDescripcion" id="c_com_reyma_gestion_dao_TipoAfectacion_tafDescripcion" required="true" z="Jymop/paeZuHsEHbOMXS2dC2CQo="/>
+    </form:update>
+</div>

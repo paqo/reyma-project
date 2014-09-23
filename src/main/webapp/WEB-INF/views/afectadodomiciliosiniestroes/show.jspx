@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reyma_gestion_dao_AfectadoDomicilioSiniestro" object="${afectadodomiciliosiniestro}" path="/afectadodomiciliosiniestroes" z="4XnstfWHGxTLZWwEpU5+JSPKhE8=">
+        <field:display field="adsDomId" id="s_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsDomId" object="${afectadodomiciliosiniestro}" z="gomHu7p8tHqgFed1JgXi0keMGr0="/>
+        <field:display field="adsPerId" id="s_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsPerId" object="${afectadodomiciliosiniestro}" z="136lq5vh7KDPkPP9hjmFf4085y8="/>
+        <field:display field="adsSinId" id="s_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsSinId" object="${afectadodomiciliosiniestro}" z="66zrNE5gXisYet6BbdbETk3GgBc="/>
+        <field:display field="adsTafId" id="s_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsTafId" object="${afectadodomiciliosiniestro}" z="5silTvEwWNgOvrzmuUECg+2bpNk="/>
+    </page:show>
+</div>

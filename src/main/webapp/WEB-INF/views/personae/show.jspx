@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reyma_gestion_dao_Persona" object="${persona}" path="/personae" z="alApNbP7jHMf8X57P6BpTurCQtI=">
+        <field:display field="perNombre" id="s_com_reyma_gestion_dao_Persona_perNombre" object="${persona}" z="lgJe83KBdAmjPtSLH5ks59+1L9c="/>
+        <field:display field="perNif" id="s_com_reyma_gestion_dao_Persona_perNif" object="${persona}" z="Ccoj8HY4CQcDCxfFzt4kDrhLK30="/>
+        <field:display field="perTlf1" id="s_com_reyma_gestion_dao_Persona_perTlf1" object="${persona}" z="0PrhQ1h585zqPZJViBRGMuYgQWA="/>
+        <field:display field="perTlf2" id="s_com_reyma_gestion_dao_Persona_perTlf2" object="${persona}" z="gYIlr7U7z66ulyLTX/6CwrzPq4w="/>
+    </page:show>
+</div>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reyma_gestion_dao_Siniestro" object="${siniestro}" path="/siniestroes" z="K/CAcXuFIDsIJisbwj8dfBAXA/I=">
+        <field:display field="sinComId" id="s_com_reyma_gestion_dao_Siniestro_sinComId" object="${siniestro}" z="WjAz/VUGuk5bl+NsqKy7+aRn3hA="/>
+        <field:display field="sinEstId" id="s_com_reyma_gestion_dao_Siniestro_sinEstId" object="${siniestro}" z="aXMHRDYz19gz+AFek6h9DdiLUcE="/>
+        <field:display field="sinTsiId" id="s_com_reyma_gestion_dao_Siniestro_sinTsiId" object="${siniestro}" z="rUyY4jCG0KA95ARZ9KJn3MSIHTE="/>
+        <field:display field="sinNumero" id="s_com_reyma_gestion_dao_Siniestro_sinNumero" object="${siniestro}" z="N68eTWj9utKDC+18khsktAGtbCg="/>
+        <field:display field="sinPoliza" id="s_com_reyma_gestion_dao_Siniestro_sinPoliza" object="${siniestro}" z="/DivOW9UDy7qJtIROfED7VSDdg8="/>
+        <field:display calendar="true" dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="s_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" object="${siniestro}" z="/pw9jl9nz1Zx6nyn5i/djx7UG60="/>
+        <field:display calendar="true" dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="s_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" object="${siniestro}" z="Z3TIxd14jnDZe6su4oDyky2PI48="/>
+        <field:display field="sinDescripcion" id="s_com_reyma_gestion_dao_Siniestro_sinDescripcion" object="${siniestro}" z="RmtCqnqlBxcYSc4gClCn2KE7rP4="/>
+        <field:display field="sinObservaciones" id="s_com_reyma_gestion_dao_Siniestro_sinObservaciones" object="${siniestro}" z="sOBTkyStQKyNZw08mF9jF3QeJiI="/>
+        <field:display field="sinUrgente" id="s_com_reyma_gestion_dao_Siniestro_sinUrgente" object="${siniestro}" z="TMtQ90SXcDeikDJlQ4J5+7eUF5c="/>
+    </page:show>
+</div>

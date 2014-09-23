@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_reyma_gestion_dao_Oficio" items="${oficios}" z="WJQZ1az85RU0/ks22QNfXGhDwNI=">
+        <table:table data="${oficios}" id="l_com_reyma_gestion_dao_Oficio" path="/oficios" typeIdFieldName="ofiId" z="Hq97CEy+YhM9f8ocF1HCcLtrm4s=">
+            <table:column id="c_com_reyma_gestion_dao_Oficio_ofiDescripcion" property="ofiDescripcion" z="HOVPGvTJdiS1AhZ2y6C2J3JybMo="/>
+        </table:table>
+    </page:list>
+</div>

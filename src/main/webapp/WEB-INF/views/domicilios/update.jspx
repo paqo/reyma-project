@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_Domicilio" idField="domId" modelAttribute="domicilio" path="/domicilios" versionField="none" z="wJ/S/YzXEamCyEW9c7brqXoA9FM=">
+        <field:simple field="afectadoDomicilioSiniestroes" id="c_com_reyma_gestion_dao_Domicilio_afectadoDomicilioSiniestroes" messageCode="entity_reference_not_managed" messageCodeAttribute="Afectado Domicilio Siniestro" z="s2HbWraI00DhceVc9btHrQ6E8Cw="/>
+        <field:select field="domProvId" id="c_com_reyma_gestion_dao_Domicilio_domProvId" itemValue="prvId" items="${provincias}" path="/provincias" z="qM7sG0TSh+9ggneKoiBdyNRDZ7Y="/>
+        <field:select field="domMunId" id="c_com_reyma_gestion_dao_Domicilio_domMunId" itemValue="munId" items="${municipios}" path="/municipios" z="9F5QixWQopkL6RQxeaRjbVOzQjo="/>
+        <field:input field="domDireccion" id="c_com_reyma_gestion_dao_Domicilio_domDireccion" required="true" z="5WUMY868dL7YihQiEZ8VUDu/ZCQ="/>
+        <field:input field="domCp" id="c_com_reyma_gestion_dao_Domicilio_domCp" validationMessageCode="field_invalid_integer" z="BB3jXNOQfUGhYk7MDtrZGwmw+vM="/>
+    </form:update>
+    
+</div>

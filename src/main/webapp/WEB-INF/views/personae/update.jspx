@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_Persona" idField="perId" modelAttribute="persona" path="/personae" versionField="none" z="sRgHGuxlURftLFpswyKkuSvatv0=">
+        <field:simple field="afectadoDomicilioSiniestroes" id="c_com_reyma_gestion_dao_Persona_afectadoDomicilioSiniestroes" messageCode="entity_reference_not_managed" messageCodeAttribute="Afectado Domicilio Siniestro" z="42DRggfSXMmvB5odtLN7wjOtCEk="/>
+        <field:input field="perNombre" id="c_com_reyma_gestion_dao_Persona_perNombre" z="OoerpCDvP1DJw7pR5eeDqKsKLkw="/>
+        <field:input field="perNif" id="c_com_reyma_gestion_dao_Persona_perNif" z="o2vxdr2uAhPOa+O1Dkmnk5cY6V8="/>
+        <field:input field="perTlf1" id="c_com_reyma_gestion_dao_Persona_perTlf1" z="7fZr3pU2gzq57PHT+lmLBIJ1wh0="/>
+        <field:input field="perTlf2" id="c_com_reyma_gestion_dao_Persona_perTlf2" z="ib/aMZtB3A0KzrPVRBg/tW0TiYU="/>
+    </form:update>
+</div>

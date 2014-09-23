@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_Estado" idField="estId" modelAttribute="estado" path="/estadoes" versionField="none" z="1Ep4QGoPkolDdZlwibvzHjZ/om4=">
+        <field:simple field="siniestroes" id="c_com_reyma_gestion_dao_Estado_siniestroes" messageCode="entity_reference_not_managed" messageCodeAttribute="Siniestro" z="wbk2WuOKyhkW/vNHh9wy9TWOrbA="/>
+        <field:input field="estDescripcion" id="c_com_reyma_gestion_dao_Estado_estDescripcion" required="true" z="xeIgxOVanLGZ5yBm7K7Xo6IdoG0="/>
+    </form:update>
+</div>

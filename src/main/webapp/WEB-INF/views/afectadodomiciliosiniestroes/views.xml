@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="afectadodomiciliosiniestroes/list">
+        <put-attribute name="body" value="/WEB-INF/views/afectadodomiciliosiniestroes/list.jspx"/>
+    </definition>
+<definition extends="default" name="afectadodomiciliosiniestroes/show">
+        <put-attribute name="body" value="/WEB-INF/views/afectadodomiciliosiniestroes/show.jspx"/>
+    </definition>
+<definition extends="default" name="afectadodomiciliosiniestroes/create">
+        <put-attribute name="body" value="/WEB-INF/views/afectadodomiciliosiniestroes/create.jspx"/>
+    </definition>
+<definition extends="default" name="afectadodomiciliosiniestroes/update">
+        <put-attribute name="body" value="/WEB-INF/views/afectadodomiciliosiniestroes/update.jspx"/>
+    </definition>
+</tiles-definitions>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_reyma_gestion_dao_LineaFactura" modelAttribute="lineaFactura" path="/lineafacturas" render="${empty dependencies}" z="lCkr7vw3PcV1cEEdwzqERImMv2U=">
+        <field:select field="linFacId" id="c_com_reyma_gestion_dao_LineaFactura_linFacId" itemValue="facId" items="${facturas}" path="/facturas" z="iuWzo9xvtilZyUG26dpq7ioiBJk="/>
+        <field:select field="linIvaId" id="c_com_reyma_gestion_dao_LineaFactura_linIvaId" itemValue="ivaId" items="${ivas}" path="/ivas" z="58eyeAmX1DO8jsvVgtqprnQHKic="/>
+        <field:input field="linConcepto" id="c_com_reyma_gestion_dao_LineaFactura_linConcepto" required="true" z="QjcgZKYLzCpNAmGoRKr+JZvaR/I="/>
+        <field:input field="linImporte" id="c_com_reyma_gestion_dao_LineaFactura_linImporte" required="true" validationMessageCode="field_invalid_number" z="DGZDRgmNNIXy2mL7IN08Nkpt01k="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_reyma_gestion_dao_LineaFactura" render="${not empty dependencies}" z="jpWo47wuukWG+rvVkjfXI3+QgeA="/>
+</div>

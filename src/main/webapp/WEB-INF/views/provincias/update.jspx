@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reyma_gestion_dao_Provincia" idField="prvId" modelAttribute="provincia" path="/provincias" versionField="none" z="uBinf37+egS83DEdpGt5o5Ned8Y=">
+        <field:simple field="domicilios" id="c_com_reyma_gestion_dao_Provincia_domicilios" messageCode="entity_reference_not_managed" messageCodeAttribute="Domicilio" z="cu5buDcjb1AtnPAGW/FUf+AgZsA="/>
+        <field:simple field="municipios" id="c_com_reyma_gestion_dao_Provincia_municipios" messageCode="entity_reference_not_managed" messageCodeAttribute="Municipio" z="T4ZRjEvQcuuhmTropCvb6wuIcdA="/>
+        <field:input field="prvDescripcion" id="c_com_reyma_gestion_dao_Provincia_prvDescripcion" required="true" z="RH9nXwmgd7h90J39w4q0Ct0T9Rk="/>
+    </form:update>
+</div>

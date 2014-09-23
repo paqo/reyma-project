@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_tipoafectacion" z="8SX6YTdalk2bCut0x9CA2nDb55k=">
+            <menu:item id="i_tipoafectacion_new" messageCode="global_menu_new" url="/tipoafectacions?form" z="js/s+pFtwu3ivA709ZiNiUB9Jds="/>
+            <menu:item id="i_tipoafectacion_list" messageCode="global_menu_list" url="/tipoafectacions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="L7ZbWcjkNeTbfFl0WQQY/u9EkZE="/>
+        </menu:category>
+        <menu:category id="c_operario" z="poNTIIMGlmVWKvJKI8U7ewzFAQo=">
+            <menu:item id="i_operario_new" messageCode="global_menu_new" url="/operarios?form" z="3JRqv9f5Vdfx8z4J0jVJsi49Q5s="/>
+            <menu:item id="i_operario_list" messageCode="global_menu_list" url="/operarios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="THjFwAkWI2f/eON8NrYBex0XjGw="/>
+        </menu:category>
+        <menu:category id="c_factura" z="2fKuI4JC+iaJbUSppRppJnkWiew=">
+            <menu:item id="i_factura_new" messageCode="global_menu_new" url="/facturas?form" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
+            <menu:item id="i_factura_list" messageCode="global_menu_list" url="/facturas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="s77QdFN3Sd31RGYgNkjNIvIaJBU="/>
+        </menu:category>
+        <menu:category id="c_domicilio" z="9Kv0zBq8wBFZL3R7DQJ9c4VTqSo=">
+            <menu:item id="i_domicilio_new" messageCode="global_menu_new" url="/domicilios?form" z="yLFo/3gnPwJoJgT3GoGFiD2bf0E="/>
+            <menu:item id="i_domicilio_list" messageCode="global_menu_list" url="/domicilios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="mbVXPYopHcvB18aGLGKYUd91zDk="/>
+        </menu:category>
+        <menu:category id="c_persona" z="HGx10uPnaEw3eOO50fIb9qf5jiI=">
+            <menu:item id="i_persona_new" messageCode="global_menu_new" url="/personae?form" z="7Y0KdFKrjpWljePDcf4RoDAeOUA="/>
+            <menu:item id="i_persona_list" messageCode="global_menu_list" url="/personae?page=1&amp;size=${empty param.size ? 10 : param.size}" z="/MWcaTHST1kjwDWGXluGyXbYCJo="/>
+        </menu:category>
+        <menu:category id="c_compania" z="FuoLT45HS5K+/WGSgCYcBe0v5uc=">
+            <menu:item id="i_compania_new" messageCode="global_menu_new" url="/companias?form" z="cdfybbuHvpGtlhhYTxPGbM+1Wd4="/>
+            <menu:item id="i_compania_list" messageCode="global_menu_list" url="/companias?page=1&amp;size=${empty param.size ? 10 : param.size}" z="4hy3WmkekkZrFBC3YgD1hEGyCV4="/>
+        </menu:category>
+        <menu:category id="c_oficio" z="Z/FlHjyJlkW2F1rhFCuVsdWXF9I=">
+            <menu:item id="i_oficio_new" messageCode="global_menu_new" url="/oficios?form" z="+hYavyQq3AycjaQBua7U7MLDYaU="/>
+            <menu:item id="i_oficio_list" messageCode="global_menu_list" url="/oficios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="vZX4jzxDhMTyGibXjsd933Qb6VI="/>
+        </menu:category>
+        <menu:category id="c_siniestro" z="ABVeXlQapwRyYdEBi7Oi4Em7Z4I=">
+            <menu:item id="i_siniestro_new" messageCode="global_menu_new" url="/siniestroes?form" z="9103s41yPmM83maKbYk80QNgoR0="/>
+            <menu:item id="i_siniestro_list" messageCode="global_menu_list" url="/siniestroes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Jnqse2qduIJG7jpqEaEKQj2MNjE="/>
+        </menu:category>
+        <menu:category id="c_trabajo" z="KlI/y3LrCtSNcpeC2OgJDnU3Es0=">
+            <menu:item id="i_trabajo_new" messageCode="global_menu_new" url="/trabajoes?form" z="HyUp+JVp+04m3G2hzJmqV/iunM8="/>
+            <menu:item id="i_trabajo_list" messageCode="global_menu_list" url="/trabajoes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="io/avd53dYW4oZHK5ELthHyobPU="/>
+        </menu:category>
+        <menu:category id="c_afectadodomiciliosiniestro" z="cqIkYsrSzinJJ41EDmn9rY6p/kE=">
+            <menu:item id="i_afectadodomiciliosiniestro_new" messageCode="global_menu_new" url="/afectadodomiciliosiniestroes?form" z="zIumu6Nc2EY4cKQRbYbW7uoQSTI="/>
+            <menu:item id="i_afectadodomiciliosiniestro_list" messageCode="global_menu_list" url="/afectadodomiciliosiniestroes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="xuPLqpGaoRRladbg479KD+w1nR4="/>
+        </menu:category>
+        <menu:category id="c_provincia" z="s40QIrkTEEQmQJE7n3s/kBpd4As=">
+            <menu:item id="i_provincia_new" messageCode="global_menu_new" url="/provincias?form" z="aptiyVobvnotHzHyHAejklRSmWM="/>
+            <menu:item id="i_provincia_list" messageCode="global_menu_list" url="/provincias?page=1&amp;size=${empty param.size ? 10 : param.size}" z="DbRgNOqg8bLq24SILSrImBD1jxo="/>
+        </menu:category>
+        <menu:category id="c_tiposiniestro" z="Ws5cmSfB5ITWNURk6A4Gl5C3V08=">
+            <menu:item id="i_tiposiniestro_new" messageCode="global_menu_new" url="/tiposiniestroes?form" z="leZtHr9Qf20kPk+LA1SjkJDPjvI="/>
+            <menu:item id="i_tiposiniestro_list" messageCode="global_menu_list" url="/tiposiniestroes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="qrr40tlSUfZ6U3Fm2LtxoxS7M/8="/>
+        </menu:category>
+        <menu:category id="c_lineafactura" z="+FNVo94TjI3Nu9TZvMaXmqBMraY=">
+            <menu:item id="i_lineafactura_new" messageCode="global_menu_new" url="/lineafacturas?form" z="JaM4jrtxlye2r+s4edpF75cuo44="/>
+            <menu:item id="i_lineafactura_list" messageCode="global_menu_list" url="/lineafacturas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="t5LX7P1A4JgBM1OwH4S+IV36bYU="/>
+        </menu:category>
+        <menu:category id="c_municipio" z="G1i1l+0Jj7CheJD0pEpQ0TlwDk8=">
+            <menu:item id="i_municipio_new" messageCode="global_menu_new" url="/municipios?form" z="GzuxH9zeNaf+dpdpvNIv/Y7h/KU="/>
+            <menu:item id="i_municipio_list" messageCode="global_menu_list" url="/municipios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="IRPalzV2r3dNKaBADDNN1mX8u+U="/>
+        </menu:category>
+        <menu:category id="c_estado" z="R0VnER9YYkIt+dO11st4rxP96qg=">
+            <menu:item id="i_estado_new" messageCode="global_menu_new" url="/estadoes?form" z="ycg0kAs5SJ41KTsAQHflCSNyXf0="/>
+            <menu:item id="i_estado_list" messageCode="global_menu_list" url="/estadoes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="/PJMqPVs73Y+7l/7KDQDkMo0E5E="/>
+        </menu:category>
+        <menu:category id="c_iva" z="XO+6jybPn8jBW1H4ewllnYf8+Vs=">
+            <menu:item id="i_iva_new" messageCode="global_menu_new" url="/ivas?form" z="spjorOgOQ/AFoZrPDPh6nIoFZAQ="/>
+            <menu:item id="i_iva_list" messageCode="global_menu_list" url="/ivas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="AcXN/3FL7Ie7CwEoBIOAk0dapUk="/>
+        </menu:category>
+    </menu:menu>
+</div>

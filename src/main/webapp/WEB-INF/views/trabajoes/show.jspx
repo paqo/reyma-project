@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reyma_gestion_dao_Trabajo" object="${trabajo}" path="/trabajoes" z="6cB/DiTZcTh54sDxmWXDiLFOZOo=">
+        <field:display field="traOfiId" id="s_com_reyma_gestion_dao_Trabajo_traOfiId" object="${trabajo}" z="+FoDvZ5nOM0Lhd0mf8+urs0ZaYg="/>
+        <field:display field="traOpeId" id="s_com_reyma_gestion_dao_Trabajo_traOpeId" object="${trabajo}" z="Tdj9csG710CI7+waixGPGhEOaaE="/>
+        <field:display field="traSinId" id="s_com_reyma_gestion_dao_Trabajo_traSinId" object="${trabajo}" z="jG9ONMWn213YOluMMksij6OEBMc="/>
+        <field:display calendar="true" dateTimePattern="${trabajo_trafecha_date_format}" field="traFecha" id="s_com_reyma_gestion_dao_Trabajo_traFecha" object="${trabajo}" z="X3T7HNMLoPkUXv2W7XnC2JR6qFg="/>
+    </page:show>
+</div>

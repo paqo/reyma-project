@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reyma_gestion_dao_LineaFactura" object="${lineafactura}" path="/lineafacturas" z="FJpcfxcQky8aL/8+U+3v78AdlQw=">
+        <field:display field="linFacId" id="s_com_reyma_gestion_dao_LineaFactura_linFacId" object="${lineafactura}" z="8Frgv3TGPIMvug/G/ipnsiifa0Y="/>
+        <field:display field="linIvaId" id="s_com_reyma_gestion_dao_LineaFactura_linIvaId" object="${lineafactura}" z="iZitAiCWfs4EiYbkNhVTa80n/pU="/>
+        <field:display field="linConcepto" id="s_com_reyma_gestion_dao_LineaFactura_linConcepto" object="${lineafactura}" z="UU/fWTcnWV6x/O0NXuI3K7kxIvA="/>
+        <field:display field="linImporte" id="s_com_reyma_gestion_dao_LineaFactura_linImporte" object="${lineafactura}" z="QzhwDlTxtb0NSw8IHMn5wHlzviY="/>
+    </page:show>
+</div>
