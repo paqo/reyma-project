@@ -22,7 +22,16 @@
 	    <li><a href="#tabs-3">Facturas</a></li>
 	  </ul>
 	  <div id="tabs-1">
-	    <form id="formAfectados" name="formAfectados" action="/">
+	    <form id="formAfectados" name="formAfectados" method="post" action="/gestion/afectados/add">
+	    	<input name="perNif" id="perNif" value="nif" />
+	    	<input name="perNombre" id="perNombre" value="nombre" />
+	    	<input name="perTlf1" id="perTlf1" value="tlf1" />
+	    	<input name="perTlf2" id="perTlf2" value="tlf2" />
+	    	<input name="domCp" id="domCp" value="cp" />
+	    	<input name="domDireccion" id="domDireccion" value="direc" />
+	    	<input name="domMunId" id="domMunId" value="mun id" />
+	    	<input name="domProvId" id="domProvId" value="prov id" />
+	    	<input type="submit" value="test" name="submitBtn" id="submitBtn" />
 	    </form>
 	  </div>
 	  <div id="tabs-2">

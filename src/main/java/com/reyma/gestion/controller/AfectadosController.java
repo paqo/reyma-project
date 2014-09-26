@@ -8,26 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
+import com.reyma.gestion.controller.validators.DomicilioValidator;
+import com.reyma.gestion.controller.validators.PersonaValidator;
+import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
-import com.reyma.gestion.service.CompaniaService;
 import com.reyma.gestion.service.DomicilioService;
-import com.reyma.gestion.service.EstadoService;
-import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.PersonaService;
 import com.reyma.gestion.service.SiniestroService;
-import com.reyma.gestion.service.TipoSiniestroService;
-import com.reyma.gestion.service.TrabajoService;
-import com.reyma.gestion.util.Fechas;
+import com.reyma.gestion.service.TipoAfectacionService;
+
+import flexjson.JSONSerializer;
 
 @RequestMapping("/afectados")
 @Controller
@@ -45,13 +47,50 @@ public class AfectadosController {
 	@Autowired
     AfectadoDomicilioSiniestroService afectadoDomicilioSiniestroService;	
 	
+	@Autowired
+    TipoAfectacionService tipoAfectacionService;	
+	
+	
+	/* @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public String alta(Integer domProvId, BindingResult bindingResult, Model uiModel) { // quitar bindingResult?
+		System.out.println("=>  id Prov: " + domProvId + ", uiModel: " + uiModel.asMap().keySet());
+		Municipio mun = new Municipio();
+		mun.setMunDescripcion("Esta es la descripcion");
+		mun.setMunId(777);
+		mun.setMunPrvId(null);
+		JSONSerializer serializer = new JSONSerializer();
+		return serializer.exclude("class").serialize(mun);
+    } */
+	
+	
+	@InitBinder
+    protected void initBinder(WebDataBinder binder) {        
+        binder.addValidators(new PersonaValidator());
+    }
+	
+	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public String alta(@Valid Persona persona, BindingResult bindingResult, Domicilio domicilio, Model uiModel) { // quitar bindingResult?
+		System.out.println("=> uiModel: " + uiModel.asMap().keySet());
+		
+		System.out.println("=> " + persona.getPerNif() + ", " + persona.getPerNombre());
+		
+		System.out.println("=> " + domicilio.getDomDireccion() + ", " + domicilio.getDomCp());
+		
+		JSONSerializer serializer = new JSONSerializer();
+		return serializer.exclude("class").serialize(persona); // class siempre lo lleva, hay que excluir
+    }
+
+	void populateEditForm(Model uiModel, Siniestro siniestro) {        
+        uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());
+        
+    }
 
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
-    public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
+    public String createee(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         
-		AfectadoDomicilioSiniestro ads;
-		
-		ads.se
+		//AfectadoDomicilioSiniestro ads;
 				
 		if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, siniestro);
@@ -71,7 +110,6 @@ public class AfectadosController {
 
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
     public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
-        addDateTimeFormatPatterns(uiModel);
         uiModel.addAttribute("siniestro", siniestroService.findSiniestro(sinId));
         uiModel.addAttribute("itemId", sinId);
         return "siniestroes/show";
@@ -88,7 +126,6 @@ public class AfectadosController {
         } else {
             uiModel.addAttribute("siniestroes", Siniestro.findAllSiniestroes(sortFieldName, sortOrder));
         }
-        addDateTimeFormatPatterns(uiModel);
         return "siniestroes/list";
     }
 
@@ -118,25 +155,7 @@ public class AfectadosController {
         uiModel.addAttribute("size", (size == null) ? "5" : size.toString());
         return "redirect:/siniestroes";
     }
-
-	void addDateTimeFormatPatterns(Model uiModel) {
-        /*uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));
-        uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));*/
-		uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-        uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-    }
-
-	void populateEditForm(Model uiModel, Siniestro siniestro) {
-        uiModel.addAttribute("siniestro", siniestro);
-        addDateTimeFormatPatterns(uiModel);
-        uiModel.addAttribute("afectadodomiciliosiniestroes", afectadoDomicilioSiniestroService.findAllAfectadoDomicilioSiniestroes());
-        uiModel.addAttribute("companias", companiaService.findAllCompanias());
-        uiModel.addAttribute("estadoes", estadoService.findAllEstadoes());
-        uiModel.addAttribute("facturas", facturaService.findAllFacturas());
-        uiModel.addAttribute("tiposiniestroes", tipoSiniestroService.findAllTipoSiniestroes());
-        uiModel.addAttribute("trabajoes", trabajoService.findAllTrabajoes());
-    }
-
+	
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
         String enc = httpServletRequest.getCharacterEncoding();
         if (enc == null) {
