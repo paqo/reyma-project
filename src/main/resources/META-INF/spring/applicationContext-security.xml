@@ -26,7 +26,7 @@
         <authentication-provider>
             <password-encoder hash="sha-256" />
             <user-service>
-            	<user name="reymasur" password="54ec8eb65f8b96476a6455a3bc43942d3a9290a5da5117a95c2170c064289e8b" authorities="ROLE_USER"/>
+            	<user name="reymasur" password="9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" authorities="ROLE_USER"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>
