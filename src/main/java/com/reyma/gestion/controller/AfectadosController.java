@@ -1,5 +1,7 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-import com.reyma.gestion.controller.validators.DomicilioValidator;
-import com.reyma.gestion.controller.validators.PersonaValidator;
+import com.reyma.gestion.controller.validators.AfectadoValidator;
+import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
@@ -49,39 +52,29 @@ public class AfectadosController {
 	
 	@Autowired
     TipoAfectacionService tipoAfectacionService;	
-	
-	
-	/* @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
-	public String alta(Integer domProvId, BindingResult bindingResult, Model uiModel) { // quitar bindingResult?
-		System.out.println("=>  id Prov: " + domProvId + ", uiModel: " + uiModel.asMap().keySet());
-		Municipio mun = new Municipio();
-		mun.setMunDescripcion("Esta es la descripcion");
-		mun.setMunId(777);
-		mun.setMunPrvId(null);
-		JSONSerializer serializer = new JSONSerializer();
-		return serializer.exclude("class").serialize(mun);
-    } */
-	
-	
+
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {        
-        binder.addValidators(new PersonaValidator());
+        binder.setValidator(new AfectadoValidator());
     }
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public String alta(@Valid Persona persona, BindingResult bindingResult, Domicilio domicilio, Model uiModel) { // quitar bindingResult?
-		System.out.println("=> uiModel: " + uiModel.asMap().keySet());
+	public String alta(@Valid Persona persona, BindingResult bindingResultP, 
+			@Valid Domicilio domicilio, BindingResult bindingResultD, Model uiModel) {		
+		List<FieldError> errores = new ArrayList<FieldError>();		
+		// lista con todos los errores de validacion de afectados
+		errores = UtilsValidacion.getErroresValidacion(bindingResultP.getFieldErrors());		
+		errores.addAll(UtilsValidacion.getErroresValidacion(bindingResultD.getFieldErrors()));
 		
-		System.out.println("=> " + persona.getPerNif() + ", " + persona.getPerNombre());
-		
-		System.out.println("=> " + domicilio.getDomDireccion() + ", " + domicilio.getDomCp());
+		for (FieldError fieldError : errores) {
+			System.out.println("=> " + fieldError.getField() + ": " + fieldError.getDefaultMessage());
+		}
 		
 		JSONSerializer serializer = new JSONSerializer();
-		return serializer.exclude("class").serialize(persona); // class siempre lo lleva, hay que excluir
-    }
-
+		return serializer.exclude("class").serialize(domicilio); // class siempre lo lleva, hay que excluir 
+    }	
+	
 	void populateEditForm(Model uiModel, Siniestro siniestro) {        
         uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());
         

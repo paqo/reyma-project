@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:springForms="http://www.springframework.org/tags/form" 
+	 xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <form:update id="fu_com_reyma_gestion_dao_Siniestro" idField="sinId" modelAttribute="siniestro" path="/siniestroes" versionField="none" z="l2WNaPjr3jltvdJwhbjYg1Pm1yo=">
@@ -33,6 +34,7 @@
 	    	<input name="domProvId" id="domProvId" value="prov id" />
 	    	<input type="submit" value="test" name="submitBtn" id="submitBtn" />
 	    </form>
+	    <springForms:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
 	  </div>
 	  <div id="tabs-2">
 	    <div id="accordion">
