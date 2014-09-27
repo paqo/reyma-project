@@ -2,6 +2,7 @@
   <classpathentry kind="src" path="src/main/java" including="**/*.java|**/*.aj"/>
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="var" path="M2_REPO/com/aet/valnif/2.01/valnif-2.01.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/el/el-api/2.2/el-api-2.2.jar" sourcepath="M2_REPO/javax/el/el-api/2.2/el-api-2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/jsp/jsp-api/2.1/jsp-api-2.1.jar" sourcepath="M2_REPO/javax/servlet/jsp/jsp-api/2.1/jsp-api-2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/jsp/jstl/jstl-api/1.2/jstl-api-1.2.jar" sourcepath="M2_REPO/javax/servlet/jsp/jstl/jstl-api/1.2/jstl-api-1.2-sources.jar"/>
