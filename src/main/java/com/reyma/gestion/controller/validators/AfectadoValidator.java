@@ -5,7 +5,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.aeat.valida.Validador;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 
@@ -30,9 +29,8 @@ public class AfectadoValidator implements Validator {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "perNombre", "field.min.length",
 	                null,"el nombre del afectado no puede ser vacío");
 			if ( StringUtils.isNotBlank(persona.getPerNif()) ){
-				// si hay NIF, validar
-				Validador validadorNIF = new Validador();
-				if (validadorNIF.checkNif(persona.getPerNif()) != Validador.NIF_OK ){
+				// si hay NIF, validar				
+				if (!UtilsValidacion.esNIFValido(persona.getPerNif())){
 					errors.rejectValue("perNif", "field.min.length",
 			                null,"el NIF no es válido");
 				}

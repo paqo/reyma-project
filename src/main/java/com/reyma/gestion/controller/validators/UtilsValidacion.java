@@ -6,8 +6,12 @@ import java.util.List;
 
 import org.springframework.validation.FieldError;
 
+import com.aeat.valida.Validador;
+
 public class UtilsValidacion {
 
+	public static Validador validadorNIF = new Validador();
+	
 	public static List<FieldError> getErroresValidacion( List<FieldError> errores) {
 		FieldError fieldError;
 		List<FieldError> res = new ArrayList<FieldError>();
@@ -20,5 +24,9 @@ public class UtilsValidacion {
 			}
 		}	
 		return res;
+	}
+	
+	public static boolean esNIFValido(String nif) {		
+		return validadorNIF.checkNif(nif) == Validador.NIF_OK;
 	}
 }
