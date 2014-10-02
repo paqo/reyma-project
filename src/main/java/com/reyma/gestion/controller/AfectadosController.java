@@ -37,7 +37,7 @@ import flexjson.JSONSerializer;
 @RequestMapping("/afectados")
 @Controller
 public class AfectadosController {
-
+	
 	@Autowired
     SiniestroService siniestroService;
 
@@ -55,7 +55,7 @@ public class AfectadosController {
 
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {        
-        binder.setValidator(new AfectadoValidator());
+        binder.addValidators(new AfectadoValidator());
     }
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
