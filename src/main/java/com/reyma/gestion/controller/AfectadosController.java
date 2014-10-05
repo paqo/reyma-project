@@ -31,6 +31,8 @@ import com.reyma.gestion.service.DomicilioService;
 import com.reyma.gestion.service.PersonaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
+import com.reyma.gestion.ui.MensajeErrorValidacionJson;
+import com.reyma.gestion.ui.MensajeExitoJson;
 
 import flexjson.JSONSerializer;
 
@@ -67,17 +69,28 @@ public class AfectadosController {
 		errores = UtilsValidacion.getErroresValidacion(bindingResultP.getFieldErrors());		
 		errores.addAll(UtilsValidacion.getErroresValidacion(bindingResultD.getFieldErrors()));
 		
-		for (FieldError fieldError : errores) {
-			System.out.println("=> " + fieldError.getField() + ": " + fieldError.getDefaultMessage());
-		}
-		
+		MensajeErrorValidacionJson mensajeError;
 		JSONSerializer serializer = new JSONSerializer();
-		return serializer.exclude("class").serialize(domicilio); // class siempre lo lleva, hay que excluir 
+		
+		if ( errores.size() == 0 ){
+			if ( bindingResultP.getFieldErrors().size() > 0 || 
+					bindingResultD.getFieldErrors().size() > 0 ){
+				// tiene errores que no son de validación, mensaje de error general
+				mensajeError =  new MensajeErrorValidacionJson(errores);				
+			} else {
+				//TODO: grabar datos
+				MensajeExitoJson mensajeExito = new MensajeExitoJson();
+				return serializer.exclude("class").serialize(mensajeExito);
+			}
+		} else {
+			// tiene errores de validacion
+			mensajeError =  new MensajeErrorValidacionJson(errores);
+		}
+		return serializer.exclude("class").serialize(mensajeError); // class siempre lo lleva, hay que excluir 
     }	
 	
 	void populateEditForm(Model uiModel, Siniestro siniestro) {        
-        uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());
-        
+        uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());        
     }
 
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
@@ -94,13 +107,8 @@ public class AfectadosController {
         //return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
         return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest) + "?form";
     }
-
-	@RequestMapping(params = "form", produces = "text/html")
-    public String createForm(Model uiModel) {
-        populateEditForm(uiModel, new Siniestro());
-        return "siniestroes/create";
-    }
-
+	
+	// este para mostrar los afectados junto al propio siniestro
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
     public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
         uiModel.addAttribute("siniestro", siniestroService.findSiniestro(sinId));
@@ -108,20 +116,7 @@ public class AfectadosController {
         return "siniestroes/show";
     }
 
-	@RequestMapping(produces = "text/html")
-    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, @RequestParam(value = "sortFieldName", required = false) String sortFieldName, @RequestParam(value = "sortOrder", required = false) String sortOrder, Model uiModel) {
-        if (page != null || size != null) {
-            int sizeNo = size == null ? 10 : size.intValue();
-            final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("siniestroes", Siniestro.findSiniestroEntries(firstResult, sizeNo, sortFieldName, sortOrder));
-            float nrOfPages = (float) siniestroService.countAllSiniestroes() / sizeNo;
-            uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
-        } else {
-            uiModel.addAttribute("siniestroes", Siniestro.findAllSiniestroes(sortFieldName, sortOrder));
-        }
-        return "siniestroes/list";
-    }
-
+	// actualizar datos PUT?
 	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String update(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
@@ -133,12 +128,7 @@ public class AfectadosController {
         return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
     }
 
-	@RequestMapping(value = "/{sinId}", params = "form", produces = "text/html")
-    public String updateForm(@PathVariable("sinId") Integer sinId, Model uiModel) {
-        populateEditForm(uiModel, siniestroService.findSiniestro(sinId));
-        return "siniestroes/update";
-    }
-
+	// posible borrar todos los afectados
 	@RequestMapping(value = "/{sinId}", method = RequestMethod.DELETE, produces = "text/html")
     public String delete(@PathVariable("sinId") Integer sinId, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Siniestro siniestro = siniestroService.findSiniestro(sinId);

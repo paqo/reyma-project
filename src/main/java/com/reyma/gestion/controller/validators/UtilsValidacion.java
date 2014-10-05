@@ -25,6 +25,13 @@ public class UtilsValidacion {
 		mensajes.setBasename("mensajes-validacion");
 	}
 	
+	/**
+	 * filtrar errores que son exclusivamente de la validación propia
+	 * definida para los formularios, excluyendo bindings errors y
+	 * de JPA (actualmente solo NotNull)
+	 * @param errores lista con todos los errores
+	 * @return lista con los errores de validación propiamente dichos
+	 */
 	public static List<FieldError> getErroresValidacion( List<FieldError> errores) {
 		FieldError fieldError;
 		List<FieldError> res = new ArrayList<FieldError>();
@@ -32,11 +39,24 @@ public class UtilsValidacion {
 		Iterator<FieldError> it = errores.iterator();
 		while (it.hasNext()) {
 			fieldError = (FieldError) it.next();
-			if ( !fieldError.isBindingFailure() ){
+			if ( esErrorValidacion(fieldError) ){				
 				res.add(fieldError);
 			}
 		}	
 		return res;
+	}
+	
+	private static boolean esErrorValidacion(FieldError fieldError) {
+		String[] codigos = fieldError.getCodes();
+		if ( fieldError.isBindingFailure() ){
+			return false;
+		} else {
+			if ( codigos == null ){
+				return true;
+			} else {
+				return !"NotNull".equalsIgnoreCase( codigos[codigos.length-1] );
+			}
+		}
 	}
 	
 	public static void validarDomicilio(Object target, Errors errors) {

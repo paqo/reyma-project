@@ -373,16 +373,40 @@ fieldset th {
 	width: 16px;
 }
 
-#sinEsUrgente > label.ui-state-default {
-	border: 1px solid #d3d3d3;
-	background: #648C1D url("images/ui-bg_glass_75_648C1D_1x400.png") 50% 50% repeat-x !important;
-	font-weight: normal;
-	color: #555 !important;
+/* ####### ESTILOS FORMULARIO AFECTADOS ######### */
+
+.formafec-label-izq {
+	width: 18%;
 }
 
-#sinEsUrgente > label.ui-state-active {
-	border: 1px solid #d3d3d3;
-	background: #648C1D url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x !important;
-	font-weight: normal;
-	color: #555 !important;
+.formafec-label-der {
+	width: 20%;
+}
+
+.formafec-input-izq {
+	width: 80%;
+}
+
+.formafec-separador-filas {
+	float:left; margin-top: 1em; width: 99%;
+}
+
+.formafec-separador-col-izq {
+	float:left; width: 60%;
+}
+
+.formafec-separador-col-der {
+	float:left; margin-left: 3%; width: 35%;
+}
+
+.formafec-separador-3col-izq {
+	float: left; width: 30%;
+}
+
+.formafec-separador-3col-der {
+	float: left; margin-left:3%; width: 30%;
+}
+
+.formafec-separador-3col-label {
+	width: 50%;
 }

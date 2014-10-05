@@ -15,7 +15,7 @@
         <field:textarea field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" z=""/>
         <field:checkbox-jq field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" label="Urgente"></field:checkbox-jq>
     </form:update>
-    
+        
     <div id="tabs">
 	  <ul>
 	    <li><a href="#tabs-1">Afectados</a></li>
@@ -23,37 +23,93 @@
 	    <li><a href="#tabs-3">Facturas</a></li>
 	  </ul>
 	  <div id="tabs-1">
-	    <form id="formAfectados" name="formAfectados" method="post" action="/gestion/afectados/add">
-	    	<input name="perNif" id="perNif" value="nif" />
-	    	<input name="perNombre" id="perNombre" value="nombre" />
-	    	<input name="perTlf1" id="perTlf1" value="tlf1" />
-	    	<input name="perTlf2" id="perTlf2" value="tlf2" />
-	    	<input name="domCp" id="domCp" value="cp" />
-	    	<input name="domDireccion" id="domDireccion" value="direc" />
-	    	<input name="domMunId" id="domMunId" value="mun id" />
-	    	<input name="domProvId" id="domProvId" value="prov id" />
-	    	<input type="submit" value="test" name="submitBtn" id="submitBtn" />
-	    </form>
-	    <springForms:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />
+	  	<div id="contAfectados">
+	  		<div id="accordion">
+				<h3><a href="#">Afectado</a></h3>
+			    <div>
+			    	<!-- afectado  -->
+			  		<div class="formafec-separador-filas">
+			  			<div class="formafec-separador-col-izq">
+			  				<label class="formafec-label-izq" for="perNombre">Nombre:</label>
+			    			<input class="formafec-input-izq" name="perNombre" id="perNombre" value="nombre" />
+			  			</div>	  			
+			  			<div class="formafec-separador-col-der">
+			  				<label class="formafec-label-der" for="perNif">NIF:</label>
+			  				<input name="perNif" id="perNif" value="nif" />
+			  			</div>
+			  		</div>
+			  		<div class="formafec-separador-filas">		  			
+			  			<div class="formafec-separador-col-izq">
+			  				<label class="formafec-label-izq" for="perTlf1">Teléfono:</label>
+			    			<input style="width: 35%;" name="perTlf1" id="perTlf1" value="tlf1" />
+			  			</div>	  			
+			  			<div class="formafec-separador-col-der">
+			  				<label class="formafec-label-der" for="perTlf2">Móvil:</label>
+			  				<input name="perTlf2" id="perTlf2" value="tlf2" />
+			  			</div>
+			  		</div>		
+			  		<!-- domicilio  -->
+			    	<div class="formafec-separador-filas">
+			  			<div class="formafec-separador-col-izq">
+			  				<label class="formafec-label-izq" for="domDireccion">Dirección:</label>
+			    			<input class="formafec-input-izq" name="domDireccion" id="domDireccion" value="direc" />
+			  			</div>	  			
+			  			<div class="formafec-separador-col-der">
+			  				<label class="formafec-label-der" for="domCp">Código Postal:</label>
+			  				<input name="domCp" id="domCp" value="cp" />
+			  			</div>
+			  		</div>
+			  		<div class="formafec-separador-filas">		
+			  			<div class="formafec-separador-3col-izq">
+			  				<label class="formafec-separador-3col-label" for="domProvId">Provincia:</label>
+			  				<input name="domProvId" id="domProvId" value="prov" />
+			  			</div>	
+			  			<div class="formafec-separador-3col-der">
+			  				<label class="formafec-separador-3col-label" for="domMunId">Municipio:</label>
+			    			<input name="domMunId" id="domMunId" value="muni" />
+			  			</div>
+			  			<div class="formafec-separador-3col-der">
+			  				<label class="formafec-separador-3col-label" for="domProvId">Asegurado?</label>
+			  				<input name="asegurado" id="asegurado" value="bool" />
+			  			</div>				  					  			
+			  		</div>
+			  		<div class="formafec-separador-filas">
+			  			<button id="btnGuardarDatosAfec">Guardar</button>
+			  		</div>
+			    </div>
+			</div>	 
+	    	
+	  	</div>	   
 	  </div>
 	  <div id="tabs-2">
-	    <div id="accordion">
-			<h3><a href="#">Dom One</a></h3>
-		    <div>
-		        One content<br />
-		    </div>
-		</div>
-		<div>
-		    <button id="addAccordion">test</button>
-		</div>
+	    <p>pestaña 2</p>	    
 	  </div>
 	  <div id="tabs-3">
 	    <p>contenido 3</p>
-	  </div>
+	  </div>		  
 	</div>
-    
+	
+	<div id="mensajesUsuario" title=" ">		
+		<p style="text-indent: 0px; font-size: 12px;"></p>
+	</div>
+		
 	<script type="text/javascript">
 		$(function() {
+			
+			// crear ventana para mensajes
+			var dialog = $( "#mensajesUsuario" ).dialog({
+	    	    autoOpen: false,
+	    	    height: 200,
+	    		width: 500,
+	    	    modal: true,
+	    	    resizable: false,
+	    	    buttons: {
+	    	        "Aceptar": function() {    	         
+	    	            $( this ).dialog( "close" );
+	    	        }
+	    	    }
+	    	});
+			
 		    // pestanas
 		    $( "#tabs" ).tabs();
 			// lista afectados 
@@ -64,10 +120,37 @@
 		    	active: false
 		    });    
 			$( '#addAccordion' ).click( function() {
-			    var newDiv = "<div><h3>Dom two</h3><div>Two Content</div></div>";
+			    //var newDiv = "<div><h3>Dom two</h3><div>Two Content</div></div>";
+			    var newDiv = '<div><h3>Dom two</h3><div><input type="text" value="se puede?" /><input type="button" value="botonaco!!" /></div></div>';
 			    $( "#accordion" ).append(newDiv)
 			    $( "#accordion" ).accordion("refresh");        
-			});
+			});		
+			// boton guarda datos afectados
+			$( "#btnGuardarDatosAfec" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-disk"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	var action = "/gestion/afectados/add";
+		    	var params = {"perNif" : $("#perNif").val(), 
+		    				  "perNombre" : $("#perNombre").val(), 
+		    				  "perTlf1" : $("#perTlf1").val(),
+		    				  "perTlf2" : $("#perTlf2").val()};	
+				$.post(action, params, function( data ) {				
+					// informar del resultado
+					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+					$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+					$( "#mensajesUsuario" ).dialog( "open" );									
+				}).error(function() {
+					$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+					$( "#mensajesUsuario" ).children("p").text( "Se ha producido un error guardando los datos de los afectados" );
+					$( "#mensajesUsuario" ).dialog( "open" );				 
+				})				 	  
+		    });		
 		});		
 	</script>
+	
 </div>
+
+
