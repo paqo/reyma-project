@@ -7,6 +7,8 @@ import org.springframework.validation.FieldError;
 
 public class MensajeErrorValidacionJson implements Serializable {
 
+	//TODO: Hacer clase padre para mensaje general de la que hereden todos
+	
 	private static final long serialVersionUID = 4646809887831123437L;
 	private String mensaje;
 	private String titulo;
@@ -70,12 +72,17 @@ public class MensajeErrorValidacionJson implements Serializable {
 		this.titulo = titulo;
 	}	
 	
-	private String getMensajeError(List<FieldError> errores) {
+	private String getMensajeError(List<FieldError> errores) {		
 		String aux = errores.size() > 1? "Se han producido los siguientes errores: <br/>" : "";		
 		StringBuilder strBuilder = new StringBuilder(aux);				
 		for (FieldError fieldError : errores) {
-			strBuilder.append("&bull; " + fieldError.getDefaultMessage() + "<br/>");
+			if ( fieldError.isBindingFailure() ){
+				strBuilder.append("&bull; El valor '" + fieldError.getRejectedValue() + "' para " +
+						"el campo " + fieldError.getField()+ " no es correcto<br/>");
+			} else {
+				strBuilder.append("&bull; " + fieldError.getDefaultMessage() + "<br/>");
+			}
 		}
 		return strBuilder.toString();
-	}
+	}	
 }

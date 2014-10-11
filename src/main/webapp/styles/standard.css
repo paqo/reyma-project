@@ -407,6 +407,10 @@ fieldset th {
 	float: left; margin-left:3%; width: 30%;
 }
 
+.formafec-botonera {
+	float: left; text-align:center; width: 33%;
+}
+
 .formafec-separador-3col-label {
 	width: 50%;
 }

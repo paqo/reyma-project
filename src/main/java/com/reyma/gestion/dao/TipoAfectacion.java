@@ -38,7 +38,7 @@ public class TipoAfectacion {
 	public void setTafId(Integer id) {
         this.tafId = id;
     }
-
+	
 	@OneToMany(mappedBy = "adsTafId", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<AfectadoDomicilioSiniestro> afectadoDomicilioSiniestroes;
 

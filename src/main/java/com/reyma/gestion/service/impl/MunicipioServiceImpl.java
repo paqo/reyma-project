@@ -39,4 +39,8 @@ public class MunicipioServiceImpl implements MunicipioService {
 	public Municipio updateMunicipio(Municipio municipio) {
         return municipio.merge();
     }
+
+	public List<Municipio> findAllMunicipiosByIdProvincia(Integer idProvincia) {
+		return Municipio.findAllMunicipiosByIdProvincia(idProvincia);
+	}
 }

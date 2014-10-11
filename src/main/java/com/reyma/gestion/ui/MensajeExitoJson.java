@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class MensajeExitoJson implements Serializable {
 
+	//TODO: Hacer clase padre para mensaje general de la que hereden todos
+	
 	private static final long serialVersionUID = 4646809887831123437L;
 	private String mensaje;
 	private String titulo;

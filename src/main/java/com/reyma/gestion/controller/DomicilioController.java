@@ -83,7 +83,6 @@ public class DomicilioController {
         }
         uiModel.asMap().clear();
         domicilioService.updateDomicilio(domicilio);
-        //return "redirect:/domicilios/" + encodeUrlPathSegment(domicilio.getDomId().toString(), httpServletRequest);
         return "redirect:/domicilios/" + encodeUrlPathSegment(domicilio.getDomId().toString(), httpServletRequest);
     }
 

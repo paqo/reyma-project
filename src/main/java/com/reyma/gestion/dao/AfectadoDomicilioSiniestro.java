@@ -55,6 +55,11 @@ public class AfectadoDomicilioSiniestro {
 	public static List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes() {
         return entityManager().createQuery("SELECT o FROM AfectadoDomicilioSiniestro o", AfectadoDomicilioSiniestro.class).getResultList();
     }
+	
+	public static List<AfectadoDomicilioSiniestro> findAfectadosDomicilioBySiniestro(Integer idSiniestro) {
+        return entityManager().createQuery("SELECT o FROM AfectadoDomicilioSiniestro o WHERE o.adsSinId = " + idSiniestro, 
+        		AfectadoDomicilioSiniestro.class).getResultList();
+    }
 
 	public static List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM AfectadoDomicilioSiniestro o";

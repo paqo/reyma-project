@@ -1,5 +1,6 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -15,11 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
+import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.CompaniaService;
 import com.reyma.gestion.service.EstadoService;
 import com.reyma.gestion.service.FacturaService;
+import com.reyma.gestion.service.MunicipioService;
+import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
@@ -49,6 +55,12 @@ public class SiniestroController {
 
 	@Autowired
     TrabajoService trabajoService;
+	
+	@Autowired
+    ProvinciaService provinciaService;
+	
+	@Autowired
+    MunicipioService municipioService;
 
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -128,12 +140,30 @@ public class SiniestroController {
 	void populateEditForm(Model uiModel, Siniestro siniestro) {
         uiModel.addAttribute("siniestro", siniestro);
         addDateTimeFormatPatterns(uiModel);
-        uiModel.addAttribute("afectadodomiciliosiniestroes", afectadoDomicilioSiniestroService.findAllAfectadoDomicilioSiniestroes());
+        //TODO: ver como se hace esto "bien" (acceso a elemento de lista
+        // en 'path')
+        List<AfectadoDomicilioSiniestro> listaAfectados = afectadoDomicilioSiniestroService.findAfectadosDomicilioBySiniestro(siniestro.getSinId());
+        int cont = 1;
+        for (AfectadoDomicilioSiniestro ads : listaAfectados) {
+        	 uiModel.addAttribute("domicilio-" + cont++, ads.getAdsDomId());
+		}
+        uiModel.addAttribute("afectadodomiciliosiniestroes", listaAfectados);
+        //TODO: facturas y trabajos solamente del siniestro
+        uiModel.addAttribute("facturas", facturaService.findAllFacturas());         
+        uiModel.addAttribute("trabajoes", trabajoService.findAllTrabajoes());
+        // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
         uiModel.addAttribute("estadoes", estadoService.findAllEstadoes());
-        uiModel.addAttribute("facturas", facturaService.findAllFacturas());
         uiModel.addAttribute("tiposiniestroes", tipoSiniestroService.findAllTipoSiniestroes());
-        uiModel.addAttribute("trabajoes", trabajoService.findAllTrabajoes());
+        uiModel.addAttribute("provincias", provinciaService.findAllProvincias());
+        uiModel.addAttribute("municipios", municipioService.findAllMunicipiosByIdProvincia(41));
+        // ponemos por defecto sevilla como provincia y municipio        
+        Domicilio domicilio = new Domicilio();
+        //TODO: cargar id de sevilla desde base de datos
+        Municipio mun = municipioService.findMunicipio(5);
+        domicilio.setDomMunId(mun);
+        domicilio.setDomProvId(mun.getMunPrvId());        
+        uiModel.addAttribute("domicilio", domicilio);
     }
 
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

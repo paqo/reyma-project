@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +24,11 @@ import org.springframework.web.util.WebUtils;
 
 import com.reyma.gestion.controller.validators.AfectadoValidator;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
+import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
+import com.reyma.gestion.dao.TipoAfectacion;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.DomicilioService;
 import com.reyma.gestion.service.PersonaService;
@@ -63,7 +66,7 @@ public class AfectadosController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public String alta(@Valid Persona persona, BindingResult bindingResultP, 
-			@Valid Domicilio domicilio, BindingResult bindingResultD, Model uiModel) {		
+			@Valid Domicilio domicilio, BindingResult bindingResultD, Model uiModel, HttpServletRequest request) {		
 		List<FieldError> errores = new ArrayList<FieldError>();		
 		// lista con todos los errores de validacion de afectados
 		errores = UtilsValidacion.getErroresValidacion(bindingResultP.getFieldErrors());		
@@ -73,14 +76,34 @@ public class AfectadosController {
 		JSONSerializer serializer = new JSONSerializer();
 		
 		if ( errores.size() == 0 ){
-			if ( bindingResultP.getFieldErrors().size() > 0 || 
-					bindingResultD.getFieldErrors().size() > 0 ){
-				// tiene errores que no son de validación, mensaje de error general
-				mensajeError =  new MensajeErrorValidacionJson(errores);				
-			} else {
-				//TODO: grabar datos
-				MensajeExitoJson mensajeExito = new MensajeExitoJson();
-				return serializer.exclude("class").serialize(mensajeExito);
+			if ( bindingResultP.getFieldErrors().size() > 0 ){
+				// tiene errores que no son de validacion, mensaje de error general
+				mensajeError =  new MensajeErrorValidacionJson( bindingResultP.getFieldErrors() );				
+			} else if ( bindingResultD.getFieldErrors().size() > 0 ){
+				mensajeError =  new MensajeErrorValidacionJson( bindingResultD.getFieldErrors() );
+			} else {				
+				if ( StringUtils.isEmpty(request.getParameter("sinId")) ){
+					mensajeError = new MensajeErrorValidacionJson("No se han podido asociar los datos al siniestro");
+				} else {
+					//TODO: grabar datos
+					TipoAfectacion ta = new TipoAfectacion();
+					AfectadoDomicilioSiniestro ads = new AfectadoDomicilioSiniestro();
+					Siniestro sin = new Siniestro();
+					sin.setSinId( Integer.parseInt(request.getParameter("sinId")) );					
+					String tafId = request.getParameter("tafId");
+					ta.setTafId(new Integer(tafId));
+					// grabar persona
+					personaService.savePersona(persona);
+					// grabar domicilio
+					domicilioService.saveDomicilio(domicilio);					
+					ads.setAdsPerId(persona);
+					ads.setAdsDomId(domicilio);
+					ads.setAdsSinId(sin);
+					ads.setAdsTafId(ta);					
+					afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
+					MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con �xito");
+					return serializer.exclude("class").serialize(mensajeExito);
+				}								
 			}
 		} else {
 			// tiene errores de validacion

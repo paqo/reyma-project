@@ -27,6 +27,10 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 	public List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes() {
         return AfectadoDomicilioSiniestro.findAllAfectadoDomicilioSiniestroes();
     }
+	
+	public List<AfectadoDomicilioSiniestro> findAfectadosDomicilioBySiniestro(Integer idSiniestro){
+		return AfectadoDomicilioSiniestro.findAfectadosDomicilioBySiniestro(idSiniestro);
+	}
 
 	public List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults) {
         return AfectadoDomicilioSiniestro.findAfectadoDomicilioSiniestroEntries(firstResult, maxResults);

@@ -15,6 +15,8 @@ public interface MunicipioService {
 
 
 	public abstract List<Municipio> findAllMunicipios();
+	
+	public abstract List<Municipio> findAllMunicipiosByIdProvincia(Integer id);
 
 
 	public abstract List<Municipio> findMunicipioEntries(int firstResult, int maxResults);

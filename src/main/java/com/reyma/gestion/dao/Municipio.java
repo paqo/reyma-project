@@ -59,6 +59,13 @@ public class Municipio {
 	public static List<Municipio> findAllMunicipios() {
         return entityManager().createQuery("SELECT o FROM Municipio o", Municipio.class).getResultList();
     }
+	
+	public static List<Municipio> findAllMunicipiosByIdProvincia(Integer idProvincia) {
+		/* return entityManager().createNativeQuery("select * from municipio where mun_prv_id = " + idProvincia, 
+				Municipio.class).getResultList(); */
+		return entityManager().createQuery("SELECT m FROM Municipio m WHERE m.munPrvId = " + idProvincia, 
+				Municipio.class).getResultList();
+    }
 
 	public static List<Municipio> findAllMunicipios(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Municipio o";

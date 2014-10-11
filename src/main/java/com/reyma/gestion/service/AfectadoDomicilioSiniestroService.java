@@ -15,8 +15,11 @@ public interface AfectadoDomicilioSiniestroService {
 
 
 	public abstract List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes();
-
-
+	
+	
+	public abstract List<AfectadoDomicilioSiniestro> findAfectadosDomicilioBySiniestro(Integer idSiniestro);
+	
+	
 	public abstract List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults);
 
 

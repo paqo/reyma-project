@@ -4,13 +4,13 @@
     <definition extends="default" name="siniestroes/list">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/list.jspx"/>
     </definition>
-<definition extends="default" name="siniestroes/show">
+	<definition extends="default" name="siniestroes/show">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/show.jspx"/>
     </definition>
-<definition extends="default" name="siniestroes/create">
+	<definition extends="default" name="siniestroes/create">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/create.jspx"/>
     </definition>
-<definition extends="default" name="siniestroes/update">
+	<definition extends="default" name="siniestroes/update">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/update.jspx"/>
     </definition>
 </tiles-definitions>

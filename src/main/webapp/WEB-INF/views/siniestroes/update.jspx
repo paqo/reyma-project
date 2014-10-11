@@ -15,71 +15,15 @@
         <field:textarea field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" z=""/>
         <field:checkbox-jq field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" label="Urgente"></field:checkbox-jq>
     </form:update>
-        
+       
     <div id="tabs">
 	  <ul>
 	    <li><a href="#tabs-1">Afectados</a></li>
 	    <li><a href="#tabs-2">Trabajos</a></li>
 	    <li><a href="#tabs-3">Facturas</a></li>
 	  </ul>
-	  <div id="tabs-1">
-	  	<div id="contAfectados">
-	  		<div id="accordion">
-				<h3><a href="#">Afectado</a></h3>
-			    <div>
-			    	<!-- afectado  -->
-			  		<div class="formafec-separador-filas">
-			  			<div class="formafec-separador-col-izq">
-			  				<label class="formafec-label-izq" for="perNombre">Nombre:</label>
-			    			<input class="formafec-input-izq" name="perNombre" id="perNombre" value="nombre" />
-			  			</div>	  			
-			  			<div class="formafec-separador-col-der">
-			  				<label class="formafec-label-der" for="perNif">NIF:</label>
-			  				<input name="perNif" id="perNif" value="nif" />
-			  			</div>
-			  		</div>
-			  		<div class="formafec-separador-filas">		  			
-			  			<div class="formafec-separador-col-izq">
-			  				<label class="formafec-label-izq" for="perTlf1">Teléfono:</label>
-			    			<input style="width: 35%;" name="perTlf1" id="perTlf1" value="tlf1" />
-			  			</div>	  			
-			  			<div class="formafec-separador-col-der">
-			  				<label class="formafec-label-der" for="perTlf2">Móvil:</label>
-			  				<input name="perTlf2" id="perTlf2" value="tlf2" />
-			  			</div>
-			  		</div>		
-			  		<!-- domicilio  -->
-			    	<div class="formafec-separador-filas">
-			  			<div class="formafec-separador-col-izq">
-			  				<label class="formafec-label-izq" for="domDireccion">Dirección:</label>
-			    			<input class="formafec-input-izq" name="domDireccion" id="domDireccion" value="direc" />
-			  			</div>	  			
-			  			<div class="formafec-separador-col-der">
-			  				<label class="formafec-label-der" for="domCp">Código Postal:</label>
-			  				<input name="domCp" id="domCp" value="cp" />
-			  			</div>
-			  		</div>
-			  		<div class="formafec-separador-filas">		
-			  			<div class="formafec-separador-3col-izq">
-			  				<label class="formafec-separador-3col-label" for="domProvId">Provincia:</label>
-			  				<input name="domProvId" id="domProvId" value="prov" />
-			  			</div>	
-			  			<div class="formafec-separador-3col-der">
-			  				<label class="formafec-separador-3col-label" for="domMunId">Municipio:</label>
-			    			<input name="domMunId" id="domMunId" value="muni" />
-			  			</div>
-			  			<div class="formafec-separador-3col-der">
-			  				<label class="formafec-separador-3col-label" for="domProvId">Asegurado?</label>
-			  				<input name="asegurado" id="asegurado" value="bool" />
-			  			</div>				  					  			
-			  		</div>
-			  		<div class="formafec-separador-filas">
-			  			<button id="btnGuardarDatosAfec">Guardar</button>
-			  		</div>
-			    </div>
-			</div>	 
-	    	
-	  	</div>	   
+	  <div id="tabs-1">	  
+	  	<jsp:include page="afectado.jsp" />
 	  </div>
 	  <div id="tabs-2">
 	    <p>pestaña 2</p>	    
@@ -93,7 +37,166 @@
 		<p style="text-indent: 0px; font-size: 12px;"></p>
 	</div>
 		
-	<script type="text/javascript">
+	<script type="text/javascript">	
+	//<![CDATA[
+		function generaTituloNuevoAfectado(asegurado,perjudicado) {
+		// encabezado
+		var h3 = "Afectado";
+		if ( asegurado ){
+			h3 = "Asegurado";
+			if ( perjudicado ){
+				h3 += " / Perjudicado";
+			}
+		} else {
+			h3 = "Perjudicado";
+		}
+		return "<h3>" + h3 + "</h3>";		
+	}
+	
+	function getDatosAfecParaEnvio (datosAfectado){
+		var checkAseg = datosAfectado.find("[id^='chkAsegurado']");
+		var checkPerj = datosAfectado.find("[id^='chkPerjudicado']");
+		// logica inversa para que los estilos de los checkboxes 
+		// no sean confursos (checked -> se toma como false)
+		var tafId = "5"; // por defecto 5 -> ambos
+		if ( !checkAseg.is(":checked") && checkPerj.is(":checked") ){
+			tafId = "3"; // 3 -> asegurado
+		} else if ( checkAseg.is(":checked") && !checkPerj.is(":checked") ){
+			tafId = "4"; // 4 -> perjudicado
+		}
+		// parametros
+		var params = {
+					/* persona */  
+					"perNif" : datosAfectado.find("[id^='perNif']").val(), 
+				  	"perNombre" : datosAfectado.find("[id^='perNombre']").val(),
+				  	"perTlf1" : datosAfectado.find("[id^='perTlf1']").val(),
+				  	"perTlf2" : datosAfectado.find("[id^='perTlf2']").val(),
+				  	/* domicilio */
+				  	"domDireccion" : datosAfectado.find("[id^='domDireccion']").val(),
+				  	"domCp" : datosAfectado.find("[id^='domCp']").val(),
+				  	"domProvId" : datosAfectado.find("[id^='domProvId']").val(),
+				  	"domMunId" : datosAfectado.find("[id^='domMunId']").val(),
+				  	/* siniestro */
+				  	"sinId" : $("[name='sinId']").val(),
+				  	/* tipo afectacion */
+				  	"tafId" : tafId		  	
+		};		
+		return params;
+	}
+	
+	/* function ajustarContenidoClonado(contenidoNuevoAfectado){
+		
+		var contActual;
+		var contNuevo;
+		
+		// cambiar ids de inputs y selects
+		var inputs = contenidoNuevoAfectado.find("input,select,button,label");		
+		inputs.each(function( index, elem ) {			
+			if ( $(elem).is("label") ){
+				contActual = $(elem).attr('for').split("-")[1];
+				contNuevo = parseInt(contActual) + 1;
+				$(elem).attr('for', $(elem).attr('for').replace("-" + contActual, "-" + contNuevo));
+				if ( $(elem).attr('for').indexOf("chk") != -1 ){
+					$(elem).text( $("label[for='" +  $(elem).attr('for').replace("-" + contNuevo, "-" + contActual ) + "']").text() );
+				}
+			} else if ( $(elem).is("button") ){
+				contActual = elem.id.split("-")[1];
+				contNuevo = parseInt(contActual) + 1;
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));
+				$(elem).text( $("#" + elem.id.replace("-" + contNuevo, "-" + contActual )).text() );
+			} else {
+				contActual = elem.id.split("-")[1];
+				contNuevo = parseInt(contActual) + 1;
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));	
+			}
+		});
+		// cambiar de id el contenedor de buttonset
+		var contChks = contenidoNuevoAfectado.find("div[id^='cont_chk']");		
+		contChks.attr('id', contChks.attr('id').replace("-" + contActual, "-" + contNuevo));
+				
+		//contenidoNuevoAfectado.find("span:not('.ui-button-text')").remove();
+		contenidoNuevoAfectado.find("span").remove();
+		contenidoNuevoAfectado.find("[class^='ui-']").removeClass().removeAttr("role");	
+	} */
+	
+	function ajustarContenidoClonado(contenidoNuevoAfectado, contActual){
+		var contNuevo = contActual + 1;
+		
+		// cambiar ids de inputs y selects
+		var inputs = contenidoNuevoAfectado.find("input,select,button,label");		
+		inputs.each(function( index, elem ) {			
+			if ( $(elem).is("label") ){
+				$(elem).attr('for', $(elem).attr('for').replace("-" + contActual, "-" + contNuevo));
+				if ( $(elem).attr('for').indexOf("chk") != -1 ){
+					$(elem).text( $("label[for='" +  $(elem).attr('for').replace("-" + contNuevo, "-" + contActual ) + "']").text() );
+				}
+			} else if ( $(elem).is("button") ){
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));
+				$(elem).text( $("#" + elem.id.replace("-" + contNuevo, "-" + contActual )).text() );
+			} else {
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));	
+			}
+		});
+		// cambiar de id el contenedor de buttonset
+		var contChks = contenidoNuevoAfectado.find("div[id^='cont_chk']");		
+		contChks.attr('id', contChks.attr('id').replace("-" + contActual, "-" + contNuevo));
+
+		contenidoNuevoAfectado.find("span").remove();
+		contenidoNuevoAfectado.find("[class^='ui-']").removeClass().removeAttr("role");	
+	}
+	
+	function inicializarWidgets(contador){
+		$( "#domProvId-" + contador ).selectmenu({
+			change: function( event, data ) {
+				        console.log( "=> " + data.item.value );
+			       	}
+    	});			
+		$( "#domMunId-" + contador ).selectmenu();				
+		$( "#cont_chk-" + contador ).buttonset();
+		// boton guarda datos afectados
+		$( "#btnGuardarDatosAfec-" + contador ).button({		    	
+ 	        icons: {	 	        	
+ 	            primary: "ui-icon-disk"
+ 	        }
+		}).click(function(event) {
+	    	event.preventDefault();
+	    	var action = "/gestion/afectados/add";
+	    	
+	    	var formulario = $(this).closest("div.cont-afectados");
+	    	var params = getDatosAfecParaEnvio(formulario);
+			$.post(action, params, function( data ) {				
+				// informar del resultado
+				$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+				$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+				$( "#mensajesUsuario" ).dialog( "open" );									
+			}).error(function() {
+				$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+				$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
+				$( "#mensajesUsuario" ).dialog( "open" );				 
+			})				 	  
+	    });	
+		
+		// boton limpiar
+		$( "#btnLimpiarDatosAfec-" + contador ).button({		    	
+ 	        icons: {	 	        	
+ 	            primary: "ui-icon-cancel"
+ 	        }
+		}).click(function(event) {
+	    	event.preventDefault();
+	    	$("#cont-afectados").find("input[type='text']").val('');			 	  
+	    });	
+		
+		// eliminar afectado
+		$( "#btnEliminarDatosAfec-" + contador ).button({		    	
+ 	        icons: {	 	        	
+ 	            primary: "ui-icon-trash"
+ 	        }
+		}).click(function(event) {
+	    	event.preventDefault();
+	    	console.log("eliminar...(TODO)");	 	  
+	    });	
+	}
+	
 		$(function() {
 			
 			// crear ventana para mensajes
@@ -119,24 +222,52 @@
 		    	collapsible: true,
 		    	active: false
 		    });    
-			$( '#addAccordion' ).click( function() {
-			    //var newDiv = "<div><h3>Dom two</h3><div>Two Content</div></div>";
-			    var newDiv = '<div><h3>Dom two</h3><div><input type="text" value="se puede?" /><input type="button" value="botonaco!!" /></div></div>';
-			    $( "#accordion" ).append(newDiv)
-			    $( "#accordion" ).accordion("refresh");        
-			});		
+			
+		 	// botones asegurado/perjudicado
+			$( "[id^='cont_chk']" ).buttonset();
+			
+			// combos provincia y municipio
+			$( "[id^='domProvId']" ).selectmenu({
+					change: function( event, data ) {
+						        console.log( "=> " + data.item.value );
+					       	}
+		    });
+			
+			$( "[id^='domMunId']" ).selectmenu();
+			
+			$( '#addAccordion' ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-circle-plus"
+	 	        }
+			}).click( function() {		          
+		        var tituloNuevoAfectado = generaTituloNuevoAfectado(true, false);
+				$( "#accordion" ).append(tituloNuevoAfectado);	
+								
+				// clonar				
+				var contadorActual = $("#accordion").children("div").size();
+				var contenidoNuevoAfectado= $("#accordion").children("div").last().clone();
+				ajustarContenidoClonado(contenidoNuevoAfectado,contadorActual);				
+				$( "#accordion" ).append(contenidoNuevoAfectado);
+								
+				inicializarWidgets( contadorActual + 1 );
+				
+				$( "#accordion" ).accordion("refresh");		    
+				
+			});	
+			
+			//$( "#accordion" ).children("div").eq(1).remove()
+						
 			// boton guarda datos afectados
-			$( "#btnGuardarDatosAfec" ).button({		    	
+			$( "[id^='btnGuardarDatosAfec']" ).button({		    	
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-disk"
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
 		    	var action = "/gestion/afectados/add";
-		    	var params = {"perNif" : $("#perNif").val(), 
-		    				  "perNombre" : $("#perNombre").val(), 
-		    				  "perTlf1" : $("#perTlf1").val(),
-		    				  "perTlf2" : $("#perTlf2").val()};	
+		    	
+		    	var formulario = $(this).closest("div.cont-afectados");
+		    	var params = getDatosAfecParaEnvio(formulario);
 				$.post(action, params, function( data ) {				
 					// informar del resultado
 					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
@@ -144,11 +275,34 @@
 					$( "#mensajesUsuario" ).dialog( "open" );									
 				}).error(function() {
 					$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
-					$( "#mensajesUsuario" ).children("p").text( "Se ha producido un error guardando los datos de los afectados" );
+					$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
 					$( "#mensajesUsuario" ).dialog( "open" );				 
 				})				 	  
-		    });		
-		});		
+		    });	
+			
+			// boton limpiar
+			$( "[id^='btnLimpiarDatosAfec']" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-cancel"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	$("#cont-afectados").find("input[type='text']").val('');			 	  
+		    });	
+			
+			// eliminar afectado
+			$( "[id^='btnEliminarDatosAfec']" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-trash"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	console.log("eliminar...(TODO)");	 	  
+		    });	
+			
+		});
+	//]]>
+			
 	</script>
 	
 </div>
