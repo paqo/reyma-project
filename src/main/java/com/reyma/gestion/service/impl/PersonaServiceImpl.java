@@ -32,7 +32,7 @@ public class PersonaServiceImpl implements PersonaService {
         return Persona.findPersonaEntries(firstResult, maxResults);
     }
 
-	public void savePersona(Persona persona) {
+	public void savePersona(Persona persona) {		
         persona.persist();
     }
 

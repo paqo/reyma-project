@@ -20,13 +20,14 @@
 				  			<h3>Afectado</h3>
 						    <div class="cont-afectados">
 						    	<input type="hidden" name="adsId" id="adsId-${contador}" value="${item.adsId}" />
-						    	<!-- afectado  -->			  			
+						    	<!-- afectado  -->						    				  			
 						  		<div class="formafec-separador-filas">
 						  			<div class="formafec-separador-col-izq" id="cont_chk-${contador}">
 						  				<input type="checkbox" checked="checked" id="chkAsegurado-${contador}"><label for="chkAsegurado-${contador}">Asegurado</label>
 			  							<input type="checkbox" checked="checked" id="chkPerjudicado-${contador}"><label for="chkPerjudicado-${contador}">Perjudicado</label>
 						  			</div>
 						  		</div>
+						  		<input type="hidden" name="perId" id="perId-${contador}" value="${item.adsPerId.perId}" />
 						  		<div class="formafec-separador-filas">
 						  			<div class="formafec-separador-col-izq">
 						  				<label class="formafec-label-izq" for="perNombre-${contador}">Nombre:</label>
@@ -48,6 +49,7 @@
 						  			</div>
 						  		</div>		
 						  		<!-- domicilio  -->
+						  		<input type="hidden" name="domId" id="domId-${contador}" value="${item.adsDomId.domId}" />
 						    	<div class="formafec-separador-filas">
 						  			<div class="formafec-separador-col-izq">
 						  				<label class="formafec-label-izq" for="domDireccion-${contador}">Dirección:</label>
@@ -62,7 +64,8 @@
 						  			<div class="formafec-separador-3col-izq">
 						  				<label class="formafec-separador-3col-label" for="domProvId-${contador}">Provincia:</label>
 						  				<form:select cssStyle="width: 200px;" items="${provincias}" id="domProvId-${contador}"				  						
-						  						path="domicilio-${contador}.domProvId" itemLabel="prvDescripcion" itemValue="prvId" />	  				
+						  						path="domicilio-${contador}.domProvId" itemLabel="prvDescripcion" itemValue="prvId" />
+						  							  				
 						  			</div>	
 						  			<div class="formafec-separador-3col-der">
 						  				<label class="formafec-separador-3col-label" for="domMunId-${contador}">Municipio:</label>

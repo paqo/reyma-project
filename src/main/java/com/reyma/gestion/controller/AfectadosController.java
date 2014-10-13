@@ -85,24 +85,36 @@ public class AfectadosController {
 				if ( StringUtils.isEmpty(request.getParameter("sinId")) ){
 					mensajeError = new MensajeErrorValidacionJson("No se han podido asociar los datos al siniestro");
 				} else {
-					//TODO: grabar datos
 					TipoAfectacion ta = new TipoAfectacion();
-					AfectadoDomicilioSiniestro ads = new AfectadoDomicilioSiniestro();
-					Siniestro sin = new Siniestro();
-					sin.setSinId( Integer.parseInt(request.getParameter("sinId")) );					
 					String tafId = request.getParameter("tafId");
 					ta.setTafId(new Integer(tafId));
-					// grabar persona
-					personaService.savePersona(persona);
-					// grabar domicilio
-					domicilioService.saveDomicilio(domicilio);					
-					ads.setAdsPerId(persona);
-					ads.setAdsDomId(domicilio);
-					ads.setAdsSinId(sin);
-					ads.setAdsTafId(ta);					
-					afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
-					MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con �xito");
-					return serializer.exclude("class").serialize(mensajeExito);
+					if ( StringUtils.isNotEmpty( request.getParameter("adsId") ) ){
+						// actualizar
+						AfectadoDomicilioSiniestro ads = afectadoDomicilioSiniestroService.
+								findAfectadoDomicilioSiniestro(Integer.parseInt(request.getParameter("adsId")));						
+						// actualizar persona y domicilio
+						personaService.updatePersona(persona);
+						domicilioService.updateDomicilio(domicilio);	
+						ads.setAdsTafId(ta);	
+						afectadoDomicilioSiniestroService.updateAfectadoDomicilioSiniestro(ads);
+						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han actualizado con éxito", true);
+						return serializer.exclude("class").serialize(mensajeExito);
+					} else {				
+						AfectadoDomicilioSiniestro ads = new AfectadoDomicilioSiniestro();
+						Siniestro sin = new Siniestro();
+						sin.setSinId( Integer.parseInt(request.getParameter("sinId")) );
+						// grabar persona
+ 						personaService.savePersona(persona);
+						// grabar domicilio
+						domicilioService.saveDomicilio(domicilio);					
+						ads.setAdsPerId(persona);
+						ads.setAdsDomId(domicilio);
+						ads.setAdsSinId(sin);
+						ads.setAdsTafId(ta);					
+						afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
+						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
+						return serializer.exclude("class").serialize(mensajeExito);
+					}
 				}								
 			}
 		} else {

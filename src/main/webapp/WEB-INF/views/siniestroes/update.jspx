@@ -36,6 +36,10 @@
 	<div id="mensajesUsuario" title=" ">		
 		<p style="text-indent: 0px; font-size: 12px;"></p>
 	</div>
+	
+	<div id="mensajeConfirmacion" title="Confirmar eliminaci&oacute;n de datos">
+    	<p style="text-indent: 0px; font-size: 12px;"></p>
+	</div
 		
 	<script type="text/javascript">	
 	//<![CDATA[
@@ -66,12 +70,16 @@
 		}
 		// parametros
 		var params = {
+					/* id de afectado_domicilio si ya existe el siniestro*/
+					"adsId" : datosAfectado.find("[id^='adsId']").val(),
 					/* persona */  
+					"perId" : datosAfectado.find("[id^='perId']").val(),
 					"perNif" : datosAfectado.find("[id^='perNif']").val(), 
 				  	"perNombre" : datosAfectado.find("[id^='perNombre']").val(),
 				  	"perTlf1" : datosAfectado.find("[id^='perTlf1']").val(),
 				  	"perTlf2" : datosAfectado.find("[id^='perTlf2']").val(),
 				  	/* domicilio */
+				  	"domId" : datosAfectado.find("[id^='domId']").val(),
 				  	"domDireccion" : datosAfectado.find("[id^='domDireccion']").val(),
 				  	"domCp" : datosAfectado.find("[id^='domCp']").val(),
 				  	"domProvId" : datosAfectado.find("[id^='domProvId']").val(),
@@ -83,42 +91,7 @@
 		};		
 		return params;
 	}
-	
-	/* function ajustarContenidoClonado(contenidoNuevoAfectado){
 		
-		var contActual;
-		var contNuevo;
-		
-		// cambiar ids de inputs y selects
-		var inputs = contenidoNuevoAfectado.find("input,select,button,label");		
-		inputs.each(function( index, elem ) {			
-			if ( $(elem).is("label") ){
-				contActual = $(elem).attr('for').split("-")[1];
-				contNuevo = parseInt(contActual) + 1;
-				$(elem).attr('for', $(elem).attr('for').replace("-" + contActual, "-" + contNuevo));
-				if ( $(elem).attr('for').indexOf("chk") != -1 ){
-					$(elem).text( $("label[for='" +  $(elem).attr('for').replace("-" + contNuevo, "-" + contActual ) + "']").text() );
-				}
-			} else if ( $(elem).is("button") ){
-				contActual = elem.id.split("-")[1];
-				contNuevo = parseInt(contActual) + 1;
-				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));
-				$(elem).text( $("#" + elem.id.replace("-" + contNuevo, "-" + contActual )).text() );
-			} else {
-				contActual = elem.id.split("-")[1];
-				contNuevo = parseInt(contActual) + 1;
-				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));	
-			}
-		});
-		// cambiar de id el contenedor de buttonset
-		var contChks = contenidoNuevoAfectado.find("div[id^='cont_chk']");		
-		contChks.attr('id', contChks.attr('id').replace("-" + contActual, "-" + contNuevo));
-				
-		//contenidoNuevoAfectado.find("span:not('.ui-button-text')").remove();
-		contenidoNuevoAfectado.find("span").remove();
-		contenidoNuevoAfectado.find("[class^='ui-']").removeClass().removeAttr("role");	
-	} */
-	
 	function ajustarContenidoClonado(contenidoNuevoAfectado, contActual){
 		var contNuevo = contActual + 1;
 		
@@ -137,6 +110,9 @@
 				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));	
 			}
 		});
+		// eliminar los ids de las entidades persona, domicilio y ads
+		contenidoNuevoAfectado.find("input[id^='perId'], input[id^='domId'], input[id^='adsId']").val('');		
+		
 		// cambiar de id el contenedor de buttonset
 		var contChks = contenidoNuevoAfectado.find("div[id^='cont_chk']");		
 		contChks.attr('id', contChks.attr('id').replace("-" + contActual, "-" + contNuevo));
@@ -212,6 +188,37 @@
 	    	        }
 	    	    }
 	    	});
+	    	
+	    	// mensajes de confirmacion
+	    	$( "#mensajeConfirmacion" ).dialog({
+                    autoOpen: false,
+                    height: 150,
+                    width: 450,
+                    modal: true,
+                    resizable: false,
+                    buttons: {
+                        "Aceptar": function() {
+                                $( this ).dialog( "close" ); // funcionalidad inicial
+                        },
+                        "Cancelar": function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+                
+                
+			function eliminarDatosAfec(elem) {
+				$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
+		        // abrir confirmacion
+		        $( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+		        	"Aceptar": funcAceptar,
+		            "Cancelar": function() { $( this ).dialog( "close" ); }
+		        });
+		        $( "#mensajeConfirmacion" ).dialog( "open" );   
+			}
+	
+			// recargar página
+			document.location.reload(true);
 			
 		    // pestanas
 		    $( "#tabs" ).tabs();
@@ -304,6 +311,11 @@
 	//]]>
 			
 	</script>
+	
+	
+	
+	
+	
 	
 </div>
 
