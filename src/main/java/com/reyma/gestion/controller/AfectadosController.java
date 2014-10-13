@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
@@ -127,21 +126,6 @@ public class AfectadosController {
 	void populateEditForm(Model uiModel, Siniestro siniestro) {        
         uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());        
     }
-
-	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
-    public String createee(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        
-		//AfectadoDomicilioSiniestro ads;
-				
-		if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, siniestro);
-            return "siniestroes/create";
-        }
-        uiModel.asMap().clear();
-        siniestroService.saveSiniestro(siniestro);
-        //return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
-        return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest) + "?form";
-    }
 	
 	// este para mostrar los afectados junto al propio siniestro
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
@@ -164,14 +148,15 @@ public class AfectadosController {
     }
 
 	// posible borrar todos los afectados
-	@RequestMapping(value = "/{sinId}", method = RequestMethod.DELETE, produces = "text/html")
-    public String delete(@PathVariable("sinId") Integer sinId, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Siniestro siniestro = siniestroService.findSiniestro(sinId);
-        siniestroService.deleteSiniestro(siniestro);
+	@RequestMapping(value = "/remove/{adsId}", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public String delete(@PathVariable("adsId") Integer adsId, Model uiModel) {
+		MensajeExitoJson mensajeExito = new MensajeExitoJson("Datos eliminados con éxito");
+		JSONSerializer serializer = new JSONSerializer();
+		AfectadoDomicilioSiniestro ads = afectadoDomicilioSiniestroService.findAfectadoDomicilioSiniestro(adsId);
+        afectadoDomicilioSiniestroService.deleteAfectadoDomicilioSiniestro(ads);
         uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "5" : size.toString());
-        return "redirect:/siniestroes";
+        return serializer.exclude("class").serialize(mensajeExito);
     }
 	
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -37,13 +37,17 @@
 		<p style="text-indent: 0px; font-size: 12px;"></p>
 	</div>
 	
-	<div id="mensajeConfirmacion" title="Confirmar eliminaci&oacute;n de datos">
+	<div id="mensajeConfirmacion" title="Confirmar eliminación de datos">
     	<p style="text-indent: 0px; font-size: 12px;"></p>
-	</div
+	</div>
 		
 	<script type="text/javascript">	
 	//<![CDATA[
-		function generaTituloNuevoAfectado(asegurado,perjudicado) {
+	
+	
+	// ################## TEMPORAL, PASAR A gestion.js
+	
+	function generaTituloNuevoAfectado(asegurado,perjudicado) {
 		// encabezado
 		var h3 = "Afectado";
 		if ( asegurado ){
@@ -173,10 +177,39 @@
 	    });	
 	}
 	
+	function eliminarDatosAfec(idAds) {
+		var action = "/gestion/afectados/remove/" + idAds;
+		$.post(action, params, function( data ) {				
+			// informar del resultado
+			$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+			$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+			$( "#mensajesUsuario" ).dialog( "open" );									
+		}).error(function() {
+			$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+			$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando los datos del afectado" );
+			$( "#mensajesUsuario" ).dialog( "open" );				 
+		})	
+	}
+	
+	function confirmarEliminacionAfec(elem) {
+		var idAds = $(elem).closest("div.cont-afectados").children("input[name='adsId']").val();
+		var funcAceptar = new eliminarDatosAfec(idAds);
+		$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
+		// abrir confirmacion
+		$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+		     	"Aceptar": funcAceptar,
+		        "Cancelar": function() { $( this ).dialog( "close" ); }
+		});
+		$( "#mensajeConfirmacion" ).dialog( "open" );   
+	}
+	
+	
+	//############################ FIN TEMPORAL
+	
 		$(function() {
 			
 			// crear ventana para mensajes
-			var dialog = $( "#mensajesUsuario" ).dialog({
+			$( "#mensajesUsuario" ).dialog({
 	    	    autoOpen: false,
 	    	    height: 200,
 	    		width: 500,
@@ -205,20 +238,9 @@
                         }
                     }
                 });
-                
-                
-			function eliminarDatosAfec(elem) {
-				$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
-		        // abrir confirmacion
-		        $( "#mensajeConfirmacion" ).dialog("option", "buttons", {
-		        	"Aceptar": funcAceptar,
-		            "Cancelar": function() { $( this ).dialog( "close" ); }
-		        });
-		        $( "#mensajeConfirmacion" ).dialog( "open" );   
-			}
-	
+            
 			// recargar página
-			document.location.reload(true);
+			//document.location.reload(true);
 			
 		    // pestanas
 		    $( "#tabs" ).tabs();
@@ -298,13 +320,15 @@
 		    });	
 			
 			// eliminar afectado
+			//TODO: pasarlo a una funcion para 
+			// reusar en inicializarWidgets
 			$( "[id^='btnEliminarDatosAfec']" ).button({		    	
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-trash"
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	console.log("eliminar...(TODO)");	 	  
+		    	confirmarEliminacionAfec(this); 	  
 		    });	
 			
 		});
