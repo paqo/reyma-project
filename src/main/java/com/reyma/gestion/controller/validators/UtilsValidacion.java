@@ -11,6 +11,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import com.aeat.valida.Validador;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 
@@ -18,6 +19,8 @@ public class UtilsValidacion {
 
 	private static ResourceBundleMessageSource mensajes;	
 	private static Locale local = new Locale("es", "ES");
+	public static Validador validadorNIF = new Validador();
+	
 	static {
 		mensajes = new ResourceBundleMessageSource();
 		mensajes.setBasename("mensajes-validacion");
@@ -88,7 +91,7 @@ public class UtilsValidacion {
 	}
 	
 	public static boolean esNIFValido(String nif) {		
-		return true;
+		return validadorNIF.checkNif(nif) == Validador.NIF_OK;
 	}
 	
 	public static String obtenerMensaje(String codigo, Object[] argumentos){
