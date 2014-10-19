@@ -1,4 +1,3 @@
-<%@page import="com.reyma.gestion.dao.Provincia"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -9,7 +8,7 @@
     
     	<div><!-- contenedor general -->
     	
-	  		<div id="accordion">
+	  		<div id="accordion-afectado">
 	  			<c:choose>
 	  				<c:when test="${fn:length(afectadodomiciliosiniestroes) == 0}">
 	  					<jsp:include flush="false" page="afectado_inicial.jsp"></jsp:include>

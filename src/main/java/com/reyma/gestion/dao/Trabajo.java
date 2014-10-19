@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -54,6 +56,11 @@ public class Trabajo {
         }
         return entityManager().createQuery(jpaQuery, Trabajo.class).getResultList();
     }
+	
+	public static List<Trabajo> findTrabajosByIdSiniestro(Integer idSiniestro) {
+		String jpaQuery = "SELECT o FROM Trabajo o WHERE o.traSinId = " + idSiniestro;
+		return entityManager().createQuery(jpaQuery, Trabajo.class).getResultList();
+	}
 
 	public static Trabajo findTrabajo(Integer traId) {
         if (traId == null) return null;
@@ -178,4 +185,5 @@ public class Trabajo {
 	public void setTraId(Integer id) {
         this.traId = id;
     }
+	
 }

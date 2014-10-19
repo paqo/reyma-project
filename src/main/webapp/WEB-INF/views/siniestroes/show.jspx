@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <page:show id="ps_com_reyma_gestion_dao_Siniestro" object="${siniestro}" path="/siniestroes" z="K/CAcXuFIDsIJisbwj8dfBAXA/I=">
@@ -12,6 +13,16 @@
         <field:display calendar="true" dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="s_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" object="${siniestro}" z="Z3TIxd14jnDZe6su4oDyky2PI48="/>
         <field:display field="sinDescripcion" id="s_com_reyma_gestion_dao_Siniestro_sinDescripcion" object="${siniestro}" z="RmtCqnqlBxcYSc4gClCn2KE7rP4="/>
         <field:display field="sinObservaciones" id="s_com_reyma_gestion_dao_Siniestro_sinObservaciones" object="${siniestro}" z="sOBTkyStQKyNZw08mF9jF3QeJiI="/>
-        <field:display field="sinUrgente" id="s_com_reyma_gestion_dao_Siniestro_sinUrgente" object="${siniestro}" z="TMtQ90SXcDeikDJlQ4J5+7eUF5c="/>
+        <div id="_s_com_reyma_gestion_dao_Siniestro_sinUrgente_id">
+			<label for="_sinUrgente_id">Urgente:</label>
+			<c:choose>
+				<c:when test="${siniestro.sinUrgente == 1}">
+					<div id="_s_com_reyma_gestion_dao_Siniestro_sinUrgente_sinUrgente_id" class="box">Si</div>
+				</c:when>
+				<c:otherwise>
+					<div id="_s_com_reyma_gestion_dao_Siniestro_sinUrgente_sinUrgente_id" class="box">No</div>
+				</c:otherwise>
+	 		</c:choose>
+		</div>
     </page:show>
 </div>

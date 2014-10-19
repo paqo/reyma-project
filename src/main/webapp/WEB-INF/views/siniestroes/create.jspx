@@ -2,22 +2,16 @@
 <div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <form:create id="fc_com_reyma_gestion_dao_Siniestro" modelAttribute="siniestro" path="/siniestroes" render="${empty dependencies}" z="3YawbkX4lo4wiNZayVzA3vR2wBs=">
-        <!-- <field:simple field="afectadoDomicilioSiniestroes" id="c_com_reyma_gestion_dao_Siniestro_afectadoDomicilioSiniestroes" messageCode="entity_reference_not_managed" messageCodeAttribute="Afectado Domicilio Siniestro" z="4nz83Yq0Lx3MES7odhGujSRfCAA="/>
-        <field:simple field="facturas" id="c_com_reyma_gestion_dao_Siniestro_facturas" messageCode="entity_reference_not_managed" messageCodeAttribute="Factura" z="w5+9NWEcTMK1bBGI28I95kWMtBU="/>
-        <field:simple field="trabajoes" id="c_com_reyma_gestion_dao_Siniestro_trabajoes" messageCode="entity_reference_not_managed" messageCodeAttribute="Trabajo" z="41To2RlDY57o0aL/NFKklU7ApMs="/>-->
+    <form:create id="fc_com_reyma_gestion_dao_Siniestro" modelAttribute="siniestro" path="/siniestroes" render="${empty dependencies}" z="3YawbkX4lo4wiNZayVzA3vR2wBs=">        
         <field:select field="sinComId" id="c_com_reyma_gestion_dao_Siniestro_sinComId" itemValue="comId" items="${companias}" path="/companias" z="SjYzr7dDR0LRftttBdFO01OnePs="/>
         <field:select field="sinEstId" id="c_com_reyma_gestion_dao_Siniestro_sinEstId" itemValue="estId" items="${estadoes}" path="/estadoes" z="ibDK+CwoLkdDWmlBEdhJsOrTLEs="/>
         <field:select field="sinTsiId" id="c_com_reyma_gestion_dao_Siniestro_sinTsiId" itemValue="tsiId" items="${tiposiniestroes}" path="/tiposiniestroes" z="in8P0BjIRnlRlYzdKKer43tDldQ="/>
         <field:input field="sinNumero" id="c_com_reyma_gestion_dao_Siniestro_sinNumero" required="true" z="6uE23ueMQy71iBvAm1yhZLxjNKU="/>
         <field:input field="sinPoliza" id="c_com_reyma_gestion_dao_Siniestro_sinPoliza" z="TCet7X738WRMzl998GPd8PKhlaM="/>
         <field:datetime dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="c_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>
-        <!-- <field:input field="sinDescripcion" id="c_com_reyma_gestion_dao_Siniestro_sinDescripcion" z="wsOe60kdDp48ARLtP5+LBYo2d/Q="/> -->
+        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>        
         <field:textarea field="sinDescripcion" id="c_com_reyma_gestion_dao_Siniestro_sinDescripcion" z=""/>
         <field:input field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" z="TlafDkHQ3G+DxzcmBSLCT90eY0w="/>
-        <!-- <field:input field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" validationMessageCode="field_invalid_integer" z="S/8ajvLAUyI1/0pyl8/MbqDDCwQ="/> -->
-        <field:checkbox-jq field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" label="Urgente"></field:checkbox-jq>
+        <field:iphone-checkbox field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" label="Urgente"></field:iphone-checkbox>
     </form:create>
-    <!-- <form:dependency dependencies="${dependencies}" id="d_com_reyma_gestion_dao_Siniestro" render="${not empty dependencies}" z="kr60UFbyZ+dP6TOHzmix41eLUJM="/> -->
 </div>

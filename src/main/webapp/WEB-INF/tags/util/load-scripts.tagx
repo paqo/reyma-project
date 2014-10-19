@@ -8,12 +8,15 @@
   <spring:url value="/resources/dijit/themes/tundra/tundra.css" var="tundra_url" />
   <spring:url value="/resources/spring/Spring.js" var="spring_url" />
   <spring:url value="/resources/spring/Spring-Dojo.js" var="spring_dojo_url" />
-  <spring:url value="/resources/images/favicon.ico" var="favicon" />  
-  <spring:url value="/resources/js/jquery.min.js" var="jquery" />  
+  <spring:url value="/resources/images/favicon.ico" var="favicon" />
+  <spring:url value="/resources/js/jquery.min.js" var="jquery" />
   <spring:url value="/resources/js/jquery-ui.min.js" var="jquery_ui" />
-  <spring:url value="/resources/styles/jquery-ui.css" var="jquery_ui_css" />  
+  <spring:url value="/resources/js/checkswitch.js" var="iphone_chk" />
+  <spring:url value="/resources/styles/jquery-ui.css" var="jquery_ui_css" />
+  <spring:url value="/resources/styles/checkswitch.css" var="iphone_chk_css" />  
   <link rel="stylesheet" type="text/css" href="${tundra_url}" />
   <link rel="stylesheet" type="text/css" href="${jquery_ui_css}" />
+  <link rel="stylesheet" type="text/css" href="${iphone_chk_css}" />
   <link rel="stylesheet" type="text/css" media="screen" href="${roo_css_url}" />  
   <link rel="SHORTCUT ICON" href="${favicon}" />
 
@@ -30,7 +33,8 @@
   <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   
   <script type="text/javascript" src="${jquery}"><!-- required for FF3 and Opera --></script>
-  <script type="text/javascript" src="${jquery_ui}"><!-- required for FF3 and Opera --></script>  
+  <script type="text/javascript" src="${jquery_ui}"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" src="${iphone_chk}"><!-- required for FF3 and Opera --></script>
   
   <script language="JavaScript" type="text/javascript">dojo.require("dojo.parser");</script>    
 

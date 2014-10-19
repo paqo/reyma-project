@@ -15,6 +15,9 @@ public interface TrabajoService {
 
 
 	public abstract List<Trabajo> findAllTrabajoes();
+	
+	
+	public abstract List<Trabajo> findTrabajosByIdSiniestro(Integer id);
 
 
 	public abstract List<Trabajo> findTrabajoEntries(int firstResult, int maxResults);

@@ -27,6 +27,10 @@ public class TrabajoServiceImpl implements TrabajoService {
 	public List<Trabajo> findAllTrabajoes() {
         return Trabajo.findAllTrabajoes();
     }
+	
+	public List<Trabajo> findTrabajosByIdSiniestro(Integer id) {
+		return Trabajo.findTrabajosByIdSiniestro(id);
+	}
 
 	public List<Trabajo> findTrabajoEntries(int firstResult, int maxResults) {
         return Trabajo.findTrabajoEntries(firstResult, maxResults);
@@ -39,4 +43,5 @@ public class TrabajoServiceImpl implements TrabajoService {
 	public Trabajo updateTrabajo(Trabajo trabajo) {
         return trabajo.merge();
     }
+	
 }

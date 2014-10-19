@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
@@ -92,6 +93,15 @@ public class UtilsValidacion {
 	
 	public static boolean esNIFValido(String nif) {		
 		return validadorNIF.checkNif(nif) == Validador.NIF_OK;
+	}
+	
+	public static boolean ignorarErrorBooleanBinding(BindingResult bindingResult){
+		if ( bindingResult.getFieldErrorCount() == 1 
+				&& bindingResult.getFieldError("sinUrgente") != null 
+	        	&& "on".equalsIgnoreCase(bindingResult.getFieldError("sinUrgente").getRejectedValue().toString()) ){
+			return true;
+		}
+		return false;
 	}
 	
 	public static String obtenerMensaje(String codigo, Object[] argumentos){

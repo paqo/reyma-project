@@ -8,7 +8,7 @@ public interface AfectadoDomicilioSiniestroService {
 	public abstract long countAllAfectadoDomicilioSiniestroes();
 
 
-	public abstract void deleteAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro);
+	public abstract boolean deleteAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro);
 
 
 	public abstract AfectadoDomicilioSiniestro findAfectadoDomicilioSiniestro(Integer id);

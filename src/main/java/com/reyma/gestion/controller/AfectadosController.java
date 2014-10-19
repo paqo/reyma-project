@@ -33,6 +33,7 @@ import com.reyma.gestion.service.DomicilioService;
 import com.reyma.gestion.service.PersonaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
+import com.reyma.gestion.ui.MensajeDialogoUIBase;
 import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 
@@ -111,7 +112,7 @@ public class AfectadosController {
 						ads.setAdsSinId(sin);
 						ads.setAdsTafId(ta);					
 						afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
-						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
+						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con �xito", true);
 						return serializer.exclude("class").serialize(mensajeExito);
 					}
 				}								
@@ -123,40 +124,20 @@ public class AfectadosController {
 		return serializer.exclude("class").serialize(mensajeError); // class siempre lo lleva, hay que excluir 
     }	
 	
-	void populateEditForm(Model uiModel, Siniestro siniestro) {        
-        uiModel.addAttribute("tiposAfectacion", tipoAfectacionService.findAllTipoAfectacions());        
-    }
 	
-	// este para mostrar los afectados junto al propio siniestro
-	@RequestMapping(value = "/{sinId}", produces = "text/html")
-    public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
-        uiModel.addAttribute("siniestro", siniestroService.findSiniestro(sinId));
-        uiModel.addAttribute("itemId", sinId);
-        return "siniestroes/show";
-    }
-
-	// actualizar datos PUT?
-	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")
-    public String update(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, siniestro);
-            return "siniestroes/update";
-        }
-        uiModel.asMap().clear();
-        siniestroService.updateSiniestro(siniestro);
-        return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
-    }
-
-	// posible borrar todos los afectados
 	@RequestMapping(value = "/remove/{adsId}", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public String delete(@PathVariable("adsId") Integer adsId, Model uiModel) {
-		MensajeExitoJson mensajeExito = new MensajeExitoJson("Datos eliminados con éxito");
+		MensajeDialogoUIBase mensaje;
 		JSONSerializer serializer = new JSONSerializer();
 		AfectadoDomicilioSiniestro ads = afectadoDomicilioSiniestroService.findAfectadoDomicilioSiniestro(adsId);
-        afectadoDomicilioSiniestroService.deleteAfectadoDomicilioSiniestro(ads);
-        uiModel.asMap().clear();
-        return serializer.exclude("class").serialize(mensajeExito);
+        if (afectadoDomicilioSiniestroService.deleteAfectadoDomicilioSiniestro(ads)){
+        	uiModel.asMap().clear();
+        	mensaje = new MensajeExitoJson("Datos eliminados con éxito", true);
+        } else {
+        	mensaje = new MensajeErrorValidacionJson("Error eliminando datos del afectado");
+        }
+        return serializer.exclude("class").serialize(mensaje);
     }
 	
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

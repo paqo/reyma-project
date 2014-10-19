@@ -414,3 +414,44 @@ fieldset th {
 .formafec-separador-3col-label {
 	width: 50%;
 }
+
+/* ####### ESTILOS FORMULARIO TRABAJOS ######### */
+.formtra-label-izq {
+	width: 18%;
+}
+
+.formtra-label-der {
+	width: 20%;
+}
+
+.formtra-input-izq {
+	width: 80%;
+}
+
+.formtra-separador-filas {
+	float:left; margin-top: 1em; width: 99%;
+}
+
+.formtra-separador-col-izq {
+	float:left; width: 60%;
+}
+
+.formtra-separador-col-der {
+	float:left; margin-left: 3%; width: 35%;
+}
+
+.formtra-separador-3col-izq {
+	float: left; width: 30%;
+}
+
+.formtra-separador-3col-der {
+	float: left; margin-left:3%; width: 30%;
+}
+
+.formtra-botonera {
+	float: left; text-align:center; width: 33%;
+}
+
+.formtra-separador-3col-label {
+	width: 50%;
+}

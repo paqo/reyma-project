@@ -16,8 +16,14 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
         return AfectadoDomicilioSiniestro.countAfectadoDomicilioSiniestroes();
     }
 
-	public void deleteAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro) {
-        afectadoDomicilioSiniestro.remove();
+	public boolean deleteAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro) {
+        try {
+			afectadoDomicilioSiniestro.remove();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+        return true;
     }
 
 	public AfectadoDomicilioSiniestro findAfectadoDomicilioSiniestro(Integer id) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
@@ -105,9 +106,17 @@ public class SiniestroController {
 
 	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String update(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, siniestro);
-            return "siniestroes/update";
+        
+		if (bindingResult.hasErrors()) {			
+			if ( UtilsValidacion.ignorarErrorBooleanBinding(bindingResult) ){
+	        	// no es realmente error, valor "on" para el checkbox
+				// TODO: modificar la manera en que se hace el binding
+				// (no se pueden usar converters de jpa por la version usada)
+				siniestro.setSinUrgente((short)1);
+			} else {
+		    	populateEditForm(uiModel, siniestro);
+	            return "siniestroes/update";
+		    }            
         }
         uiModel.asMap().clear();
         siniestroService.updateSiniestro(siniestro);
@@ -147,10 +156,13 @@ public class SiniestroController {
         for (AfectadoDomicilioSiniestro ads : listaAfectados) {
         	 uiModel.addAttribute("domicilio-" + cont++, ads.getAdsDomId());
 		}
+        // afectados
         uiModel.addAttribute("afectadodomiciliosiniestroes", listaAfectados);
-        //TODO: facturas y trabajos solamente del siniestro
+        // trabajos
+        uiModel.addAttribute("trabajos", trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId()) );
+        //TODO: facturas solamente del siniestro
         uiModel.addAttribute("facturas", facturaService.findAllFacturas());         
-        uiModel.addAttribute("trabajoes", trabajoService.findAllTrabajoes());
+        
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
         uiModel.addAttribute("estadoes", estadoService.findAllEstadoes());
