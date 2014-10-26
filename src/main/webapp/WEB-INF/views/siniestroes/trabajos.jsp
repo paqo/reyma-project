@@ -5,8 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="field" tagdir="/WEB-INF/tags/form/fields"%>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
     	<div><!-- contenedor general -->
     	
@@ -26,33 +25,29 @@
 						  			<!-- operario  -->
 						  				<input type="hidden" name="opeId" id="opeId-${contador}" value="${item.traOpeId.opeId}" />
 						  				<label class="formtra-label-izq" for="opeNombrePila-${contador}">Operario:</label>
-						    			<input type="text" class="formtra-input-izq" name="opeNombrePila" id="opeNombrePila-${contador}" 
-						    				   value="${item.traOpeId.opeNombrePila}" />
+						    			<form:select cssStyle="width: 200px;" items="${operarios}" id="traOpeId-${contador}"				  						
+						  						path="trabajo-${contador}.traOpeId" itemLabel="opeNombrePila" itemValue="opeId" />						    			
 						  			</div>	  			
 									<div class="formtra-separador-3col-izq">
 									<!-- oficio  -->
 										<input type="hidden" name="ofiId" id="ofiId-${contador}" value="${item.traOfiId.ofiId}" />
-						  				<label class="formtra-label-der" for="ofiDescripcion-${contador}">Oficio:</label>
-						  				<input type="text" class="formtra-input-izq" name="ofiDescripcion" id="ofiDescripcion-${contador}" 
-						  					   value="${item.traOfiId.ofiDescripcion}" />
+						  				<label class="formtra-label-der" for="ofiDescripcion-${contador}">Oficio:</label>						  				
+						  				<form:select cssStyle="width: 200px;" items="${oficios}" id="traOfiId-${contador}"				  						
+						  						path="trabajo-${contador}.traOfiId" itemLabel="ofiDescripcion" itemValue="ofiId" />
 						  			</div>
 						  			<div class="formtra-separador-3col-izq">
 									<!-- fecha  -->
-						  				<label class="formtra-label-der" for="traFecha-${contador}">Fecha:</label>
-						  				<%--
+						  				<label class="formtra-label-der" for="traFecha-${contador}">Fecha:</label>						  				
 						  				<input type="text" class="formtra-input-izq" name="traFecha" id="traFecha-${contador}" 
-						  					   value="<fmt:formatDate pattern='dd/MM/yyyy HH:mm' value='${item.traFecha.time}' />" /> 
-						  				--%>
-						  				<field:datetime dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="traFecha" 
-						  				id="traFecha-${contador}" required="true" z=""/>
+						  					   value="<fmt:formatDate pattern='dd/MM/yyyy HH:mm' value='${item.traFecha.time}' />" />
 						  			</div>
 						  		</div>						  		
 						  		<div class="formtra-separador-filas">						  			
 							  		<div class="formafec-botonera">
-							  			<button id="btnGuardarDatosAfec-${contador}">Guardar</button>
+							  			<button id="btnGuardarDatosTrabajo-${contador}">Guardar</button>
 							  		</div>
 							  		<div class="formtra-botonera">
-							  			<button id="btnEliminarDatosAfec-${contador}">Eliminar</button>
+							  			<button id="btnEliminarDatosTrabajo-${contador}">Eliminar</button>
 							  		</div>	
 						  		</div>			  		
 						    </div>
@@ -61,7 +56,7 @@
 	  			</c:choose>				
 			</div>
 			<div style="margin-top: 1em;">
-				<button id="addAccordion">Añadir trabajo</button>
+				<button id="addTrabajo">Añadir trabajo</button>
 			</div>
 	  	</div>	<!-- fin contenedor general -->
 	  	

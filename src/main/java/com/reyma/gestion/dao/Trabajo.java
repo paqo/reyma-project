@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.reyma.gestion.util.Fechas;
+
 @Configurable
 @Entity
 @Table(name = "TRABAJO")
@@ -138,7 +140,7 @@ public class Trabajo {
 	@Column(name = "tra_fecha")
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(style = "MM")
+	@DateTimeFormat( pattern = Fechas.FORMATO_FECHA_DDMMYYYYHHMM)
     private Calendar traFecha;
 
 	public Oficio getTraOfiId() {

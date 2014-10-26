@@ -110,9 +110,10 @@ public class AfectadosController {
 						ads.setAdsPerId(persona);
 						ads.setAdsDomId(domicilio);
 						ads.setAdsSinId(sin);
-						ads.setAdsTafId(ta);					
+						ads.setAdsTafId(ta);		
+						//TODO: esto debe devolver true or false
 						afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
-						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con �xito", true);
+						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
 						return serializer.exclude("class").serialize(mensajeExito);
 					}
 				}								
@@ -131,7 +132,7 @@ public class AfectadosController {
 		MensajeDialogoUIBase mensaje;
 		JSONSerializer serializer = new JSONSerializer();
 		AfectadoDomicilioSiniestro ads = afectadoDomicilioSiniestroService.findAfectadoDomicilioSiniestro(adsId);
-        if (afectadoDomicilioSiniestroService.deleteAfectadoDomicilioSiniestro(ads)){
+        if ( afectadoDomicilioSiniestroService.deleteAfectadoDomicilioSiniestro(ads) ){
         	uiModel.asMap().clear();
         	mensaje = new MensajeExitoJson("Datos eliminados con éxito", true);
         } else {

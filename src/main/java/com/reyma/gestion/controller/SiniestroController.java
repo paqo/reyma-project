@@ -20,12 +20,17 @@ import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
+import com.reyma.gestion.dao.Oficio;
+import com.reyma.gestion.dao.Operario;
 import com.reyma.gestion.dao.Siniestro;
+import com.reyma.gestion.dao.Trabajo;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.CompaniaService;
 import com.reyma.gestion.service.EstadoService;
 import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.MunicipioService;
+import com.reyma.gestion.service.OficioService;
+import com.reyma.gestion.service.OperarioService;
 import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
@@ -47,6 +52,12 @@ public class SiniestroController {
 
 	@Autowired
     EstadoService estadoService;
+	
+	@Autowired
+    OficioService oficioService;
+	
+	@Autowired
+	OperarioService operarioService;
 
 	@Autowired
     FacturaService facturaService;
@@ -149,17 +160,16 @@ public class SiniestroController {
 	void populateEditForm(Model uiModel, Siniestro siniestro) {
         uiModel.addAttribute("siniestro", siniestro);
         addDateTimeFormatPatterns(uiModel);
-        //TODO: ver como se hace esto "bien" (acceso a elemento de lista
-        // en 'path')
-        List<AfectadoDomicilioSiniestro> listaAfectados = afectadoDomicilioSiniestroService.findAfectadosDomicilioBySiniestro(siniestro.getSinId());
-        int cont = 1;
-        for (AfectadoDomicilioSiniestro ads : listaAfectados) {
-        	 uiModel.addAttribute("domicilio-" + cont++, ads.getAdsDomId());
-		}
+        
+        List<AfectadoDomicilioSiniestro> afectados = 
+        		afectadoDomicilioSiniestroService.findAfectadosDomicilioBySiniestro(siniestro.getSinId());
+        
+        List<Trabajo> trabajos = trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId());
+        
         // afectados
-        uiModel.addAttribute("afectadodomiciliosiniestroes", listaAfectados);
+        uiModel.addAttribute("afectadodomiciliosiniestroes", afectados);
         // trabajos
-        uiModel.addAttribute("trabajos", trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId()) );
+        uiModel.addAttribute("trabajos", trabajos);
         //TODO: facturas solamente del siniestro
         uiModel.addAttribute("facturas", facturaService.findAllFacturas());         
         
@@ -167,6 +177,7 @@ public class SiniestroController {
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
         uiModel.addAttribute("estadoes", estadoService.findAllEstadoes());
         uiModel.addAttribute("tiposiniestroes", tipoSiniestroService.findAllTipoSiniestroes());
+        
         uiModel.addAttribute("provincias", provinciaService.findAllProvincias());
         uiModel.addAttribute("municipios", municipioService.findAllMunicipiosByIdProvincia(41));
         // ponemos por defecto sevilla como provincia y municipio        
@@ -176,7 +187,30 @@ public class SiniestroController {
         domicilio.setDomMunId(mun);
         domicilio.setDomProvId(mun.getMunPrvId());        
         uiModel.addAttribute("domicilio", domicilio);
+        uiModel.addAttribute("municipios", municipioService.findAllMunicipiosByIdProvincia(41));
+        
+        uiModel.addAttribute("trabajo-1", new Trabajo());
+        uiModel.addAttribute("oficios", oficioService.findAllOficios() );
+        uiModel.addAttribute("operarios", operarioService.findAllOperarios() );
+        
+        fixPathDesplegables(uiModel, siniestro, afectados, trabajos);
+        
+        
     }
+
+	private void fixPathDesplegables(Model uiModel,
+			Siniestro siniestro, List<AfectadoDomicilioSiniestro> listaAfectados, List<Trabajo> trabajos) {
+		//TODO: ver como se hace esto "bien" (acceso a elemento de lista en 'path')        
+        int cont = 1;
+        for (AfectadoDomicilioSiniestro ads : listaAfectados) {
+        	 uiModel.addAttribute("domicilio-" + cont++, ads.getAdsDomId());
+		}
+        
+        cont = 1;
+        for (Trabajo trabajo : trabajos) {
+        	 uiModel.addAttribute("trabajo-" + cont++, trabajo);
+		}
+	}
 
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
         String enc = httpServletRequest.getCharacterEncoding();

@@ -89,7 +89,7 @@
 	  			</c:choose>				
 			</div>
 			<div style="margin-top: 1em;">
-				<button id="addAccordion">Añadir afectado</button>
+				<button id="addAfectado">Añadir afectado</button>
 			</div>
 	  	</div>	<!-- fin contenedor general -->
 	  	

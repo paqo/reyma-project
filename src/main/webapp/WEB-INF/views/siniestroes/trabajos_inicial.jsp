@@ -12,14 +12,14 @@
 						  	<div class="formtra-separador-3col-izq">
 						  		<!-- operario  -->						  		
 						  		<label class="formtra-label-izq" for="opeNombrePila-1">Operario:</label>
-						    	<input type="text" class="formtra-input-izq" name="opeNombrePila" id="opeNombrePila-1" 
-						    		   value="${item.traOpeId.opeNombrePila}" />
+						  		<form:select cssStyle="width: 200px;" items="${operarios}" id="traOpeId-1"				  						
+						  						path="trabajo-1.traOpeId" itemLabel="opeNombrePila" itemValue="opeId" />
 						  	</div>	  			
 							<div class="formtra-separador-3col-izq">
 								<!-- oficio  -->
 						  		<label class="formtra-label-der" for="ofiDescripcion-1">Oficio:</label>
-						  		<input type="text" class="formtra-input-izq" name="ofiDescripcion" id="ofiDescripcion-1" 
-						  			   value="${item.traOfiId.ofiDescripcion}" />
+						  		<form:select cssStyle="width: 200px;" items="${oficios}" id="traOfiId-1"				  						
+						  						path="trabajo-1.traOfiId" itemLabel="ofiDescripcion" itemValue="ofiId" />
 						  	</div>
 						  	<div class="formtra-separador-3col-izq">
 								<!-- fecha  -->

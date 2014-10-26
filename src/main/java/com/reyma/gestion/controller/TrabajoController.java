@@ -1,10 +1,4 @@
 package com.reyma.gestion.controller;
-import com.reyma.gestion.dao.Trabajo;
-import com.reyma.gestion.service.OficioService;
-import com.reyma.gestion.service.OperarioService;
-import com.reyma.gestion.service.SiniestroService;
-import com.reyma.gestion.service.TrabajoService;
-
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-@RequestMapping("/trabajoes")
+import com.reyma.gestion.dao.Trabajo;
+import com.reyma.gestion.service.OficioService;
+import com.reyma.gestion.service.OperarioService;
+import com.reyma.gestion.service.SiniestroService;
+import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.MensajeExitoJson;
+
+import flexjson.JSONSerializer;
+
+@RequestMapping("/trabajos")
 @Controller
 public class TrabajoController {
 
@@ -43,17 +47,29 @@ public class TrabajoController {
     public String create(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, trabajo);
-            return "trabajoes/create";
+            return "trabajos/create";
         }
         uiModel.asMap().clear();
         trabajoService.saveTrabajo(trabajo);
-        return "redirect:/trabajoes/" + encodeUrlPathSegment(trabajo.getTraId().toString(), httpServletRequest);
+        return "redirect:/trabajos/" + encodeUrlPathSegment(trabajo.getTraId().toString(), httpServletRequest);
+    }
+	
+	
+	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+    public String alta(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {        
+		JSONSerializer serializer = new JSONSerializer();
+		//MensajeErrorValidacionJson mensajeError = null;
+		//TODO: VALIDACIONES
+		trabajoService.saveTrabajo(trabajo);
+		MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos del trabajo se han guardado con éxito", true);
+		return serializer.exclude("class").serialize(mensajeExito);
     }
 
 	@RequestMapping(params = "form", produces = "text/html")
     public String createForm(Model uiModel) {
         populateEditForm(uiModel, new Trabajo());
-        return "trabajoes/create";
+        return "trabajos/create";
     }
 
 	@RequestMapping(value = "/{traId}", produces = "text/html")
@@ -61,7 +77,7 @@ public class TrabajoController {
         addDateTimeFormatPatterns(uiModel);
         uiModel.addAttribute("trabajo", trabajoService.findTrabajo(traId));
         uiModel.addAttribute("itemId", traId);
-        return "trabajoes/show";
+        return "trabajos/show";
     }
 
 	@RequestMapping(produces = "text/html")
@@ -69,31 +85,31 @@ public class TrabajoController {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("trabajoes", Trabajo.findTrabajoEntries(firstResult, sizeNo, sortFieldName, sortOrder));
+            uiModel.addAttribute("trabajos", Trabajo.findTrabajoEntries(firstResult, sizeNo, sortFieldName, sortOrder));
             float nrOfPages = (float) trabajoService.countAllTrabajoes() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("trabajoes", Trabajo.findAllTrabajoes(sortFieldName, sortOrder));
+            uiModel.addAttribute("trabajos", Trabajo.findAllTrabajoes(sortFieldName, sortOrder));
         }
         addDateTimeFormatPatterns(uiModel);
-        return "trabajoes/list";
+        return "trabajos/list";
     }
 
 	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String update(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, trabajo);
-            return "trabajoes/update";
+            return "trabajos/update";
         }
         uiModel.asMap().clear();
         trabajoService.updateTrabajo(trabajo);
-        return "redirect:/trabajoes/" + encodeUrlPathSegment(trabajo.getTraId().toString(), httpServletRequest);
+        return "redirect:/trabajos/" + encodeUrlPathSegment(trabajo.getTraId().toString(), httpServletRequest);
     }
 
 	@RequestMapping(value = "/{traId}", params = "form", produces = "text/html")
     public String updateForm(@PathVariable("traId") Integer traId, Model uiModel) {
         populateEditForm(uiModel, trabajoService.findTrabajo(traId));
-        return "trabajoes/update";
+        return "trabajos/update";
     }
 
 	@RequestMapping(value = "/{traId}", method = RequestMethod.DELETE, produces = "text/html")
@@ -103,7 +119,7 @@ public class TrabajoController {
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/trabajoes";
+        return "redirect:/trabajos";
     }
 
 	void addDateTimeFormatPatterns(Model uiModel) {
