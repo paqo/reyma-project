@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Trabajo;
 import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.service.OperarioService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.MensajeDialogoUIBase;
+import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 
 import flexjson.JSONSerializer;
@@ -63,6 +66,17 @@ public class TrabajoController {
 		//TODO: VALIDACIONES
 		trabajoService.saveTrabajo(trabajo);
 		MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos del trabajo se han guardado con éxito", true);
+		return serializer.exclude("class").serialize(mensajeExito);
+    }
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public String actualizar(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {        
+		JSONSerializer serializer = new JSONSerializer();
+		//MensajeErrorValidacionJson mensajeError = null;
+		//TODO: VALIDACIONES
+		trabajoService.updateTrabajo(trabajo);
+		MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos del trabajo se han actualizado con éxito", true);
 		return serializer.exclude("class").serialize(mensajeExito);
     }
 
@@ -111,15 +125,20 @@ public class TrabajoController {
         populateEditForm(uiModel, trabajoService.findTrabajo(traId));
         return "trabajos/update";
     }
-
-	@RequestMapping(value = "/{traId}", method = RequestMethod.DELETE, produces = "text/html")
-    public String delete(@PathVariable("traId") Integer traId, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Trabajo trabajo = trabajoService.findTrabajo(traId);
-        trabajoService.deleteTrabajo(trabajo);
-        uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/trabajos";
+	
+	@RequestMapping(value = "/remove/{traId}", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public String delete(@PathVariable("traId") Integer traId, Model uiModel) {
+		MensajeDialogoUIBase mensaje;
+		JSONSerializer serializer = new JSONSerializer();
+		Trabajo trabajo = trabajoService.findTrabajo(traId);		
+		if ( trabajoService.deleteTrabajo(trabajo) ){
+			uiModel.asMap().clear();
+        	mensaje = new MensajeExitoJson("Datos eliminados con éxito", true);
+		}else {
+			mensaje = new MensajeErrorValidacionJson("Error eliminando datos del trabajo");
+		}
+        return serializer.exclude("class").serialize(mensaje);
     }
 
 	void addDateTimeFormatPatterns(Model uiModel) {

@@ -8,7 +8,7 @@ public interface TrabajoService {
 	public abstract long countAllTrabajoes();
 
 
-	public abstract void deleteTrabajo(Trabajo trabajo);
+	public abstract boolean deleteTrabajo(Trabajo trabajo);
 
 
 	public abstract Trabajo findTrabajo(Integer id);

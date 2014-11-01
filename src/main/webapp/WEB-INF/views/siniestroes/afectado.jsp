@@ -22,8 +22,22 @@
 						    	<!-- afectado  -->						    				  			
 						  		<div class="formafec-separador-filas">
 						  			<div class="formafec-separador-col-izq" id="cont_chk-${contador}">
-						  				<input type="checkbox" checked="checked" id="chkAsegurado-${contador}"><label for="chkAsegurado-${contador}">Asegurado</label>
-			  							<input type="checkbox" checked="checked" id="chkPerjudicado-${contador}"><label for="chkPerjudicado-${contador}">Perjudicado</label>
+						  				<c:choose>
+						  					<c:when test="${item.adsTafId.tafId == 3 || item.adsTafId.tafId == 5}">
+						  						<input type="checkbox" id="chkAsegurado-${contador}"><label for="chkAsegurado-${contador}">Asegurado</label>
+						  					</c:when>
+						  					<c:otherwise>
+						  						<input type="checkbox" checked="checked" id="chkAsegurado-${contador}"><label for="chkAsegurado-${contador}">Asegurado</label>
+						  					</c:otherwise>
+						  				</c:choose>
+						  				<c:choose>
+						  					<c:when test="${item.adsTafId.tafId == 4 || item.adsTafId.tafId == 5}">
+						  						<input type="checkbox" id="chkPerjudicado-${contador}"><label for="chkPerjudicado-${contador}">Perjudicado</label>
+						  					</c:when>
+						  					<c:otherwise>
+						  						<input type="checkbox" checked="checked" id="chkPerjudicado-${contador}"><label for="chkPerjudicado-${contador}">Perjudicado</label>
+						  					</c:otherwise>
+						  				</c:choose>
 						  			</div>
 						  		</div>
 						  		<input type="hidden" name="perId" id="perId-${contador}" value="${item.adsPerId.perId}" />

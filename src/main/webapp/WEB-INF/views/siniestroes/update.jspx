@@ -124,7 +124,7 @@
 		return params;
 	}
 		
-	function ajustarContenidoClonado(contenidoNuevoAfectado, contActual){
+	function ajustarContenidoClonadoAfec(contenidoNuevoAfectado, contActual){
 		var contNuevo = contActual + 1;
 		
 		// cambiar ids de inputs y selects
@@ -153,7 +153,32 @@
 		contenidoNuevoAfectado.find("[class^='ui-']").removeClass().removeAttr("role");		
 	}
 	
-	function inicializarWidgets(contador){
+	function ajustarContenidoClonadoTra(contenidoNuevoTrabajo, contActual){
+		var contNuevo = contActual + 1;
+		
+		// cambiar ids de inputs y selects
+		var inputs = contenidoNuevoTrabajo.find("input,select,button,label");		
+		inputs.each(function( index, elem ) {			
+			if ( $(elem).is("label") ){
+				$(elem).attr('for', $(elem).attr('for').replace("-" + contActual, "-" + contNuevo));
+				if ( $(elem).attr('for').indexOf("chk") != -1 ){
+					$(elem).text( $("label[for='" +  $(elem).attr('for').replace("-" + contNuevo, "-" + contActual ) + "']").text() );
+				}
+			} else if ( $(elem).is("button") ){
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));
+				$(elem).text( $("#" + elem.id.replace("-" + contNuevo, "-" + contActual )).text() );
+			} else {
+				$(elem).attr('id', elem.id.replace("-" + contActual, "-" + contNuevo));	
+			}
+		});
+		// eliminar los ids de las entidades operario, oficio y trabajo
+		contenidoNuevoTrabajo.find("input[id^='opeId'], input[id^='ofiId'], input[id^='traId']").val('');		
+		
+		contenidoNuevoTrabajo.find("span").remove();
+		contenidoNuevoTrabajo.find("[class^='ui-']").removeClass().removeAttr("role");		
+	}
+		
+	function inicializarWidgetsAfec(contador){
 		$( "#domProvId-" + contador ).selectmenu({
 			change: function( event, data ) {
 				        console.log( "=> " + data.item.value );
@@ -205,6 +230,61 @@
 	    });	
 	}
 	
+	function inicializarWidgetsTra(contador){
+		$( "#traOpeId-" + contador ).selectmenu();			
+		$( "#traOfiId-" + contador ).selectmenu();
+		
+		// boton guardar datos trabajo
+		$( "#btnGuardarDatosTrabajo-" + contador ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-disk"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();		    	    	
+		    	var formulario = $(this).closest("div.cont-trabajos");
+		    	var params = getDatosTrabajoParaEnvio(formulario);		    	
+		    	var action = params.traId? "/gestion/trabajos/update" : "/gestion/trabajos/add";		
+				$.post(action, params, function( data ) {				
+					// informar del resultado
+					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+					$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+					$( "#mensajesUsuario" ).dialog( "open" );									
+				}).error(function() {
+					$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+					$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos del trabajo" );
+					$( "#mensajesUsuario" ).dialog( "open" );				 
+				})				 	  
+		    });	
+		
+		// eliminar datos trabajo
+		$( "#btnEliminarDatosTrabajo-" + contador ).button({		    	
+ 	        icons: {	 	        	
+ 	            primary: "ui-icon-trash"
+ 	        }
+		}).click(function(event) {
+	    	event.preventDefault();
+	    	confirmarEliminacionTrabajo(this); 	  
+	    });	
+		
+		// recrear de nuevo calendario
+		$( "#traFecha-" + contador ).removeClass("hasDatepicker");
+		$( "#traFecha-" + contador ).datepicker("destroy");
+		$( "#traFecha-" + contador ).siblings("img").remove();
+		$( "#traFecha-" + contador ).datepicker({
+			dateFormat: 'dd/mm/yy',
+			constrainInput: false,
+			showOn: "button",
+		    buttonImage: "/gestion/images/calendar.png",
+		    buttonImageOnly: true,
+		    buttonText: "Seleccionar fecha",
+		    onSelect: function(datetext){
+		        var d = new Date();
+		        datetext=datetext+" "+d.getHours()+":"+d.getMinutes();
+		        $(this).val(datetext);
+		    },
+		});		
+	}
+	
 	function eliminarDatosAfec(idAds) {
 		var action = "/gestion/afectados/remove/" + idAds;
 		var params = {"idAds" : idAds};
@@ -232,19 +312,64 @@
 		})	
 	}
 	
-	function confirmarEliminacionAfec(elem) {
-		var idAds = $(elem).closest("div.cont-afectados").children("input[name='adsId']").val();
-		//var funcAceptar = function(idAds){eliminarDatosAfec(idAds)};
-		var funcAceptar = function(){ eliminarDatosAfec(idAds) };
-		$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
-		// abrir confirmacion
-		$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
-		     	"Aceptar": funcAceptar,
-		        "Cancelar": function() { $( this ).dialog( "close" ); }
-		});
-		$( "#mensajeConfirmacion" ).dialog( "open" );   
+	function eliminarDatosTrabajo(idTra) {
+		var action = "/gestion/trabajos/remove/" + idTra;
+		var params = {"idTra" : idTra};
+		$( "#mensajeConfirmacion" ).dialog( "close" );
+		$.post(action, params, function( data ) {				
+			// informar del resultado
+			$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+			$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+			$( "#mensajesUsuario" ).dialog( "open" );
+			if ( data.recargar ){
+				$( "#mensajesUsuario" )
+				.off( "dialogclose" )
+				.on( "dialogclose", 
+						function( event, ui ) {
+							$( "#mensajesUsuario" ).dialog( "close" );
+							// recargar datos siniestro
+							document.location.reload(true);
+						} 
+				);
+			}
+		}).error(function() {
+			$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+			$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando los datos del trabajo" );
+			$( "#mensajesUsuario" ).dialog( "open" );				 
+		})	
 	}
 	
+	function confirmarEliminacionAfec(elem) {
+		var idAds = $(elem).closest("div.cont-afectados").children("input[name='adsId']").val();		
+		if ( idAds ){
+			var funcAceptar = function(){ eliminarDatosAfec(idAds) };
+			$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
+			// abrir confirmacion
+			$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+			     	"Aceptar": funcAceptar,
+			        "Cancelar": function() { $( this ).dialog( "close" ); }
+			});
+			$( "#mensajeConfirmacion" ).dialog( "open" );   
+		} else {
+			return;
+		}
+	}
+	
+	function confirmarEliminacionTrabajo(elem) {
+		var idTrabajo = $(elem).closest("div.cont-trabajos").children("input[name='traId']").val();	
+		if ( idTrabajo ){
+			var funcAceptar = function(){ eliminarDatosTrabajo(idTrabajo) };
+			$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del trabajo?" );                        
+			// abrir confirmacion
+			$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+			     	"Aceptar": funcAceptar,
+			        "Cancelar": function() { $( this ).dialog( "close" ); }
+			});
+			$( "#mensajeConfirmacion" ).dialog( "open" );			
+		} else  {
+			return;
+		}		   
+	}	
 	
 	//############################ FIN TEMPORAL
 	
@@ -318,19 +443,20 @@
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-circle-plus"
 	 	        }
-			}).click( function() {		          
+			}).click( function() {		
+				//TODO: poner los valores logicos en funcion del tipo
 		        var tituloNuevoAfectado = generaTituloNuevoAfectado(true, false);
-				$( "#accordion" ).append(tituloNuevoAfectado);	
+				$( "#accordion-afectado" ).append(tituloNuevoAfectado);	
 								
 				// clonar				
-				var contadorActual = $("#accordion").children("div").size();
-				var contenidoNuevoAfectado= $("#accordion").children("div").last().clone();
-				ajustarContenidoClonado(contenidoNuevoAfectado,contadorActual);				
-				$( "#accordion" ).append(contenidoNuevoAfectado);
+				var contadorActual = $("#accordion-afectado").children("div").size();
+				var contenidoNuevoAfectado= $("#accordion-afectado").children("div").last().clone();
+				ajustarContenidoClonadoAfec(contenidoNuevoAfectado,contadorActual);				
+				$( "#accordion-afectado" ).append(contenidoNuevoAfectado);
 								
-				inicializarWidgets( contadorActual + 1 );
+				inicializarWidgetsAfec( contadorActual + 1 );
 				
-				$( "#accordion" ).accordion("refresh");		    
+				$( "#accordion-afectado" ).accordion("refresh");		    
 				
 			});	
 			
@@ -338,19 +464,18 @@
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-circle-plus"
 	 	        }
-			}).click( function() {		          
-		        /* var tituloNuevoAfectado = generaTituloNuevoAfectado(true, false);
-				$( "#accordion" ).append(tituloNuevoAfectado);	
-								
+			}).click( function() {		        
+				//TODO: poner como encabezamiento algo como (Oficio) operario
+				$( "#accordion-trabajos" ).append("<h3>Operario</h3>");
 				// clonar				
-				var contadorActual = $("#accordion").children("div").size();
-				var contenidoNuevoAfectado= $("#accordion").children("div").last().clone();
-				ajustarContenidoClonado(contenidoNuevoAfectado,contadorActual);				
-				$( "#accordion" ).append(contenidoNuevoAfectado);
+				var contadorActual = $("#accordion-trabajos").children("div").size();
+				var contenidoNuevoTrabajo= $("#accordion-trabajos").children("div").last().clone();
+				ajustarContenidoClonadoTra(contenidoNuevoTrabajo,contadorActual);				
+				$( "#accordion-trabajos" ).append(contenidoNuevoTrabajo);
 								
-				inicializarWidgets( contadorActual + 1 ); */
+				inicializarWidgetsTra( contadorActual + 1 );
 				
-				$( "#accordion" ).accordion("refresh");		    
+				$( "#accordion-trabajos" ).accordion("refresh");		    
 				
 			});				
 			
@@ -371,7 +496,18 @@
 					// informar del resultado
 					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
 					$( "#mensajesUsuario" ).children("p").html( data.mensaje );
-					$( "#mensajesUsuario" ).dialog( "open" );									
+					$( "#mensajesUsuario" ).dialog( "open" );
+					if ( data.recargar ){
+						$( "#mensajesUsuario" )
+						.off( "dialogclose" )
+						.on( "dialogclose", 
+								function( event, ui ) {
+									$( "#mensajesUsuario" ).dialog( "close" );
+									// recargar datos siniestro
+									document.location.reload(true);
+								} 
+						);
+					}
 				}).error(function() {
 					$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 					$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
@@ -412,7 +548,7 @@
 			    buttonImageOnly: true,
 			    buttonText: "Seleccionar fecha",
 			    onSelect: function(datetext){
-			        var d = new Date(); // for now
+			        var d = new Date();
 			        datetext=datetext+" "+d.getHours()+":"+d.getMinutes();
 			        $(this).val(datetext);
 			    },
@@ -422,26 +558,50 @@
 			$( "[id^='traOpeId']" ).selectmenu();
 			$( "[id^='traOfiId']" ).selectmenu();
 			
+			
+			// boton guardar/actualizar
 			$( "[id^='btnGuardarDatosTrabajo']" ).button({		    	
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-disk"
 	 	        }
 			}).click(function(event) {
-		    	event.preventDefault();
-		    	var action = "/gestion/trabajos/add";		    	
+		    	event.preventDefault();		    	    	
 		    	var formulario = $(this).closest("div.cont-trabajos");
-		    	var params = getDatosTrabajoParaEnvio(formulario);
+		    	var params = getDatosTrabajoParaEnvio(formulario);		    	
+		    	var action = params.traId? "/gestion/trabajos/update" : "/gestion/trabajos/add";		
 				$.post(action, params, function( data ) {				
 					// informar del resultado
 					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
 					$( "#mensajesUsuario" ).children("p").html( data.mensaje );
-					$( "#mensajesUsuario" ).dialog( "open" );									
+					$( "#mensajesUsuario" ).dialog( "open" );		
+					if ( data.recargar ){
+						$( "#mensajesUsuario" )
+						.off( "dialogclose" )
+						.on( "dialogclose", 
+								function( event, ui ) {
+									$( "#mensajesUsuario" ).dialog( "close" );
+									// recargar datos siniestro
+									document.location.reload(true);
+								} 
+						);
+					}
 				}).error(function() {
 					$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 					$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos del trabajo" );
 					$( "#mensajesUsuario" ).dialog( "open" );				 
 				})				 	  
 		    });
+			
+			// boton eliminar
+			$( "[id^='btnEliminarDatosTrabajo']" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-trash"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();		    	    	
+		    	confirmarEliminacionTrabajo(this); 
+		    });
+			
 			
 		});
 	//]]>

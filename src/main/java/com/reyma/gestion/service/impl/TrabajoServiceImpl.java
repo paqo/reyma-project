@@ -16,8 +16,14 @@ public class TrabajoServiceImpl implements TrabajoService {
         return Trabajo.countTrabajoes();
     }
 
-	public void deleteTrabajo(Trabajo trabajo) {
-        trabajo.remove();
+	public boolean deleteTrabajo(Trabajo trabajo) {
+        try {
+			trabajo.remove();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+        return true;
     }
 
 	public Trabajo findTrabajo(Integer id) {

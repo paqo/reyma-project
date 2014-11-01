@@ -97,7 +97,7 @@ public class AfectadosController {
 						domicilioService.updateDomicilio(domicilio);	
 						ads.setAdsTafId(ta);	
 						afectadoDomicilioSiniestroService.updateAfectadoDomicilioSiniestro(ads);
-						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han actualizado con éxito", true);
+						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han actualizado con éxito", false);
 						return serializer.exclude("class").serialize(mensajeExito);
 					} else {				
 						AfectadoDomicilioSiniestro ads = new AfectadoDomicilioSiniestro();
