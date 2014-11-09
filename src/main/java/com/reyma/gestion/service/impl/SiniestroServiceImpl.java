@@ -39,4 +39,15 @@ public class SiniestroServiceImpl implements SiniestroService {
 	public Siniestro updateSiniestro(Siniestro siniestro) {
         return siniestro.merge();
     }
+
+	@Override
+	public List<Siniestro> findAllSiniestroes(String sortField, String sortOrder) {
+		return Siniestro.findAllSiniestroes(sortField, sortOrder);
+	}
+
+	@Override
+	public List<Siniestro> findSiniestroEntries(int firstResult,
+			int maxResults, String sortField, String sortOrder) {
+		return Siniestro.findSiniestroEntries(firstResult, maxResults, sortField, sortOrder);
+	}
 }

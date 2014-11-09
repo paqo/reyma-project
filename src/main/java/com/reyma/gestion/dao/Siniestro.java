@@ -33,7 +33,7 @@ public class Siniestro {
 	@PersistenceContext
     transient EntityManager entityManager;
 
-	public static final List<String> fieldNames4OrderClauseFilter = java.util.Arrays.asList("sinTsiId");
+	public static final List<String> fieldNames4OrderClauseFilter = java.util.Arrays.asList("sinTsiId", "sinFechaOcurrencia");
 
 	public static final EntityManager entityManager() {
         EntityManager em = new Siniestro().entityManager;

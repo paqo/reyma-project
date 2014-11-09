@@ -4,7 +4,7 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <form:update id="fu_com_reyma_gestion_dao_Siniestro" idField="sinId" modelAttribute="siniestro" path="/siniestroes" versionField="none" z="l2WNaPjr3jltvdJwhbjYg1Pm1yo=">
-        <field:select field="sinComId" id="c_com_reyma_gestion_dao_Siniestro_sinComId" itemValue="comId" items="${companias}" path="/companias" z="SjYzr7dDR0LRftttBdFO01OnePs="/>
+        <field:select field="sinComId" id="c_com_reyma_gestion_dao_Siniestro_sinComId" itemLabel="comDescripcion" itemValue="comId" items="${companias}" path="/companias" z="SjYzr7dDR0LRftttBdFO01OnePs="/>
         <field:select field="sinEstId" id="c_com_reyma_gestion_dao_Siniestro_sinEstId" itemValue="estId" items="${estadoes}" path="/estadoes" z="ibDK+CwoLkdDWmlBEdhJsOrTLEs="/>
         <field:select field="sinTsiId" id="c_com_reyma_gestion_dao_Siniestro_sinTsiId" itemValue="tsiId" items="${tiposiniestroes}" path="/tiposiniestroes" z="in8P0BjIRnlRlYzdKKer43tDldQ="/>
         <field:input field="sinNumero" id="c_com_reyma_gestion_dao_Siniestro_sinNumero" required="true" z="6uE23ueMQy71iBvAm1yhZLxjNKU="/>
@@ -374,6 +374,12 @@
 	//############################ FIN TEMPORAL
 	
 		$(function() {
+			
+			$( "#proceed" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-disk"
+	 	        }
+			});			
 			
 			// crear ventana para mensajes
 			$( "#mensajesUsuario" ).dialog({

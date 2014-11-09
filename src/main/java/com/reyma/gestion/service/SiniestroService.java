@@ -15,9 +15,15 @@ public interface SiniestroService {
 
 
 	public abstract List<Siniestro> findAllSiniestroes();
+	
+	
+	public abstract List<Siniestro> findAllSiniestroes(String sortField, String sortOrder);
 
 
 	public abstract List<Siniestro> findSiniestroEntries(int firstResult, int maxResults);
+	
+	
+	public abstract List<Siniestro> findSiniestroEntries(int firstResult, int maxResults, String sortField, String sortOrder);
 
 
 	public abstract void saveSiniestro(Siniestro siniestro);

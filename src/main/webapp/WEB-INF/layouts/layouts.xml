@@ -11,6 +11,7 @@
     	<put-attribute name="footer" value="/WEB-INF/views/footer.jspx" /> -->
     <put-attribute name="menu" value="/WEB-INF/views/menu-lateral.jspx" />
     <put-attribute name="toolbar" value="/WEB-INF/views/toolbar.jspx" />
+    <put-attribute name="pie" value="/WEB-INF/views/pie.jsp" />
   </definition>
 
   <definition name="public" template="/WEB-INF/layouts/default.jspx">

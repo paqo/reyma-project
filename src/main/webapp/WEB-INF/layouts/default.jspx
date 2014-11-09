@@ -23,6 +23,7 @@
 	    		<tiles:insertAttribute name="toolbar" ignore="true"/>
 	    		<tiles:insertAttribute name="body"/> 		    	
 		    </div>
+		    <tiles:insertAttribute name="pie" ignore="true"/>
 		</div>
 	</body>
 </html>

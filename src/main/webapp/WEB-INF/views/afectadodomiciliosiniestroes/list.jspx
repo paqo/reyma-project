@@ -6,8 +6,7 @@
         <table:table data="${afectadodomiciliosiniestroes}" id="l_com_reyma_gestion_dao_AfectadoDomicilioSiniestro" path="/afectadodomiciliosiniestroes" typeIdFieldName="adsId" z="wq3HeTjXsSkqOPVkxX2xaWMyBaU=">
             <table:column id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsDomId" property="adsDomId" z="YOIT7EUGYHkk7Xt1W9l3eYSKGm0="/>
             <table:column id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsPerId" property="adsPerId" z="MaVWLb/lZ8GsEu/1tsOz3FeeSWM="/>
-            <table:column id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsSinId" property="adsSinId" z="09NLHSivfNKD4uXwhTbPmPXju6E="/>
-            <table:column id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsTafId" property="adsTafId" z="45yUPYjsMAlKY+OOLrNUwpaFywk="/>
+            <table:column id="c_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_adsSinId" property="adsSinId" z="09NLHSivfNKD4uXwhTbPmPXju6E="/>           
         </table:table>
     </page:list>
 </div>

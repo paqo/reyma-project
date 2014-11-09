@@ -38,8 +38,8 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 		return AfectadoDomicilioSiniestro.findAfectadosDomicilioBySiniestro(idSiniestro);
 	}
 
-	public List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults) {
-        return AfectadoDomicilioSiniestro.findAfectadoDomicilioSiniestroEntries(firstResult, maxResults);
+	public List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        return AfectadoDomicilioSiniestro.findAfectadoDomicilioSiniestroEntries(firstResult, maxResults, sortFieldName, sortOrder);
     }
 
 	public void saveAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro) {
@@ -49,4 +49,10 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 	public AfectadoDomicilioSiniestro updateAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro) {
         return afectadoDomicilioSiniestro.merge();
     }
+
+	
+	public List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes(
+			String sortFieldName, String sortOrder) {
+		return AfectadoDomicilioSiniestro.findAllAfectadoDomicilioSiniestroes(sortFieldName, sortOrder);
+	}
 }

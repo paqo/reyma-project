@@ -1,5 +1,6 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +21,6 @@ import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
-import com.reyma.gestion.dao.Oficio;
-import com.reyma.gestion.dao.Operario;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.Trabajo;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
@@ -35,6 +34,7 @@ import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.listados.SiniestroListadoDTO;
 import com.reyma.gestion.util.Fechas;
 
 @RequestMapping("/siniestroes")
@@ -73,6 +73,11 @@ public class SiniestroController {
 	
 	@Autowired
     MunicipioService municipioService;
+	
+	@Autowired
+    AfectadoDomicilioSiniestroService adsService;
+	
+	
 
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -99,19 +104,32 @@ public class SiniestroController {
         uiModel.addAttribute("itemId", sinId);
         return "siniestroes/show";
     }
-
+	
 	@RequestMapping(produces = "text/html")
-    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, @RequestParam(value = "sortFieldName", required = false) String sortFieldName, @RequestParam(value = "sortOrder", required = false) String sortOrder, Model uiModel) {
-        if (page != null || size != null) {
+    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
+		if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("siniestroes", Siniestro.findSiniestroEntries(firstResult, sizeNo, sortFieldName, sortOrder));
+            List<Siniestro> siniestros = siniestroService.findSiniestroEntries(firstResult, sizeNo, "sinFechaOcurrencia", "DESC");
+            List<SiniestroListadoDTO> listaSiniestros = new ArrayList<SiniestroListadoDTO>();
+            SiniestroListadoDTO dto;
+            for (Siniestro siniestro : siniestros) {
+				dto = new SiniestroListadoDTO(siniestro, afectadoDomicilioSiniestroService);
+				listaSiniestros.add(dto);
+			}            
+            uiModel.addAttribute("siniestroes", listaSiniestros);
             float nrOfPages = (float) siniestroService.countAllSiniestroes() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-            uiModel.addAttribute("siniestroes", Siniestro.findAllSiniestroes(sortFieldName, sortOrder));
+        	List<Siniestro> siniestros = siniestroService.findAllSiniestroes("sinFechaOcurrencia", "DESC");
+            List<SiniestroListadoDTO> listaSiniestros = new ArrayList<SiniestroListadoDTO>();
+            SiniestroListadoDTO dto;
+            for (Siniestro siniestro : siniestros) {
+				dto = new SiniestroListadoDTO(siniestro, afectadoDomicilioSiniestroService);
+				listaSiniestros.add(dto);
+			} 
+            uiModel.addAttribute("siniestroes", listaSiniestros);
         }
-        addDateTimeFormatPatterns(uiModel);
         return "siniestroes/list";
     }
 
