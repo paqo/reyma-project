@@ -82,8 +82,11 @@
 						  			</div>	
 						  			<div class="formafec-separador-3col-der">
 						  				<label class="formafec-separador-3col-label" for="domMunId-${contador}">Municipio:</label>
+						    			<%--
 						    			<form:select cssStyle="width: 200px;" items="${municipios}" id="domMunId-${contador}" 
-						  						path="domicilio-${contador}.domMunId" itemLabel="munDescripcion" itemValue="munId" />				  									    			
+						  						path="domicilio-${contador}.domMunId" itemLabel="munDescripcion" itemValue="munId" />
+										--%>	
+										<input id="domMunId-${contador}" />			  									    			
 						  			</div>			  							  					  			
 						  		</div>
 						  		<div class="formafec-separador-filas">

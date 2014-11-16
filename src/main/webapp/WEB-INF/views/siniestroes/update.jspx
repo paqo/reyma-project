@@ -109,21 +109,22 @@
 		return params;
 	}
 	
-	/*
-	######################### autocomplete #######################
-	
 	var accentMap = {
 		      "á": "a",
-		      "ö": "o"
-		    };
-		    var normalize = function( term ) {
-		      var ret = "";
-		      for ( var i = 0; i < term.length; i++ ) {
-		        ret += accentMap[ term.charAt(i) ] || term.charAt(i);
-		      }
-		      return ret;
+		      "é": "e",
+		      "í" : "i",
+		      "ó" : "o",
+		      "ú" : "u"
 		    };
 	
+		    
+	var normalize = function( term ) {
+					      var ret = "";
+					      for ( var i = 0; i < term.length; i++ ) {
+					        ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+					      }
+					      return ret;
+	};
 	
 	$.extend($.ui.autocomplete.prototype, {
 	    _renderItem: function (ul, item) {
@@ -138,19 +139,6 @@
 	            .appendTo(ul);
 	    }
 	});
-	
-	$( "#developer" ).autocomplete({
-      source: function( request, response ) {
-        var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-        response( $.grep( names, function( value ) {
-          value = value.label || value.value || value;
-          return matcher.test( value ) || matcher.test( normalize( value ) );
-        }) );
-      }
-    });
-	
-	
-	*/
 	
 	function getDatosTrabajoParaEnvio (datosTrabajo){
 		// parametros
@@ -485,7 +473,19 @@
 					       	}
 		    });
 			
-			$( "[id^='domMunId']" ).selectmenu();			
+			//$( "[id^='domMunId']" ).selectmenu();
+			
+			$( "#domMunId-1" ).autocomplete({
+				minLength: 3,
+				source: function( request, response ) {
+					  var idInput = $(this.element).attr("id").split("-")[1];
+			          $.getJSON( "/gestion/municipios/getJson", {
+			            munDescripcion: request.term,
+			            munPrvId: $("#domProvId-" + idInput).val()
+			          }, 
+			          response );
+			   	},    
+			});
 			
 			// boton agregar afectado
 			$( '#addAfectado' ).button({		    	

@@ -1,10 +1,6 @@
 package com.reyma.gestion.controller;
-import com.reyma.gestion.dao.Municipio;
-import com.reyma.gestion.service.DomicilioService;
-import com.reyma.gestion.service.MunicipioService;
-import com.reyma.gestion.service.ProvinciaService;
-
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -17,8 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
+
+import com.reyma.gestion.dao.Municipio;
+import com.reyma.gestion.service.DomicilioService;
+import com.reyma.gestion.service.MunicipioService;
+import com.reyma.gestion.service.ProvinciaService;
+import com.reyma.gestion.ui.AutocompleteJSONBean;
+
+import flexjson.JSONSerializer;
 
 @RequestMapping("/municipios")
 @Controller
@@ -55,6 +60,17 @@ public class MunicipioController {
         uiModel.addAttribute("municipio", municipioService.findMunicipio(munId));
         uiModel.addAttribute("itemId", munId);
         return "municipios/show";
+    }
+	
+	
+	@RequestMapping(value = "/getJson", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String obtenerMunicipiosByIdProvYDescAjax(Municipio municipio, Model uiModel) {
+		JSONSerializer serializer = new JSONSerializer();
+		System.out.println("=> municipio: " + municipio.getMunDescripcion() + ", idProv: " + municipio.getMunPrvId());
+		List<AutocompleteJSONBean> municipios = municipioService.
+				findMunicipiosByIdProvinciaAndDesc(municipio.getMunPrvId().getPrvId(), municipio.getMunDescripcion());
+		return serializer.exclude("*.class").serialize(municipios);
     }
 
 	@RequestMapping(produces = "text/html")

@@ -2,6 +2,7 @@ package com.reyma.gestion.service;
 import java.util.List;
 
 import com.reyma.gestion.dao.Municipio;
+import com.reyma.gestion.ui.AutocompleteJSONBean;
 
 public interface MunicipioService {
 
@@ -16,7 +17,11 @@ public interface MunicipioService {
 
 	public abstract List<Municipio> findAllMunicipios();
 	
+	
 	public abstract List<Municipio> findAllMunicipiosByIdProvincia(Integer id);
+	
+	
+	public abstract List<AutocompleteJSONBean> findMunicipiosByIdProvinciaAndDesc(Integer id, String desc);
 
 
 	public abstract List<Municipio> findMunicipioEntries(int firstResult, int maxResults);

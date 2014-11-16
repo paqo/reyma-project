@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -169,4 +171,11 @@ public class Municipio {
 	public void setMunDescripcion(String munDescripcion) {
         this.munDescripcion = munDescripcion;
     }
+
+	public static List<Municipio> findMunicipiosByIdProvinciaAndDesc(
+			Integer idProvincia, String descripcion) {
+		return entityManager().createQuery("SELECT m FROM Municipio m WHERE m.munPrvId = " + idProvincia +
+				" AND m.munDescripcion LIKE '%" + descripcion + "%'", 
+				Municipio.class).getResultList();
+	}
 }
