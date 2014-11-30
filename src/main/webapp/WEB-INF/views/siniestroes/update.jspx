@@ -100,7 +100,8 @@
 				  	"domDireccion" : datosAfectado.find("[id^='domDireccion']").val(),
 				  	"domCp" : datosAfectado.find("[id^='domCp']").val(),
 				  	"domProvId" : datosAfectado.find("[id^='domProvId']").val(),
-				  	"domMunId" : datosAfectado.find("[id^='domMunId']").val(),
+				  	//"domMunId" : datosAfectado.find("[id^='domMunId']").val(),
+				  	"domMunId" : datosAfectado.find("[id^='IDdomMunId']").val(),
 				  	/* siniestro */
 				  	"sinId" : $("[name='sinId']").val(),
 				  	/* tipo afectacion */
@@ -210,12 +211,30 @@
 	}
 		
 	function inicializarWidgetsAfec(contador){
+		// combo provincias
 		$( "#domProvId-" + contador ).selectmenu({
 			change: function( event, data ) {
 				        console.log( "=> " + data.item.value );
 			       	}
-    	});			
-		$( "#domMunId-" + contador ).selectmenu();				
+    	});	
+		
+		// autocomplete municipios
+		$( "#domMunId-" + contador ).autocomplete({
+			minLength: 3,
+			source: function( request, response ) {				 
+			          	$.getJSON( "/gestion/municipios/getJson", {
+			            munDescripcion: request.term,
+			            munPrvId: $("#domProvId-" + contador).val(), 
+			            munId: $("#IDdomMunId-" + contador).val()
+		          	}, 
+		          	response );
+		   	},  
+		   	select: function (event, ui) {
+				   		$("#IDdomMunId-" + contador).val(ui.item.id);
+				        console.log("=> id: " + ui.item.id);
+				    }
+		});
+						
 		$( "#cont_chk-" + contador ).buttonset();
 		// boton guarda datos afectados
 		$( "#btnGuardarDatosAfec-" + contador ).button({		    	
@@ -228,7 +247,28 @@
 	    	
 	    	var formulario = $(this).closest("div.cont-afectados");
 	    	var params = getDatosAfecParaEnvio(formulario);
-			$.post(action, params, function( data ) {				
+	    	$.post(action, params, function( data ) {				
+				// informar del resultado
+				$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+				$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+				$( "#mensajesUsuario" ).dialog( "open" );
+				if ( data.recargar ){
+					$( "#mensajesUsuario" )
+					.off( "dialogclose" )
+					.on( "dialogclose", 
+							function( event, ui ) {
+								$( "#mensajesUsuario" ).dialog( "close" );
+								// recargar datos siniestro
+								document.location.reload(true);
+							} 
+					);
+				}
+			}).error(function() {
+				$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+				$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
+				$( "#mensajesUsuario" ).dialog( "open" );				 
+			})		
+	    	/* $.post(action, params, function( data ) {				
 				// informar del resultado
 				$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
 				$( "#mensajesUsuario" ).children("p").html( data.mensaje );
@@ -237,7 +277,9 @@
 				$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 				$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
 				$( "#mensajesUsuario" ).dialog( "open" );				 
-			})				 	  
+			})	*/
+			
+			
 	    });	
 		
 		// boton limpiar
@@ -382,6 +424,15 @@
 			});
 			$( "#mensajeConfirmacion" ).dialog( "open" );   
 		} else {
+			// se acaba de añadir pero aun no se ha salvado:
+			// eliminar directamente						
+			var contenido = $(elem).closest("div.cont-afectados");		
+			var indice = contenido.index();
+			if ( indice > 1 ){ // solo si no es el que sale por defecto
+				var encabezadoH3 = contenido.siblings().eq(indice-1);
+				contenido.remove();
+				encabezadoH3.remove();	
+			}			
 			return;
 		}
 	}
@@ -452,7 +503,7 @@
 		    	header: "h3",
 		    	heightStyle: "content",
 		    	collapsible: true,
-		    	active: false
+		    	active: 0
 		    });  
 			
 		 	// lista trabajos
@@ -473,18 +524,22 @@
 					       	}
 		    });
 			
-			//$( "[id^='domMunId']" ).selectmenu();
-			
-			$( "#domMunId-1" ).autocomplete({
+			$( "[id^='domMunId']" ).autocomplete({
 				minLength: 3,
 				source: function( request, response ) {
 					  var idInput = $(this.element).attr("id").split("-")[1];
 			          $.getJSON( "/gestion/municipios/getJson", {
 			            munDescripcion: request.term,
-			            munPrvId: $("#domProvId-" + idInput).val()
+			            munPrvId: $("#domProvId-" + idInput).val(), 
+			            munId: $("#IDdomMunId-" + idInput).val()
 			          }, 
 			          response );
-			   	},    
+			   	},  
+			   	select: function (event, ui) {			  
+			   		var idHidden = $(this).attr("id").split("-")[1];
+			   		$("#IDdomMunId-" + idHidden).val(ui.item.id);
+			        console.log("=> id: " + ui.item.id); // actualizar input hidden con ID 
+			    }
 			});
 			
 			// boton agregar afectado
@@ -502,7 +557,8 @@
 				var contenidoNuevoAfectado= $("#accordion-afectado").children("div").last().clone();
 				ajustarContenidoClonadoAfec(contenidoNuevoAfectado,contadorActual);				
 				$( "#accordion-afectado" ).append(contenidoNuevoAfectado);
-								
+				
+				// aplicar widgets para autocomplete, selectmenu, botones, etc
 				inicializarWidgetsAfec( contadorActual + 1 );
 				
 				$( "#accordion-afectado" ).accordion("refresh");		    

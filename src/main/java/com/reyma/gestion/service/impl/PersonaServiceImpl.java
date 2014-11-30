@@ -39,4 +39,9 @@ public class PersonaServiceImpl implements PersonaService {
 	public Persona updatePersona(Persona persona) {
         return persona.merge();
     }
+
+	@Override
+	public Persona findPersona(Persona persona) {
+		return Persona.findPersona(persona);
+	}
 }

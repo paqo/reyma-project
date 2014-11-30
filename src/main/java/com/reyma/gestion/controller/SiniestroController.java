@@ -201,7 +201,7 @@ public class SiniestroController {
         // ponemos por defecto sevilla como provincia y municipio        
         Domicilio domicilio = new Domicilio();
         //TODO: cargar id de sevilla desde base de datos
-        Municipio mun = municipioService.findMunicipio(5);
+        Municipio mun = municipioService.findMunicipio(757);
         domicilio.setDomMunId(mun);
         domicilio.setDomProvId(mun.getMunPrvId());        
         uiModel.addAttribute("domicilio", domicilio);

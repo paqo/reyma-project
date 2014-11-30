@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Entity
@@ -122,6 +126,29 @@ public class Persona {
 	public static Persona findPersona(Integer perId) {
         if (perId == null) return null;
         return entityManager().find(Persona.class, perId);
+    }
+	
+	public static Persona findPersona(Persona persona) {
+		Persona personaEnc = null;
+		if (persona != null){
+	        try {
+				personaEnc = entityManager().createQuery(
+				        "SELECT o FROM Persona o WHERE o.perNif = :nif " +
+				        "AND o.perNombre = :nombre", Persona.class)
+				        .setParameter("nif", persona.getPerNif())
+				        .setParameter("nombre", persona.getPerNombre())
+				        .getSingleResult();
+			} catch (EmptyResultDataAccessException e){
+				//TODO: pasar a log4j
+				System.out.println("persona no encontrada: " + persona);
+				return null;
+			} catch (IncorrectResultSizeDataAccessException e) {		
+				//TODO: pasar a log4j
+				System.out.println("encontrada mas de una persona para criterio de busqueda: " + persona);
+				return null;
+			}	        
+		}        
+		return personaEnc;
     }
 
 	public static List<Persona> findPersonaEntries(int firstResult, int maxResults) {

@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +15,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configurable
@@ -185,4 +189,29 @@ public class Domicilio {
         this.entityManager.flush();
         return merged;
     }
+
+	public static Domicilio findDomicilio(Domicilio domicilio) {		
+		Domicilio domicilioEnc = null;
+		if ( domicilio != null ){ 
+			try {
+				domicilioEnc = entityManager().createQuery("SELECT o FROM Domicilio o "
+						+ "WHERE o.domDireccion = :direccion "
+						+ "AND o.domMunId = :municipio "
+						+ "AND o.domProvId = :provincia", Domicilio.class)
+						.setParameter("direccion", domicilio.getDomDireccion())
+						.setParameter("municipio", domicilio.getDomMunId())
+						.setParameter("provincia", domicilio.getDomProvId())
+						.getSingleResult();
+			} catch (EmptyResultDataAccessException e){
+				//TODO: pasar a log4j
+				System.out.println("domicilio no encontrado: " + domicilio);
+				return null;
+			} catch (IncorrectResultSizeDataAccessException e) {		
+				//TODO: pasar a log4j
+				System.out.println("encontrado mas de un domicilio para criterio de busqueda: " + domicilio);
+				return null;
+			}	
+		}		
+		return domicilioEnc;
+	}
 }

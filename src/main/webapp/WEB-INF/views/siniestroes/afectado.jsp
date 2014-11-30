@@ -86,7 +86,8 @@
 						    			<form:select cssStyle="width: 200px;" items="${municipios}" id="domMunId-${contador}" 
 						  						path="domicilio-${contador}.domMunId" itemLabel="munDescripcion" itemValue="munId" />
 										--%>	
-										<input id="domMunId-${contador}" />			  									    			
+										<input id="domMunId-${contador}" value="${item.adsDomId.domMunId.munDescripcion}" />
+										<input id="IDdomMunId-${contador}" type="hidden" value="${item.adsDomId.domMunId.munId}" />			  									    			
 						  			</div>			  							  					  			
 						  		</div>
 						  		<div class="formafec-separador-filas">

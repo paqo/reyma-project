@@ -1,5 +1,4 @@
 package com.reyma.gestion.controller;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +17,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UriUtils;
-import org.springframework.web.util.WebUtils;
 
 import com.reyma.gestion.controller.validators.AfectadoValidator;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.TipoAfectacion;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.DomicilioService;
+import com.reyma.gestion.service.MunicipioService;
 import com.reyma.gestion.service.PersonaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
@@ -57,6 +56,9 @@ public class AfectadosController {
 	
 	@Autowired
     TipoAfectacionService tipoAfectacionService;	
+	
+	@Autowired
+	MunicipioService municipioService; 
 
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {        
@@ -100,32 +102,54 @@ public class AfectadosController {
 						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han actualizado con éxito", false);
 						return serializer.exclude("class").serialize(mensajeExito);
 					} else {				
+						// crear nuevo
 						AfectadoDomicilioSiniestro ads = new AfectadoDomicilioSiniestro();
 						Siniestro sin = new Siniestro();
 						sin.setSinId( Integer.parseInt(request.getParameter("sinId")) );
-						// grabar persona
- 						personaService.savePersona(persona);
-						// grabar domicilio
-						domicilioService.saveDomicilio(domicilio);					
-						ads.setAdsPerId(persona);
-						ads.setAdsDomId(domicilio);
-						ads.setAdsSinId(sin);
-						ads.setAdsTafId(ta);		
-						//TODO: esto debe devolver true or false
-						afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
-						MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
-						return serializer.exclude("class").serialize(mensajeExito);
+						
+						Persona adsPersona = grabarPersona(persona);
+						if ( adsPersona != null ){ // grabar persona							
+							Domicilio adsDomicilio = grabarDomicilio(domicilio);
+							if ( adsDomicilio != null ) { // grabar domicilio
+								if ( grabarAfectadoDomicilioSiniestro(ads, adsPersona, adsDomicilio, sin, ta) ){
+									MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
+									return serializer.exclude("class").serialize(mensajeExito);
+								} else {
+									mensajeError = new MensajeErrorValidacionJson("Revisar que todos los campos tengan valores correctos.");
+									mensajeError.setTitulo("Error guardando los datos del formulario");
+								}
+							} else {
+								mensajeError = new MensajeErrorValidacionJson("No se han podido guardar los datos del domicilio");
+							}
+						} else {
+							mensajeError = new MensajeErrorValidacionJson("No se han podido guardar los datos del afectado");
+						}						
 					}
 				}								
 			}
 		} else {
 			// tiene errores de validacion
-			mensajeError =  new MensajeErrorValidacionJson(errores);
+			mensajeError = new MensajeErrorValidacionJson(errores);
 		}
 		return serializer.exclude("class").serialize(mensajeError); // class siempre lo lleva, hay que excluir 
     }	
 	
-	
+	private boolean grabarAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro ads, 
+			Persona persona, Domicilio domicilio, Siniestro sin, TipoAfectacion ta) {
+		ads.setAdsPerId(persona);
+		ads.setAdsDomId(domicilio);
+		ads.setAdsSinId(sin);
+		ads.setAdsTafId(ta);
+		try {
+			afectadoDomicilioSiniestroService.saveAfectadoDomicilioSiniestro(ads);
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	@RequestMapping(value = "/remove/{adsId}", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public String delete(@PathVariable("adsId") Integer adsId, Model uiModel) {
@@ -139,16 +163,56 @@ public class AfectadosController {
         	mensaje = new MensajeErrorValidacionJson("Error eliminando datos del afectado");
         }
         return serializer.exclude("class").serialize(mensaje);
-    }
+    }	
 	
-	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
-        String enc = httpServletRequest.getCharacterEncoding();
-        if (enc == null) {
-            enc = WebUtils.DEFAULT_CHARACTER_ENCODING;
-        }
-        try {
-            pathSegment = UriUtils.encodePathSegment(pathSegment, enc);
-        } catch (UnsupportedEncodingException uee) {}
-        return pathSegment;
-    }
+	private Persona grabarPersona(Persona persona){
+		Persona personaEnc = null;		
+		try {
+			personaEnc = personaService.findPersona(persona);
+			if ( personaEnc == null){
+				// nueva persona, grabar
+				personaService.savePersona(persona);
+			} else {
+				// persona encontrada, comprobar si han
+				// cambiado los tlfs y en su caso grabar para no perder
+				// esa info
+				// TODO: los tlfs deberian estar en el siniestro!!				
+				if ( !StringUtils.equals(persona.getPerTlf1(), personaEnc.getPerTlf1()) ||
+					 !StringUtils.equals(persona.getPerTlf2(), personaEnc.getPerTlf2()) ){
+					personaService.savePersona(persona);					
+				} else {
+					// persona ya almacenda, devolvemos la encontrada
+					return personaEnc;				
+				}
+			}
+			return persona;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private Domicilio grabarDomicilio(Domicilio domicilio) {
+		try {
+			if ( domicilio.getDomMunId().getMunId() == null ){
+				// municipio nuevo, crear primero
+				Municipio nuevoMunicipio = new Municipio();
+				nuevoMunicipio.setMunDescripcion(domicilio.getDomMunId().getMunDescripcion());
+				nuevoMunicipio.setMunPrvId( domicilio.getDomProvId() );
+				municipioService.saveMunicipio(nuevoMunicipio);
+			}
+			Domicilio domBusqueda = domicilioService.findDomicilio(domicilio);
+			if ( domBusqueda == null ){
+				domicilioService.saveDomicilio(domicilio);
+				return domicilio;
+			} else {
+				// domicilio encontrado, devolvemos el persistido
+				return domBusqueda;
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

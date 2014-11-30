@@ -12,6 +12,9 @@ public interface PersonaService {
 
 
 	public abstract Persona findPersona(Integer id);
+	
+	
+	public abstract Persona findPersona(Persona persona);
 
 
 	public abstract List<Persona> findAllPersonae();

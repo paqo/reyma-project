@@ -12,6 +12,9 @@ public interface DomicilioService {
 
 
 	public abstract Domicilio findDomicilio(Integer id);
+	
+	
+	public abstract Domicilio findDomicilio(Domicilio domicilio);
 
 
 	public abstract List<Domicilio> findAllDomicilios();

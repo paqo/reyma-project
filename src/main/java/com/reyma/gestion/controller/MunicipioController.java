@@ -67,7 +67,9 @@ public class MunicipioController {
 	@ResponseBody
 	public String obtenerMunicipiosByIdProvYDescAjax(Municipio municipio, Model uiModel) {
 		JSONSerializer serializer = new JSONSerializer();
-		System.out.println("=> municipio: " + municipio.getMunDescripcion() + ", idProv: " + municipio.getMunPrvId());
+		System.out.println("=> municipio: " + municipio.getMunDescripcion() +
+				"=> idMun: " + municipio.getMunId()+
+				", idProv: " + municipio.getMunPrvId());
 		List<AutocompleteJSONBean> municipios = municipioService.
 				findMunicipiosByIdProvinciaAndDesc(municipio.getMunPrvId().getPrvId(), municipio.getMunDescripcion());
 		return serializer.exclude("*.class").serialize(municipios);
