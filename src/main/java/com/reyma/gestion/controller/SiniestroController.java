@@ -82,8 +82,15 @@ public class SiniestroController {
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, siniestro);
-            return "siniestroes/create";
+        	if ( UtilsValidacion.ignorarErrorBooleanBinding(bindingResult) ){
+	        	// no es realmente error, valor "on" para el checkbox
+				// TODO: modificar la manera en que se hace el binding
+				// (no se pueden usar converters de jpa por la version usada)
+				siniestro.setSinUrgente((short)1);
+			} else {
+				populateEditForm(uiModel, siniestro);
+	            return "siniestroes/create";
+			}            
         }
         uiModel.asMap().clear();
         siniestroService.saveSiniestro(siniestro);
