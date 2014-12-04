@@ -6,17 +6,16 @@
         <!-- siniestros -->        
         <menu:category id="c_siniestro" z="">
             <menu:item id="i_siniestro_new" messageCode="global_menu_new" url="/siniestroes?form" z="9103s41yPmM83maKbYk80QNgoR0="/>
-            <menu:item id="i_siniestro_list" messageCode="global_menu_list" url="/siniestroes?page=1&amp;size=${empty param.size ? 2 : param.size}" z="Jnqse2qduIJG7jpqEaEKQj2MNjE="/>
+            <menu:item id="i_siniestro_list" messageCode="global_menu_list" url="/siniestroes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Jnqse2qduIJG7jpqEaEKQj2MNjE="/>
         </menu:category>
 		<!-- facturas -->        
         <menu:category id="c_factura" z="">
             <menu:item id="i_factura_new" messageCode="global_menu_new" url="/facturas?form" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
-            <menu:item id="i_factura_list" messageCode="global_menu_list" url="/facturas?page=1&amp;size=${empty param.size ? 5 : param.size}" z="s77QdFN3Sd31RGYgNkjNIvIaJBU="/>
+            <menu:item id="i_factura_list" messageCode="global_menu_list" url="/facturas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="s77QdFN3Sd31RGYgNkjNIvIaJBU="/>
         </menu:category>
-        <!-- TODO: // quitar (solo para pruebas) -->
-		<menu:category id="c_domicilio" z="">
-            <menu:item id="i_domicilio_new" messageCode="global_menu_new" url="/domicilios?form" z="yLFo/3gnPwJoJgT3GoGFiD2bf0E="/>
-            <menu:item id="i_domicilio_list" messageCode="global_menu_list" url="/domicilios?page=1&amp;size=${empty param.size ? 10 : param.size}" z="mbVXPYopHcvB18aGLGKYUd91zDk="/>
+        <!-- busquedas -->
+		<menu:category id="c_busquedas" z="">
+            <menu:item id="i_busqueda_new" messageCode="global_generic" url="/busquedas?form" z=""/>            
         </menu:category>
     </menu:menu>
 </div>
