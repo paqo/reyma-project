@@ -2,6 +2,7 @@ package com.reyma.gestion.dao;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -66,6 +71,38 @@ public class Siniestro {
 	public static Siniestro findSiniestro(Integer sinId) {
         if (sinId == null) return null;
         return entityManager().find(Siniestro.class, sinId);
+    }
+	
+	public static Siniestro findSiniestroByNumSiniestro(String sinNumero) {
+        if (sinNumero == null) return null;  
+        /*Siniestro res = entityManager().createQuery("SELECT o FROM Siniestro o "
+						+ "WHERE o.sinNumero = :numero", Siniestro.class)
+						.setParameter("numero", sinNumero)
+						.getSingleResult();       
+        return res;*/
+       
+        CriteriaBuilder cb = entityManager().getCriteriaBuilder();
+        CriteriaQuery<Siniestro> cq = cb.createQuery(Siniestro.class);
+        Root<Siniestro> siniestroRoot = cq.from(Siniestro.class);
+        
+        /*
+        Predicate criterios = cb.equal(siniestroRoot.get("sinNumero"), sinNumero);
+        Predicate criterios2 = cb.equal(siniestroRoot.get("sinPoliza"), "efg456");
+        
+        List<Predicate> condiciones = new ArrayList<Predicate>();
+        
+        
+        condiciones.add(criterios);
+        condiciones.add(criterios2);
+        
+        CriteriaQuery<Siniestro> query = cq.select(siniestroRoot).
+        	where( condiciones.toArray(new Predicate[]{}) ); 
+        */
+        
+        CriteriaQuery<Siniestro> query = cq.select(siniestroRoot).
+        	where( cb.equal(siniestroRoot.get("sinNumero"), sinNumero) ); 
+               
+        return entityManager().createQuery( query ).getSingleResult();        
     }
 
 	public static List<Siniestro> findSiniestroEntries(int firstResult, int maxResults) {
