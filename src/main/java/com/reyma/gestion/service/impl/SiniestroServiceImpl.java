@@ -23,6 +23,10 @@ public class SiniestroServiceImpl implements SiniestroService {
 	public Siniestro findSiniestro(Integer id) {
         return Siniestro.findSiniestro(id);
     }
+	
+	public Siniestro findSiniestroByNumSiniestro(String numSiniestro) {
+        return Siniestro.findSiniestroByNumSiniestro(numSiniestro);
+    }
 
 	public List<Siniestro> findAllSiniestroes() {
         return Siniestro.findAllSiniestroes();

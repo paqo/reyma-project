@@ -468,3 +468,15 @@ fieldset th {
 	margin-top: 1.6em; text-align: right; font-weight:bold; color: white;
 }
 
+/* ########## ESTILOS PARA TABLA DE RESULTADOS DE BUSQUEDAS ########## */
+
+#resultados { border-collapse:collapse;}
+#resultados h4 { margin:0px; padding:0px;}
+#resultados img { float:right;}
+#resultados ul { margin:10px 0 10px 40px; padding:0px;}
+#resultados th { background:#7CB8E2 url(images/buscador/header_bkg.png) repeat-x scroll center left; color:#fff; padding:7px 15px; text-align:left;}
+#resultados td { background:#73DA5A none repeat-x scroll center left; color:#000; padding:7px 15px; }
+#resultados tr.odd td { background:#fff url(images/buscador/row_bkg.png) repeat-x scroll center left; cursor:pointer; }
+#resultados div.arrow { background:transparent url(images/buscador/arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;}
+#resultados div.up { background-position:0px 0px;}
+

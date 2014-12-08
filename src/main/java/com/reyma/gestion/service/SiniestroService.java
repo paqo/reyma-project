@@ -31,4 +31,7 @@ public interface SiniestroService {
 
 	public abstract Siniestro updateSiniestro(Siniestro siniestro);
 
+
+	public abstract Siniestro findSiniestroByNumSiniestro(String sinNumero);
+
 }

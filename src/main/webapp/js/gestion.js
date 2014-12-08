@@ -14,3 +14,15 @@ function generaNuevoAfectado(asegurado, perjudicado,idContador) {
 	var div = "<div id='" + idContador + "'>" + "</div>";	
 	return h3 + div;
 }
+
+function formatearResultados(contenedorResultados) {
+	$("#" + contenedorResultados + " tr:odd").addClass("odd");
+	$("#" + contenedorResultados + " tr:not(.odd)").hide();
+	$("#" + contenedorResultados + " tr:first-child").show();    
+	$("#" + contenedorResultados +" tr.odd").click(function(){
+        $(this).next("tr").toggle();		
+        $(this).find(".arrow").toggleClass("up");
+    }); 
+	return;
+}
+

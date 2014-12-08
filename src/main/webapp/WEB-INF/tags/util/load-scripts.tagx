@@ -10,6 +10,7 @@
   <spring:url value="/resources/spring/Spring-Dojo.js" var="spring_dojo_url" />
   <spring:url value="/resources/images/favicon.ico" var="favicon" />
   <spring:url value="/resources/js/jquery.min.js" var="jquery" />
+  <spring:url value="/resources/js/gestion.js" var="gestion" />
   <spring:url value="/resources/js/jquery-ui.min.js" var="jquery_ui" />
   <spring:url value="/resources/js/checkswitch.js" var="iphone_chk" />
   <spring:url value="/resources/styles/jquery-ui.css" var="jquery_ui_css" />
@@ -33,6 +34,7 @@
   <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   
   <script type="text/javascript" src="${jquery}"><!-- required for FF3 and Opera --></script>
+  <script type="text/javascript" src="${gestion}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" src="${jquery_ui}"><!-- required for FF3 and Opera --></script>
   <script type="text/javascript" src="${iphone_chk}"><!-- required for FF3 and Opera --></script>
   

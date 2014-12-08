@@ -29,7 +29,7 @@ public class SiniestroListadoDTO implements Serializable {
 		compania = sin.getSinComId().getComCodigo();
 		numeroSiniestro = sin.getSinNumero();
 		fecha = sin.getSinFechaOcurrencia();
-		List<AfectadoDomicilioSiniestro> afectados = adsService.findAfectadosDomicilioBySiniestro(id);
+		List<AfectadoDomicilioSiniestro> afectados = adsService.findAfectadosDomicilioByIdSiniestro(id);
 		StringBuilder sbAfec = new StringBuilder();
 		StringBuilder sbDom = new StringBuilder();
 		for (AfectadoDomicilioSiniestro afectado : afectados) {

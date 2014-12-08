@@ -1,7 +1,6 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,19 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-import com.reyma.gestion.dao.Persona;
+import com.reyma.gestion.busqueda.BusquedaHelper;
+import com.reyma.gestion.busqueda.dto.ResultadoBusqueda;
 import com.reyma.gestion.dao.Siniestro;
-import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
-import com.reyma.gestion.service.CompaniaService;
-import com.reyma.gestion.service.EstadoService;
-import com.reyma.gestion.service.FacturaService;
-import com.reyma.gestion.service.MunicipioService;
-import com.reyma.gestion.service.OficioService;
-import com.reyma.gestion.service.OperarioService;
-import com.reyma.gestion.service.ProvinciaService;
-import com.reyma.gestion.service.SiniestroService;
-import com.reyma.gestion.service.TipoSiniestroService;
-import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.util.Fechas;
 
 import flexjson.JSONSerializer;
@@ -37,44 +26,11 @@ import flexjson.JSONSerializer;
 public class BusquedaController {
 
 	@Autowired
-    SiniestroService siniestroService;
-
-	@Autowired
-    AfectadoDomicilioSiniestroService afectadoDomicilioSiniestroService;
-
-	@Autowired
-    CompaniaService companiaService;
-
-	@Autowired
-    EstadoService estadoService;
-	
-	@Autowired
-    OficioService oficioService;
-	
-	@Autowired
-	OperarioService operarioService;
-
-	@Autowired
-    FacturaService facturaService;
-
-	@Autowired
-    TipoSiniestroService tipoSiniestroService;
-
-	@Autowired
-    TrabajoService trabajoService;
-	
-	@Autowired
-    ProvinciaService provinciaService;
-	
-	@Autowired
-    MunicipioService municipioService;
-	
-	@Autowired
-    AfectadoDomicilioSiniestroService adsService;
+	BusquedaHelper busquedas;
 	
 	
 
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
     public String buscar(Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
@@ -83,9 +39,26 @@ public class BusquedaController {
         
         uiModel.asMap().clear();
         JSONSerializer serializer = new JSONSerializer();
-        Map<String, String> test = new HashMap<String, String>();
-        test.put("test", "ola k a�e");
-        return serializer.exclude("class").serialize(test);
+        
+        /*
+        List<ResultadoBusqueda> resultados = new ArrayList<ResultadoBusqueda>();
+        Siniestro sinEnc = siniestroService.findSiniestroByNumSiniestro(siniestro.getSinNumero()); 
+        
+        List<AfectadoDomicilioSiniestro> adsEnc = afectadoDomicilioSiniestroService.
+        		findAfectadosDomicilioByIdSiniestro(sinEnc.getSinId());
+        if ( adsEnc.size() != 0 ){
+        	resultados.add(new ResultadoBusqueda(sinEnc, adsEnc.get(0).getAdsDomId(), adsEnc.get(0).getAdsPerId()));
+        	
+        } */
+        
+        List<Siniestro> sinEncontrados = busquedas.buscar(siniestro, null, null);
+        List<ResultadoBusqueda> resultados = busquedas.obtenerResultadosBusqueda(sinEncontrados);
+        
+        /* List<Siniestro> siniestros = siniestroService.findAllSiniestroes();        
+        List<ResultadoBusqueda> resultados = busquedas.obtenerResultadosBusqueda(siniestros); */
+       
+        return serializer.exclude("*.class").serialize(resultados);
+        
     }
 
 	@RequestMapping(params = "form", produces = "text/html")

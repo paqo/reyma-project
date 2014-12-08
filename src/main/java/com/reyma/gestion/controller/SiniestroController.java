@@ -187,7 +187,7 @@ public class SiniestroController {
         addDateTimeFormatPatterns(uiModel);
         
         List<AfectadoDomicilioSiniestro> afectados = 
-        		afectadoDomicilioSiniestroService.findAfectadosDomicilioBySiniestro(siniestro.getSinId());
+        		afectadoDomicilioSiniestroService.findAfectadosDomicilioByIdSiniestro(siniestro.getSinId());
         
         List<Trabajo> trabajos = trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId());
         
