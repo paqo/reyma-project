@@ -20,8 +20,8 @@ function formatearResultados(contenedorResultados) {
 	$("#" + contenedorResultados + " tr:not(.odd)").hide();
 	$("#" + contenedorResultados + " tr:first-child").show();    
 	$("#" + contenedorResultados +" tr.odd").click(function(){
-        $(this).next("tr").toggle();		
-        $(this).find(".arrow").toggleClass("up");
+		$(this).next("tr").toggle();
+        $(this).find(".arrow").toggleClass("up");        
     }); 
 	return;
 }

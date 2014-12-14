@@ -1,10 +1,13 @@
 package com.reyma.gestion.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.SiniestroService;
 
@@ -54,4 +57,13 @@ public class SiniestroServiceImpl implements SiniestroService {
 			int maxResults, String sortField, String sortOrder) {
 		return Siniestro.findSiniestroEntries(firstResult, maxResults, sortField, sortOrder);
 	}
+
+	@Override
+	public List<Siniestro> buscarSiniestrosPorCriterios(Siniestro siniestro,
+			Domicilio domicilio, Persona persona, Map<String, Object> params) {
+		return Siniestro.buscarSiniestrosPorCriterios(siniestro, domicilio, persona, params);
+	}
+
+	
+	
 }

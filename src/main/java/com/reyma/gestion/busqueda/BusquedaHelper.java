@@ -1,9 +1,14 @@
 package com.reyma.gestion.busqueda;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,15 @@ public class BusquedaHelper {
 	@Autowired
 	private SiniestroService siniestroService;
 	
+	public List<Siniestro> buscar(Siniestro siniestro, Domicilio domicilio, Persona persona, Map<String, Object> parametrosAdicionales) {
+		List<Siniestro> res = new ArrayList<Siniestro>();
+		
+		res = siniestroService.buscarSiniestrosPorCriterios(siniestro, domicilio, 
+				persona, parametrosAdicionales);
+		
+		return res;
+	}
+	
 	public List<ResultadoBusqueda> obtenerResultadosBusqueda( List<Siniestro> siniestros ) {
 		List<ResultadoBusqueda> res = new ArrayList<ResultadoBusqueda>();
 		AfectadoDomicilioSiniestro ads;
@@ -37,14 +51,42 @@ public class BusquedaHelper {
 		}		
 		return res;
 	}
-	
-	public List<Siniestro> buscar(Siniestro siniestro, Domicilio domicilio, Persona persona) {
-		List<Siniestro> res = new ArrayList<Siniestro>();
-		Siniestro aux;
-		if ( !StringUtils.isEmpty(siniestro.getSinNumero()) ){
-			aux = siniestroService.findSiniestroByNumSiniestro(siniestro.getSinNumero());
-			res.add(aux);
+
+	public Map<String, Object> obtenerParametrosAdicionales(
+			HttpServletRequest request) {
+		
+		Map<String, Object> params = new HashMap<String, Object>();     
+		
+		// fecha ini
+		Calendar cal = obtenerCalendarDesdeRequest(request, "fechaIni");
+		if ( cal != null ){
+			params.put("fechaIni", cal);
 		}
-		return res;
+		// fecha fin
+		cal = obtenerCalendarDesdeRequest(request, "fechaFin");
+		if ( cal != null ){
+			params.put("fechaFin", cal);
+		}
+		return params;
+	}
+
+	private Calendar obtenerCalendarDesdeRequest(HttpServletRequest request, String nombreParam) {
+		if ( request.getParameter(nombreParam) == null ){
+			return null;
+		}
+		
+		Calendar cal1 = null;
+		try {
+			String _f1 = request.getParameter(nombreParam);
+			String[] chunks = _f1.split("\\/");
+			cal1 = new GregorianCalendar(Integer.parseInt(chunks[2]), 
+					Integer.parseInt(chunks[1]) - 1, /* 0-based */
+					Integer.parseInt(chunks[0]) );
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cal1 = null;
+		}
+		return cal1;
 	}
 }

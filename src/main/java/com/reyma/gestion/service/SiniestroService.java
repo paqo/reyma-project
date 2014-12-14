@@ -1,6 +1,9 @@
 package com.reyma.gestion.service;
 import java.util.List;
+import java.util.Map;
 
+import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 
 public interface SiniestroService {
@@ -34,4 +37,6 @@ public interface SiniestroService {
 
 	public abstract Siniestro findSiniestroByNumSiniestro(String sinNumero);
 
+	
+	public abstract List<Siniestro> buscarSiniestrosPorCriterios(Siniestro siniestro, Domicilio domicilio, Persona persona, Map<String, Object> params);
 }

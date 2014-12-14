@@ -29,7 +29,7 @@
 			            <th></th>
 			        </tr>
 			        <tr>
-			            <td colspan="5">No hay resultados</td>
+			            <td colspan="5">No hay resultados que mostrar</td>
 			            <td><div class="arrow"></div></td>
 			        </tr>
     			</table>
@@ -69,40 +69,57 @@
 				}).click( function() {		   
 					var action = "/gestion/busquedas";
 					var params = {
-									sinNumero : $("#numSiniestro").val()
+									//sinNumero : $("#numSiniestro").val(),
+									perNif: "jare" //47866177A
+									/*,
+									sinPoliza : "22222222222222",
+									sinComId : 1,
+									domDireccion : "refresca",
+									fechaIni : "10/09/2014",
+									fechaFin : "20/09/2014" */									
 					 			 };
 					$.post(action, params, function( data ) {				
 						// resultado						
 						var filaCabecera = $("#resultados").find("#resultados-cabecera").clone();
 						$("#resultados").empty();
 						$( filaCabecera ).appendTo( "#resultados" );
-						var filaRaw;						
-						$.each(data, function( index, value ) {
-							  filaRaw = "<tr>";
-							  filaRaw += "<td>" + data[index].compania + "</td>";
-							  filaRaw += "<td>" + data[index].fecha + "</td>";
-							  filaRaw += "<td>" + data[index].numeroSiniestro + "</td>";
-							  filaRaw += "<td>" + data[index].domicilio + "</td>";
-							  filaRaw += "<td>" + data[index].asegurado + "</td>";
-							  filaRaw += "<td><div class='arrow'></div></td>";							  
-							  filaRaw += "</tr>"
-							  $( filaRaw ).appendTo( "#resultados" );
-							  filaRaw = "<tr>";
-							  filaRaw += "<td colspan='6'>"; 
-							  filaRaw += "<div style='float: left; width: 100%;'>";
-							  filaRaw += "<div style='float: left; width: 25%; color:#000000;'>" + data[index].estado + "</div>";
-							  filaRaw += "<div style='float: left; width: 30%; color:#000000;'>Fecha de entrada: " + data[index].fechaEntrada + "</div>";
-							  filaRaw += "<div style='float: left; width: 25%; color:#000000; text-align: center;'>(" + data[index].tipo + ")</div>";
-							  filaRaw += "<div style='float: left; width: 20%;'>";							  
-							  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "'><img style='float:left;' title='ver siniestro' src='/gestion/resources/images/show.png' class='image'/></a></div>";							  
-							  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "?form'><img style='float:left;' title='ir al siniestro' src='/gestion/resources/images/update.png' class='image'/></a></div>";
-							  filaRaw += "</div>";
-							  filaRaw += "</div>";
-							  filaRaw += "<div style='float: left; width: 100%; margin-top: 1em; color:#000000;'>Descripci&oacute;n: " + data[index].descripcion + "</div>";
-							  filaRaw += "</td>";							  
-							  filaRaw += "</tr>";
-							  $( filaRaw ).appendTo( "#resultados" );
-						});
+						var filaRaw;
+						if ( data.length == 0 ){ // hay resultados?
+							filaRaw = "<tr>"; 
+							filaRaw += "<td colspan='5'>No se han encontrado resultados</td>";
+							filaRaw += "<td><div class='arrow'></div></td>";
+							filaRaw += "</tr>";		
+							$( filaRaw ).appendTo( "#resultados" );
+						} else {
+							$.each(data, function( index, value ) {
+								  filaRaw = "<tr>";
+								  filaRaw += "<td>" + data[index].compania + "</td>";
+								  filaRaw += "<td>" + data[index].fecha + "</td>";
+								  filaRaw += "<td>" + data[index].numeroSiniestro + "</td>";
+								  filaRaw += "<td>" + data[index].domicilio + "</td>";
+								  filaRaw += "<td>" + data[index].asegurado + "</td>";
+								  filaRaw += "<td><div class='arrow'></div></td>";							  
+								  filaRaw += "</tr>"
+								  $( filaRaw ).appendTo( "#resultados" );
+								  filaRaw = "<tr>";
+								  filaRaw += "<td colspan='6'>";
+								  filaRaw += "<div style='float: left; width: 100%;' class='detalle'>";
+								  filaRaw += "<div style='float: left; width: 100%;'>";
+								  filaRaw += "<div style='float: left; width: 25%; color:#000000;'>" + data[index].estado + "</div>";
+								  filaRaw += "<div style='float: left; width: 30%; color:#000000;'>Fecha de entrada: " + data[index].fechaEntrada + "</div>";
+								  filaRaw += "<div style='float: left; width: 25%; color:#000000; text-align: center;'>(" + data[index].tipo + ")</div>";
+								  filaRaw += "<div style='float: left; width: 20%;'>";							  
+								  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "'><img style='float:left;' title='ver siniestro' src='/gestion/resources/images/show.png' class='image'/></a></div>";							  
+								  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "?form'><img style='float:left;' title='ir al siniestro' src='/gestion/resources/images/update.png' class='image'/></a></div>";
+								  filaRaw += "</div>";
+								  filaRaw += "</div>";
+								  filaRaw += "<div style='float: left; width: 100%; margin-top: 1em; color:#000000;'>Descripci&oacute;n: " + data[index].descripcion + "</div>";
+								  filaRaw += "</div>";
+								  filaRaw += "</td>";							  
+								  filaRaw += "</tr>";
+								  $( filaRaw ).appendTo( "#resultados" );
+							});	
+						}						
 						formatearResultados("resultados");
 					}).error(function() {
 						$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );

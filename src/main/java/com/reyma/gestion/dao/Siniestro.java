@@ -1,6 +1,8 @@
 package com.reyma.gestion.dao;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,9 +21,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -75,34 +81,11 @@ public class Siniestro {
 	
 	public static Siniestro findSiniestroByNumSiniestro(String sinNumero) {
         if (sinNumero == null) return null;  
-        /*Siniestro res = entityManager().createQuery("SELECT o FROM Siniestro o "
+        Siniestro res = entityManager().createQuery("SELECT o FROM Siniestro o "
 						+ "WHERE o.sinNumero = :numero", Siniestro.class)
 						.setParameter("numero", sinNumero)
 						.getSingleResult();       
-        return res;*/
-       
-        CriteriaBuilder cb = entityManager().getCriteriaBuilder();
-        CriteriaQuery<Siniestro> cq = cb.createQuery(Siniestro.class);
-        Root<Siniestro> siniestroRoot = cq.from(Siniestro.class);
-        
-        /*
-        Predicate criterios = cb.equal(siniestroRoot.get("sinNumero"), sinNumero);
-        Predicate criterios2 = cb.equal(siniestroRoot.get("sinPoliza"), "efg456");
-        
-        List<Predicate> condiciones = new ArrayList<Predicate>();
-        
-        
-        condiciones.add(criterios);
-        condiciones.add(criterios2);
-        
-        CriteriaQuery<Siniestro> query = cq.select(siniestroRoot).
-        	where( condiciones.toArray(new Predicate[]{}) ); 
-        */
-        
-        CriteriaQuery<Siniestro> query = cq.select(siniestroRoot).
-        	where( cb.equal(siniestroRoot.get("sinNumero"), sinNumero) ); 
-               
-        return entityManager().createQuery( query ).getSingleResult();        
+        return res;      
     }
 
 	public static List<Siniestro> findSiniestroEntries(int firstResult, int maxResults) {
@@ -325,4 +308,229 @@ public class Siniestro {
 	public void setSinUrgente(Short sinUrgente) {
         this.sinUrgente = sinUrgente;
     }
+
+	public static List<Siniestro> buscarSiniestrosPorCriterios(Siniestro siniestro, Domicilio domicilio, 
+			Persona afectado, Map<String, Object> parametrosAdicionales) {
+		if (siniestro == null) return null;
+       
+        CriteriaBuilder cb = entityManager().getCriteriaBuilder();
+        CriteriaQuery<Siniestro> cq = cb.createQuery(Siniestro.class);
+        final Root<Siniestro> siniestroRoot = cq.from(Siniestro.class);
+        
+        List<Predicate> condiciones = new ArrayList<Predicate>();
+        Join<Siniestro, AfectadoDomicilioSiniestro> joinAds = null;
+        
+        //1.- condiciones generales del siniestro
+        if ( anyadirCondicionesParaEntidad(siniestro, parametrosAdicionales) ){        	
+            obtenerCondicionesSiniestro(siniestro, parametrosAdicionales, siniestroRoot, condiciones, cb); 
+        }     
+        
+        if ( anyadirCondicionesParaEntidad(domicilio, null) ||
+        		anyadirCondicionesParaEntidad(afectado, null) ){
+        	joinAds = siniestroRoot.join("afectadoDomicilioSiniestroes");
+        }
+        
+        //2.- si hay condiciones del domicilio        
+        obtenerCondicionesDomicilio(domicilio, siniestroRoot, joinAds, condiciones, cb);
+        
+        //3.- si hay condiciones de asegurado/perjudicado
+        obtenerCondicionesAfectado(afectado, siniestroRoot, joinAds, condiciones, cb);
+        
+        CriteriaQuery<Siniestro> query = 
+        		cq.select(siniestroRoot).
+            	where( condiciones.toArray(new Predicate[]{}) ).
+            	distinct(true).
+            	orderBy( cb.asc(siniestroRoot.get("sinComId")),
+            			cb.desc(siniestroRoot.get("sinFechaOcurrencia")) ); 
+        
+        return entityManager().createQuery( query ).getResultList();  
+	}
+	
+	private static void obtenerCondicionesAfectado(Persona afectado,
+			Root<Siniestro> siniestroRoot,
+			Join<Siniestro, AfectadoDomicilioSiniestro> joinAds,
+			List<Predicate> condiciones, CriteriaBuilder cb) {
+		
+		if ( joinAds == null  ){
+			return;
+		}
+		Predicate condicion;
+		Expression<String> exp;		
+		if ( !StringUtils.isEmpty(afectado.getPerNombre()) ){			
+			exp = joinAds.get("adsPerId").get("perNombre");
+	    	condicion = cb.like(exp, "%" + afectado.getPerNombre()+ "%");
+	    	condiciones.add(condicion);		
+		}
+		if ( !StringUtils.isEmpty(afectado.getPerNif()) ){
+			exp = joinAds.get("adsPerId").get("perNif");
+	    	condicion = cb.like(exp, "%" + afectado.getPerNif()+ "%");
+	    	condiciones.add(condicion);		
+		}
+	}
+
+	private static void obtenerCondicionesDomicilio(Domicilio domicilioCondiciones, 
+			Root<Siniestro> siniestroRoot, Join<Siniestro, AfectadoDomicilioSiniestro> joinAds, 
+			List<Predicate> condiciones, CriteriaBuilder cb){
+		
+		if ( joinAds == null  ){
+			return;
+		}
+		Predicate condicion;
+		Expression<String> exp;		
+		if ( !StringUtils.isEmpty(domicilioCondiciones.getDomDireccion()) ){
+			exp = joinAds.get("adsDomId").get("domDireccion");
+	    	condicion = cb.like(exp, "%" + domicilioCondiciones.getDomDireccion() + "%");
+	    	condiciones.add(condicion);		
+		}
+	}
+	
+	private static List<Predicate> obtenerCondicionesSiniestro(Siniestro siniestroCondiciones, Map<String, Object> parametrosAdicionales, 
+			Root<Siniestro> siniestroRoot, List<Predicate> condiciones, CriteriaBuilder cb){
+		
+		Predicate condicion;
+		Expression<String> exp;
+		
+		//TODO: hacer con reflexion?
+		if ( !StringUtils.isEmpty(siniestroCondiciones.getSinNumero()) ){
+			exp = siniestroRoot.get("sinNumero");			
+			condicion = cb.like( exp, "%" + siniestroCondiciones.getSinNumero() + "%");
+			condiciones.add(condicion);
+		}
+		
+		if ( !StringUtils.isEmpty(siniestroCondiciones.getSinPoliza() ) ){
+			condicion = cb.equal(siniestroRoot.get("sinPoliza"), siniestroCondiciones.getSinPoliza());
+			condiciones.add(condicion);
+		}
+		
+		if ( siniestroCondiciones.getSinComId() != null ){
+			condicion = cb.equal(siniestroRoot.get("sinComId"), siniestroCondiciones.getSinComId());
+			condiciones.add(condicion);
+		}
+
+		if ( parametrosAdicionales.containsKey("fechaIni") ){
+			Calendar cal1 = (Calendar)parametrosAdicionales.get("fechaIni");
+			if ( parametrosAdicionales.containsKey("fechaFin") ){ // periodo
+				Calendar cal2 = (Calendar)parametrosAdicionales.get("fechaFin");
+				condicion = cb.between(siniestroRoot.<Calendar>get("sinFechaOcurrencia"), cal1, cal2);
+			} else { // fecha exacta
+				condicion = cb.equal(siniestroRoot.get("sinFechaOcurrencia"), cal1);				
+			}
+			condiciones.add(condicion);
+		}
+		
+		return condiciones;
+	}
+	
+	/**
+	 * Método para comprobar si se debe hacer join (crer un objeto
+	 * de tipo Root) con esa entidad
+	 * @param dao
+	 * @return
+	 */
+	private static boolean anyadirCondicionesParaEntidad(Object dao, Map<String, Object> parametrosAdicionales) {
+		if ( dao != null ){
+			if ( dao.getClass().isAssignableFrom(Siniestro.class) ){
+				Siniestro sin = (Siniestro) dao;
+				return !StringUtils.isEmpty(sin.getSinNumero() ) || 
+						!StringUtils.isEmpty(sin.getSinPoliza() ) || 
+						(sin.getSinComId() != null && sin.getSinComId().getComId() != null ) || 
+						parametrosAdicionales.containsKey("fechaIni");
+			} else if ( dao.getClass().isAssignableFrom(Domicilio.class) ){
+				Domicilio dom = (Domicilio) dao;
+				return !StringUtils.isEmpty(dom.getDomDireccion());
+			} else if ( dao.getClass().isAssignableFrom(Persona.class) ){
+				Persona per = (Persona) dao;
+				return !StringUtils.isEmpty(per.getPerNombre()) ||
+						!StringUtils.isEmpty(per.getPerNif());
+			}	
+		}			
+		return false;
+	}
+	
+	
+	/*
+	@SuppressWarnings("unchecked")
+	private static List<Predicate> obtenerCondicionesDomicilio(Domicilio domicilio,
+			Integer idSiniestro, Root<Siniestro> siniestroRoot, List<Predicate> condiciones,
+			CriteriaBuilder cb, CriteriaQuery<Siniestro> cq) {		
+		
+		Predicate condicion;		
+		final Root<AfectadoDomicilioSiniestro> adsRoot;
+		boolean adsFromAnyadido = cq.getRoots().contains(cq.from(AfectadoDomicilioSiniestro.class));
+		
+		if ( !StringUtils.isEmpty(domicilio.getDomDireccion() ) ){
+			if ( !adsFromAnyadido ){
+				adsRoot = cq.from(AfectadoDomicilioSiniestro.class);	
+			} else {
+				adsRoot = (Root<AfectadoDomicilioSiniestro>) obtenerRootByClass(cq, AfectadoDomicilioSiniestro.class);
+			}					
+			condicion = cb.equal(adsRoot.get("adsSinId"), siniestroRoot);
+			condiciones.add(condicion);
+			// direccion del domicilio
+			Expression<String> path = adsRoot.get("adsDomId").get("domDireccion");			
+			condicion = cb.like( path, "%" + domicilio.getDomDireccion() + "%");
+			condiciones.add(condicion);
+		}		
+		return condiciones;
+	}
+	*/
+	
+	
+	/*private static List<Predicate> obtenerCondicionesDomicilio(Domicilio domicilio,
+			Integer idSiniestro, Root<Siniestro> siniestroRoot, List<Predicate> condiciones,
+			CriteriaBuilder cb, CriteriaQuery<Siniestro> cq) {		
+		
+		
+		
+		
+		Predicate condicion;		
+		final Root<AfectadoDomicilioSiniestro> adsRoot;
+		boolean adsFromAnyadido = cq.getRoots().contains(cq.from(AfectadoDomicilioSiniestro.class));
+		
+		if ( !StringUtils.isEmpty(domicilio.getDomDireccion() ) ){
+			if ( !adsFromAnyadido ){
+				adsRoot = cq.from(AfectadoDomicilioSiniestro.class);	
+			} else {
+				adsRoot = (Root<AfectadoDomicilioSiniestro>) obtenerRootByClass(cq, AfectadoDomicilioSiniestro.class);
+			}					
+			condicion = cb.equal(adsRoot.get("adsSinId"), siniestroRoot);
+			condiciones.add(condicion);
+			// direccion del domicilio
+			Expression<String> path = adsRoot.get("adsDomId").get("domDireccion");			
+			condicion = cb.like( path, "%" + domicilio.getDomDireccion() + "%");
+			condiciones.add(condicion);
+		}		
+		return condiciones;
+	} 
+	
+	private static Root<?> obtenerRootByClass(
+			CriteriaQuery<Siniestro> cq, Class<?> clazz) {
+		Iterator<Root<?>> it = cq.getRoots().iterator();		
+		while (it.hasNext()){
+			Root<?> root = it.next();
+			if (root.getJavaType().isAssignableFrom(clazz)){
+				return (Root<?>) it.next();
+			}			
+		}
+		return null;
+	} */
+	
+	/*private static List<Predicate> obtenerCondicionesAfectado(Persona afectado,
+			Integer idSiniestro, Root<Siniestro> siniestroRoot, List<Predicate> condiciones,
+			CriteriaBuilder cb, CriteriaQuery<Siniestro> cq) {		
+		
+		Predicate condicion;
+		
+		if ( !StringUtils.isEmpty(afectado.getPerNombre() ) ){			
+       	 	final Root<AfectadoDomicilioSiniestro> adsRoot = cq.from(AfectadoDomicilioSiniestro.class);			
+			condicion = cb.equal(adsRoot.get("adsSinId"), siniestroRoot);
+			condiciones.add(condicion);
+			// direccion del domicilio
+			Expression<String> path = adsRoot.get("adsDomId").get("domDireccion");			
+			condicion = cb.like( path, "%" + afectado.getPerNombre() + "%");
+			condiciones.add(condicion);
+		}		
+		return condiciones;
+	}*/
+	
 }
