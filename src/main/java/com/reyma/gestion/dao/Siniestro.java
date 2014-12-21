@@ -59,6 +59,13 @@ public class Siniestro {
 	public static List<Siniestro> findAllSiniestroes() {
         return entityManager().createQuery("SELECT o FROM Siniestro o", Siniestro.class).getResultList();
     }
+	
+	public static List<Siniestro> findSiniestrosParaFecha(Calendar fecha) {
+        return entityManager().createQuery("SELECT o FROM Siniestro o "
+				+ "WHERE o.sinFechaOcurrencia = :fecha", Siniestro.class)
+				.setParameter("fecha", fecha)
+				.getResultList();
+    }
 
 	public static List<Siniestro> findAllSiniestroes(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Siniestro o";

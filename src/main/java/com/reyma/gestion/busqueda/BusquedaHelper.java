@@ -38,6 +38,10 @@ public class BusquedaHelper {
 		return res;
 	}
 	
+	public List<Siniestro> buscarSiniestrosParaFecha(Calendar fecha) {		
+		return siniestroService.findSiniestrosParaFecha(fecha);
+	}
+	
 	public List<ResultadoBusqueda> obtenerResultadosBusqueda( List<Siniestro> siniestros ) {
 		List<ResultadoBusqueda> res = new ArrayList<ResultadoBusqueda>();
 		AfectadoDomicilioSiniestro ads;

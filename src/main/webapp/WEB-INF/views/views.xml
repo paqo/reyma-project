@@ -3,7 +3,8 @@
 <tiles-definitions>
 
   <definition extends="default" name="index">
-    <put-attribute name="body" value="/WEB-INF/views/index.jspx"/>
+    <!-- <put-attribute name="body" value="/WEB-INF/views/index.jspx"/> -->
+    <put-attribute name="body" value="/WEB-INF/views/index.jsp"/>
   </definition>
 
   <definition extends="public" name="dataAccessFailure">

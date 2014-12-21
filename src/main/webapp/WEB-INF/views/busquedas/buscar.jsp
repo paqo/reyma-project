@@ -70,7 +70,7 @@
 					var action = "/gestion/busquedas";
 					var params = {
 									//sinNumero : $("#numSiniestro").val(),
-									perNif: "jare" //47866177A
+									perNif: "nif" //47866177A
 									/*,
 									sinPoliza : "22222222222222",
 									sinComId : 1,

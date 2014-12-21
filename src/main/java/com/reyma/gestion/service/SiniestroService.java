@@ -1,4 +1,5 @@
 package com.reyma.gestion.service;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,10 @@ public interface SiniestroService {
 
 
 	public abstract Siniestro findSiniestroByNumSiniestro(String sinNumero);
-
+	
+	
+	public List<Siniestro> findSiniestrosParaFecha(Calendar fecha);
+	
 	
 	public abstract List<Siniestro> buscarSiniestrosPorCriterios(Siniestro siniestro, Domicilio domicilio, Persona persona, Map<String, Object> params);
 }

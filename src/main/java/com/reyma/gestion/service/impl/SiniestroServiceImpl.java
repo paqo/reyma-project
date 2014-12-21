@@ -1,5 +1,6 @@
 package com.reyma.gestion.service.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class SiniestroServiceImpl implements SiniestroService {
 	public List<Siniestro> findAllSiniestroes() {
         return Siniestro.findAllSiniestroes();
     }
+	
+	public List<Siniestro> findSiniestrosParaFecha(Calendar fecha) {
+		return Siniestro.findSiniestrosParaFecha(fecha);
+	}
 
 	public List<Siniestro> findSiniestroEntries(int firstResult, int maxResults) {
         return Siniestro.findSiniestroEntries(firstResult, maxResults);

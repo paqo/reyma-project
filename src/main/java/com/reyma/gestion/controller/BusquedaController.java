@@ -1,7 +1,10 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +45,33 @@ public class BusquedaController {
         List<ResultadoBusqueda> resultados;
 		try {
 			List<Siniestro> sinEncontrados = busquedas.buscar(siniestro, domicilio, persona, parametrosAdicionales);
+			resultados = busquedas.obtenerResultadosBusqueda(sinEncontrados);
+		} catch (Exception e) {			
+			e.printStackTrace();
+			resultados = new ArrayList<ResultadoBusqueda>();
+		}       
+        return serializer.exclude("*.class").serialize(resultados);        
+    }
+	
+	@RequestMapping( value="inicio", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+    public String inicio(Model uiModel, HttpServletRequest request) {
+                
+        uiModel.asMap().clear();
+        JSONSerializer serializer = new JSONSerializer();
+        String fechaStr = request.getParameter("fecha");
+        List<ResultadoBusqueda> resultados;
+        Calendar fecha = new GregorianCalendar(new Locale("es", "ES"));
+		try {
+			if ( "ayer".equalsIgnoreCase(fechaStr) ){
+				// fecha de ayer
+				fecha.add(Calendar.DAY_OF_MONTH, -1);
+			}			
+			fecha.set(Calendar.HOUR_OF_DAY, 0);
+			fecha.set(Calendar.MINUTE, 0);
+			fecha.set(Calendar.SECOND, 0);
+			//TODO: semana anterior?
+			List<Siniestro> sinEncontrados = busquedas.buscarSiniestrosParaFecha(fecha);
 			resultados = busquedas.obtenerResultadosBusqueda(sinEncontrados);
 		} catch (Exception e) {			
 			e.printStackTrace();

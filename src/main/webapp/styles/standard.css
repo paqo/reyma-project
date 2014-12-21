@@ -470,7 +470,7 @@ fieldset th {
 
 /* ########## ESTILOS PARA TABLA DE RESULTADOS DE BUSQUEDAS ########## */
 
-#resultados { border-collapse:collapse;}
+/* #resultados { border-collapse:collapse;}
 #resultados h4 { margin:0px; padding:0px;}
 #resultados img { float:right;}
 #resultados ul { margin:10px 0 10px 40px; padding:0px;}
@@ -478,5 +478,14 @@ fieldset th {
 #resultados td { background:#73DA5A none repeat-x scroll center left; color:#000; padding:7px 15px; }
 #resultados tr.odd td { background:#fff url(images/buscador/row_bkg.png) repeat-x scroll center left; cursor:pointer; }
 #resultados div.arrow { background:transparent url(images/buscador/arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;}
-#resultados div.up { background-position:0px 0px;}
+#resultados div.up { background-position:0px 0px;} */
 
+#resultados, #sin-hoy, #sin-ayer { border-collapse:collapse;}
+#resultados h4, #sin-hoy h4, #sin-ayer h4 { margin:0px; padding:0px;}
+#resultados img, #sin-hoy img, #sin-ayer img { float:right;}
+#resultados ul, #sin-hoy ul, #sin-ayer ul { margin:10px 0 10px 40px; padding:0px;}
+#resultados th, #sin-hoy th, #sin-ayer th { background:#7CB8E2 url(images/buscador/header_bkg.png) repeat-x scroll center left; color:#fff; padding:7px 15px; text-align:left;}
+#resultados td, #sin-hoy td, #sin-ayer td { background:#73DA5A none repeat-x scroll center left; color:#000; padding:7px 15px; }
+#resultados tr.odd td, #sin-hoy tr.odd td, #sin-ayer tr.odd td { background:#fff url(images/buscador/row_bkg.png) repeat-x scroll center left; cursor:pointer; }
+#resultados div.arrow, #sin-hoy div.arrow, #sin-ayer div.arrow { background:transparent url(images/buscador/arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;}
+#resultados div.up, #sin-hoy div.up, #sin-ayer div.up { background-position:0px 0px;} 
