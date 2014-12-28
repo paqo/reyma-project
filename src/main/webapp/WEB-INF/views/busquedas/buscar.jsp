@@ -8,11 +8,65 @@
     
     	<div><!-- contenedor general -->
     		<div id="contenedorBusquedas">
-    			<div>
-    				<label for="numSiniestro">N&uacute;mero de siniestro:&nbsp;</label>
-    				<input id="numSiniestro" name="sinNumero" value="" />
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="numSiniestro">N&uacute;mero de siniestro:&nbsp;</label>
+	    				<input id="numSiniestro" name="sinNumero" value="" />
+	    			</div>
+	    			<div class="celda-formulario-busqueda">
+	    				<label for="numPoliza">N&uacute;mero de poliza:&nbsp;</label>
+	    				<input id="numPoliza" name="sinPoliza" value="" />
+	    			</div>
     			</div>
-    			<div style="height: 1.4em;">&nbsp;</div>
+    			<div class="espaciador">&nbsp;</div>
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="fechaDesde">Fecha desde:&nbsp;</label>
+	    				<input id="fechaDesde" name="fechaDesde" value="" />
+	    			</div>
+	    			<div class="celda-formulario-busqueda">
+	    				<label for="fechaHasta">Fecha hasta:&nbsp;</label>
+	    				<input id="fechaHasta" name="fechaHasta" value="" />
+	    			</div>
+    			</div>   
+    			<div class="espaciador">&nbsp;</div>
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="nombre">Nombre:&nbsp;</label>
+	    				<input id="nombre" name="nombre" value="" />
+	    			</div>
+	    			<div class="celda-formulario-busqueda">
+	    				<label for="nif">Nif:&nbsp;</label>
+	    				<input id="nif" name="nif" value="" />
+	    			</div>
+    			</div>	
+    			<div class="espaciador">&nbsp;</div>
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="direccion">Direcci&oacute;n:&nbsp;</label>
+	    				<input id="direccion" name="direccion" value="" />
+	    			</div>
+	    			<div class="celda-formulario-busqueda">
+	    				<label for="tlf">Tel&eacute;fono:&nbsp;</label>
+	    				<input id="tlf" name="tlf" value="" />
+	    			</div>
+    			</div>	
+    			<div class="espaciador">&nbsp;</div>
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="compania">Compa&ntilde;&iacute;a:&nbsp;</label>
+	    				<select name="compania" id="compania" style="width: 11.5em;">
+	    					<option value="">-- cualquiera --</option>
+					      	<c:forEach items="${companias}" var="compania" >
+					      		<option value="${compania.comId}">${compania.comCodigo}</option>					      		
+					      	</c:forEach>
+					    </select>
+	    			</div>
+    			</div>
+    			<%--
+    			
+    			 --%>	
+    			<div style="height: 1.4em; float: left; width: 100%;">&nbsp;</div>
     			<div>    				
     				<button id="btnBuscar">Buscar</button>
     			</div>
@@ -20,7 +74,7 @@
     		
     		<div id="contenedorResultados">
     			<table id="resultados">
-    				<tr id="resultados-cabecera">
+    				<tr class="resultados-cabecera">
 			            <th>compa&ntilde;&iacute;a</th>
 			            <th>fecha</th>
 			            <th>n&uacute;m siniestro</th>			            
@@ -64,63 +118,30 @@
 				// boton de buscar
 				$( '#btnBuscar' ).button({		    	
 		 	        icons: {	 	        	
-		 	        	primary: "ui-icon-disk"
+		 	        	primary: "ui-icon-search"
 		 	        }								
 				}).click( function() {		   
 					var action = "/gestion/busquedas";
 					var params = {
-									//sinNumero : $("#numSiniestro").val(),
-									perNif: "nif" //47866177A
-									/*,
-									sinPoliza : "22222222222222",
-									sinComId : 1,
-									domDireccion : "refresca",
-									fechaIni : "10/09/2014",
-									fechaFin : "20/09/2014" */									
+									sinNumero : $("#numSiniestro").val(),
+									sinPoliza : $("#numPoliza").val(),									
+									fechaIni : $("#fechaDesde").val(),	
+									fechaFin : $("#fechaHasta").val(),
+									perNif: $("#nif").val(),									
+									perNombre: $("#nombre").val(),
+									domDireccion : $("#direccion").val(),
+									perTlf1 : $("#tlf").val(),
+									sinComId : $("#compania").val()
 					 			 };
-					$.post(action, params, function( data ) {				
-						// resultado						
-						var filaCabecera = $("#resultados").find("#resultados-cabecera").clone();
-						$("#resultados").empty();
-						$( filaCabecera ).appendTo( "#resultados" );
-						var filaRaw;
-						if ( data.length == 0 ){ // hay resultados?
-							filaRaw = "<tr>"; 
-							filaRaw += "<td colspan='5'>No se han encontrado resultados</td>";
-							filaRaw += "<td><div class='arrow'></div></td>";
-							filaRaw += "</tr>";		
-							$( filaRaw ).appendTo( "#resultados" );
+					$.post(action, params, function( data ) {	
+						if ( data.excedido ){
+							$( "#mensajesUsuario" ).dialog( "option", "title", "Aviso" );
+							$( "#mensajesUsuario" ).children("p").html( "El n&uacute;mero de resultados es demasiado grande, se debe refinar la b&uacute;squeda." );
+							$( "#mensajesUsuario" ).dialog( "open" );
 						} else {
-							$.each(data, function( index, value ) {
-								  filaRaw = "<tr>";
-								  filaRaw += "<td>" + data[index].compania + "</td>";
-								  filaRaw += "<td>" + data[index].fecha + "</td>";
-								  filaRaw += "<td>" + data[index].numeroSiniestro + "</td>";
-								  filaRaw += "<td>" + data[index].domicilio + "</td>";
-								  filaRaw += "<td>" + data[index].asegurado + "</td>";
-								  filaRaw += "<td><div class='arrow'></div></td>";							  
-								  filaRaw += "</tr>"
-								  $( filaRaw ).appendTo( "#resultados" );
-								  filaRaw = "<tr>";
-								  filaRaw += "<td colspan='6'>";
-								  filaRaw += "<div style='float: left; width: 100%;' class='detalle'>";
-								  filaRaw += "<div style='float: left; width: 100%;'>";
-								  filaRaw += "<div style='float: left; width: 25%; color:#000000;'>" + data[index].estado + "</div>";
-								  filaRaw += "<div style='float: left; width: 30%; color:#000000;'>Fecha de entrada: " + data[index].fechaEntrada + "</div>";
-								  filaRaw += "<div style='float: left; width: 25%; color:#000000; text-align: center;'>(" + data[index].tipo + ")</div>";
-								  filaRaw += "<div style='float: left; width: 20%;'>";							  
-								  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "'><img style='float:left;' title='ver siniestro' src='/gestion/resources/images/show.png' class='image'/></a></div>";							  
-								  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "?form'><img style='float:left;' title='ir al siniestro' src='/gestion/resources/images/update.png' class='image'/></a></div>";
-								  filaRaw += "</div>";
-								  filaRaw += "</div>";
-								  filaRaw += "<div style='float: left; width: 100%; margin-top: 1em; color:#000000;'>Descripci&oacute;n: " + data[index].descripcion + "</div>";
-								  filaRaw += "</div>";
-								  filaRaw += "</td>";							  
-								  filaRaw += "</tr>";
-								  $( filaRaw ).appendTo( "#resultados" );
-							});	
-						}						
-						formatearResultados("resultados");
+							cargarTablaResultados(data, "resultados");
+							formatearResultados("resultados");				
+						}								
 					}).error(function() {
 						$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 						$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error en la b&uacute;squeda" );
@@ -129,6 +150,12 @@
 					
 				});	
 	            formatearResultados("resultados");
+	            
+	            // datepickers y combo de companias
+	            $( "#fechaDesde" ).datepicker();
+	            $( "#fechaHasta" ).datepicker();
+	            $( "#compania" ).selectmenu();
+	            
 		  	});
 
 		</script>

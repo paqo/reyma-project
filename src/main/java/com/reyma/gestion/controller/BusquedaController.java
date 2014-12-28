@@ -23,7 +23,7 @@ import com.reyma.gestion.busqueda.dto.ResultadoBusqueda;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
-import com.reyma.gestion.util.Fechas;
+import com.reyma.gestion.service.CompaniaService;
 
 import flexjson.JSONSerializer;
 
@@ -33,6 +33,9 @@ public class BusquedaController {
 
 	@Autowired
 	BusquedaHelper busquedas;
+	
+	@Autowired
+	CompaniaService companiaService;
 
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -45,6 +48,9 @@ public class BusquedaController {
         List<ResultadoBusqueda> resultados;
 		try {
 			List<Siniestro> sinEncontrados = busquedas.buscar(siniestro, domicilio, persona, parametrosAdicionales);
+			if ( sinEncontrados.size() > busquedas.obtenerNumeroMaximoResultadosPermitidos() ){
+				return busquedas.obtenerResultadoLimiteExcedido();
+			}
 			resultados = busquedas.obtenerResultadosBusqueda(sinEncontrados);
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -53,6 +59,12 @@ public class BusquedaController {
         return serializer.exclude("*.class").serialize(resultados);        
     }
 	
+	/**
+	 * Llamada desde la pagina inicial
+	 * @param uiModel
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping( value="inicio", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
     public String inicio(Model uiModel, HttpServletRequest request) {
@@ -86,13 +98,8 @@ public class BusquedaController {
         return "busquedas/inicio";
     }
 
-	void addDateTimeFormatPatterns(Model uiModel) {       
-		uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-        uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-    }
-
-	void populateEditForm(Model uiModel) {
-		addDateTimeFormatPatterns(uiModel);
+	void populateEditForm(Model uiModel) {	
+		 uiModel.addAttribute("companias", companiaService.findAllCompanias());		
     }
 
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

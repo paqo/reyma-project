@@ -1,15 +1,21 @@
 package com.reyma.gestion.busqueda;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
 import com.reyma.gestion.busqueda.dto.ResultadoBusqueda;
@@ -40,6 +46,25 @@ public class BusquedaHelper {
 	
 	public List<Siniestro> buscarSiniestrosParaFecha(Calendar fecha) {		
 		return siniestroService.findSiniestrosParaFecha(fecha);
+	}
+	
+	public int obtenerNumeroMaximoResultadosPermitidos() {
+		Resource resource = new ClassPathResource("com/reyma/gestion/busqueda/busquedas.properties");
+		try {
+			Properties props = PropertiesLoaderUtils.loadProperties(resource);
+			return Integer.parseInt(props.getProperty("busquedas.limiteresultados"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public String obtenerResultadoLimiteExcedido() {
+		return "{\"excedido\": true}";
 	}
 	
 	public List<ResultadoBusqueda> obtenerResultadosBusqueda( List<Siniestro> siniestros ) {
@@ -75,9 +100,9 @@ public class BusquedaHelper {
 	}
 
 	private Calendar obtenerCalendarDesdeRequest(HttpServletRequest request, String nombreParam) {
-		if ( request.getParameter(nombreParam) == null ){
+		if ( StringUtils.isEmpty(request.getParameter(nombreParam)) ){
 			return null;
-		}
+		}		
 		
 		Calendar cal1 = null;
 		try {
