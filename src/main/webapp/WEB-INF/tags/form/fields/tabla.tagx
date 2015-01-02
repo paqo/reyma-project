@@ -89,13 +89,13 @@
                             <spring:param name="sortOrder" value="asc" />
                         </c:if>
                     </spring:url>
-                    <th>
+                    <th id="${fn:substring(columnHeading, 0, 3)}">
                     <c:choose>
                     	<c:when test="${mostrarOrdenacion}">
                     		<a href="${querySortUrl}" class="${sortOrderClass}"><c:out value="${columnHeading}" /> <spring:eval var="colCounter" expression="colCounter  + 1" /></a>
                     	</c:when>
                     	<c:otherwise>
-                    		<c:out escapeXml="false" value="${columnHeading}" /> <spring:eval var="colCounter" expression="colCounter  + 1" />                   		
+                    		<c:out escapeXml="false" value="${columnHeading}" /><spring:eval var="colCounter" expression="colCounter  + 1" />                   		
                     	</c:otherwise>
                     </c:choose> 
                     </th>                   

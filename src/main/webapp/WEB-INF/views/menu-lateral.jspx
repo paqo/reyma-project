@@ -10,7 +10,7 @@
         </menu:category>
 		<!-- facturas -->        
         <menu:category id="c_factura" z="">
-            <menu:item id="i_factura_new" messageCode="global_menu_new" url="/facturas?form" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
+            <menu:item id="i_factura_new" messageCode="global_generic" url="/facturas?form" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
             <menu:item id="i_factura_list" messageCode="global_menu_list" url="/facturas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="s77QdFN3Sd31RGYgNkjNIvIaJBU="/>
         </menu:category>
         <!-- busquedas -->

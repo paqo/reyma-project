@@ -506,3 +506,57 @@ div.celda-formulario-busqueda label {
 	margin-left: 5px;
 	margin-top: 0px;
 }
+
+/* ESTILOS LISTADO DE SINIESTRO */
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Com {
+	width: 10%;
+}
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Num {
+	width: 15%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Dir {
+	width: 35%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Per {
+	width: 25%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Fec {
+	width: 10%;
+}
+
+/* ESTILOS LOGIN */
+
+#contenedor-login {
+	border: 1px solid #BFBFBF;
+}
+
+#contenido-login {
+	padding: 1.6em;
+}
+
+#titulo-login {
+	background-color: #61A023;
+	padding:0.3em;
+}
+
+#titulo-login #titulo {
+	color: white; 
+	text-transform: uppercase; 
+	font-weight: bold;
+}
+
+.titulo-logo {
+  	float: left;
+	color: white;
+	font-size: 25px;
+	font-weight: bold;
+	padding-top: 0.5em;
+}

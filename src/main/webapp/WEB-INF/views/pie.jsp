@@ -2,5 +2,5 @@
     pageEncoding="UTF-8"%>
 
 <div class="pie-contenedor">
-	<div class="pie">Reyma Gesti&oacute;n v1.0.1</div>
+	<div class="pie">ReymaSur Gesti&oacute;n v1.0.1</div>
 </div>

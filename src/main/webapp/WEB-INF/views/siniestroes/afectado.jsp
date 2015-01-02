@@ -13,10 +13,14 @@
 	  				<c:when test="${fn:length(afectadodomiciliosiniestroes) == 0}">
 	  					<jsp:include flush="false" page="afectado_inicial.jsp"></jsp:include>
 	  				</c:when>
-	  				<c:otherwise>
-			  			<c:forEach items="${afectadodomiciliosiniestroes}" var="item" varStatus="num">
+	  				<c:otherwise>						
+						<c:forEach items="${afectadodomiciliosiniestroes}" var="item" varStatus="num">
 				  			<c:set var="contador" value="${num.count}" />
-				  			<h3>Afectado</h3>
+				  			<c:set var="tituloH3" value="${item.adsTafId.tafDescripcion}" />
+				  			<c:if test="${item.adsTafId.tafId == 5}">
+				  				<c:set var="tituloH3" value="ASEGURADO Y PERJUDICADO" />
+				  			</c:if>
+				  			<h3><c:out value="${tituloH3}" /></h3>
 						    <div class="cont-afectados">
 						    	<input type="hidden" name="adsId" id="adsId-${contador}" value="${item.adsId}" />
 						    	<!-- afectado  -->						    				  			
