@@ -25,4 +25,7 @@ public interface TipoSiniestroService {
 
 	public abstract TipoSiniestro updateTipoSiniestro(TipoSiniestro tipoSiniestro);
 
+
+	public abstract TipoSiniestro findTipoSiniestroByDesc(String descripcion);
+
 }

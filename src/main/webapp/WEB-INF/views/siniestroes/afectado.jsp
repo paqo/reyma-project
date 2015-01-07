@@ -17,8 +17,8 @@
 						<c:forEach items="${afectadodomiciliosiniestroes}" var="item" varStatus="num">
 				  			<c:set var="contador" value="${num.count}" />
 				  			<c:set var="tituloH3" value="${item.adsTafId.tafDescripcion}" />
-				  			<c:if test="${item.adsTafId.tafId == 5}">
-				  				<c:set var="tituloH3" value="ASEGURADO Y PERJUDICADO" />
+				  			<c:if test="${item.adsTafId.tafId == 5}">				  				
+				  				<c:set var="tituloH3"><spring:message code="afectados_ambos" /></c:set>
 				  			</c:if>
 				  			<h3><c:out value="${tituloH3}" /></h3>
 						    <div class="cont-afectados">

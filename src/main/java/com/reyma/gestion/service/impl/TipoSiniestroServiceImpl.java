@@ -39,4 +39,8 @@ public class TipoSiniestroServiceImpl implements TipoSiniestroService {
 	public TipoSiniestro updateTipoSiniestro(TipoSiniestro tipoSiniestro) {
         return tipoSiniestro.merge();
     }
+
+	public TipoSiniestro findTipoSiniestroByDesc(String descripcion) {
+		return TipoSiniestro.findTipoSiniestroByDesc(descripcion);
+	}
 }

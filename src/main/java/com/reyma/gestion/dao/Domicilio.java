@@ -53,7 +53,7 @@ public class Domicilio {
     private Provincia domProvId;
 
 	@ManyToOne
-    @JoinColumn(name = "dom_mun_id", referencedColumnName = "mun_id", nullable = false)
+    @JoinColumn(name = "dom_mun_id", referencedColumnName = "mun_id", nullable = true)
     private Municipio domMunId;
 
 	@Column(name = "dom_direccion", length = 80)

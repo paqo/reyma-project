@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,10 +89,15 @@ public class Siniestro {
 	
 	public static Siniestro findSiniestroByNumSiniestro(String sinNumero) {
         if (sinNumero == null) return null;  
-        Siniestro res = entityManager().createQuery("SELECT o FROM Siniestro o "
-						+ "WHERE o.sinNumero = :numero", Siniestro.class)
-						.setParameter("numero", sinNumero)
-						.getSingleResult();       
+        Siniestro res;
+		try {
+			res = entityManager().createQuery("SELECT o FROM Siniestro o "
+							+ "WHERE o.sinNumero = :numero", Siniestro.class)
+							.setParameter("numero", sinNumero)
+							.getSingleResult();
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}       
         return res;      
     }
 
@@ -420,7 +426,7 @@ public class Siniestro {
 				Calendar cal2 = (Calendar)parametrosAdicionales.get("fechaFin");
 				condicion = cb.between(siniestroRoot.<Calendar>get("sinFechaOcurrencia"), cal1, cal2);
 			} else { // fecha exacta
-				condicion = cb.equal(siniestroRoot.get("sinFechaOcurrencia"), cal1);				
+				condicion = cb.equal(siniestroRoot.<Calendar>get("sinFechaOcurrencia"), cal1);				
 			}
 			condiciones.add(condicion);
 		}

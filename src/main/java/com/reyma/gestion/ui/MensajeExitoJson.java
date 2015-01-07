@@ -13,13 +13,14 @@ public class MensajeExitoJson extends MensajeDialogoUIBase implements Serializab
 	public MensajeExitoJson(String mensaje) {
 		this.mensaje = mensaje;
 		recargar = false;
-		titulo = "Operaci&oacute;n realizada con &eacute;xito";
+		//titulo = "Operaci&oacute;n realizada con &eacute;xito";
+		titulo = "Operación realizada correctamente";
 	}
 
 	public MensajeExitoJson(String mensaje, boolean recargar) {
 		this.mensaje = mensaje;
 		this.recargar = recargar;	
-		titulo = "Operaci&oacute;n realizada con &eacute;xito";
+		titulo = "Operación realizada correctamente";
 	}
 
 }

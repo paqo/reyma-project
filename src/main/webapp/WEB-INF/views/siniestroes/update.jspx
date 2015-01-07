@@ -9,8 +9,8 @@
         <field:select field="sinTsiId" id="c_com_reyma_gestion_dao_Siniestro_sinTsiId" itemValue="tsiId" items="${tiposiniestroes}" path="/tiposiniestroes" z="in8P0BjIRnlRlYzdKKer43tDldQ="/>
         <field:input field="sinNumero" id="c_com_reyma_gestion_dao_Siniestro_sinNumero" required="true" z="6uE23ueMQy71iBvAm1yhZLxjNKU="/>
         <field:input field="sinPoliza" id="c_com_reyma_gestion_dao_Siniestro_sinPoliza" z="TCet7X738WRMzl998GPd8PKhlaM="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="c_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>        
+        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>
+        <field:datetime dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="c_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>                
         <field:textarea field="sinDescripcion" id="c_com_reyma_gestion_dao_Siniestro_sinDescripcion" style="width: 50%; max-width: 50% !important;" z=""/>
         <field:textarea field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" style="width: 50%; max-width: 50% !important;" z=""/>                
         <c:choose>
@@ -267,18 +267,7 @@
 				$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 				$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
 				$( "#mensajesUsuario" ).dialog( "open" );				 
-			})		
-	    	/* $.post(action, params, function( data ) {				
-				// informar del resultado
-				$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
-				$( "#mensajesUsuario" ).children("p").html( data.mensaje );
-				$( "#mensajesUsuario" ).dialog( "open" );									
-			}).error(function() {
-				$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
-				$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error guardando los datos de los afectados" );
-				$( "#mensajesUsuario" ).dialog( "open" );				 
-			})	*/
-			
+			})	
 			
 	    });	
 		
@@ -642,6 +631,56 @@
 		    	$(this).closest("div.cont-afectados").find("input[type='text']").val('');			 	  
 		    });	
 			
+			//TODO: refactorizar y limpiar en un solo metodo
+			
+			$( "[id^='chkAsegurado-']" ).on( "click", function() {
+				var id = $(this).attr("id").split("-")[1]
+				var h3 = $(this).closest("div.cont-afectados").prev();				
+				if ( !$(this).is(":checked") && !$("#chkPerjudicado-" + id).is(":checked") ){ // logica inversa
+					h3.contents().filter(function() {
+					      return this.nodeType === 3;
+					    }).get(0).data = "ASEGURADO Y PERJUDICADO"
+				} else if ( $(this).is(":checked") && $("#chkAsegurado-" + id).is(":checked") ){
+					h3.contents().filter(function() {
+					      return this.nodeType === 3;
+					    }).get(0).data = "ASEGURADO Y PERJUDICADO"
+				} else {
+					if ( $(this).is(":checked") ){
+						h3.contents().filter(function() {
+						      return this.nodeType === 3;
+						    }).get(0).data = "PERJUDICADO"
+					} else {
+						h3.contents().filter(function() {
+						      return this.nodeType === 3;
+						    }).get(0).data = "ASEGURADO"
+					}
+				}				
+			});
+			
+			$( "[id^='chkPerjudicado-']" ).on( "click", function() {				
+				var id = $(this).attr("id").split("-")[1]
+				var h3 = $(this).closest("div.cont-afectados").prev();				
+				if ( !$(this).is(":checked") && !$("#chkAsegurado-" + id).is(":checked") ){ // logica inversa
+					h3.contents().filter(function() {
+					      return this.nodeType === 3;
+					    }).get(0).data = "ASEGURADO Y PERJUDICADO"
+				} if ( $(this).is(":checked") && $("#chkAsegurado-" + id).is(":checked") ){
+					h3.contents().filter(function() {
+					      return this.nodeType === 3;
+					    }).get(0).data = "ASEGURADO Y PERJUDICADO"
+				} else {
+					if ( $(this).is(":checked") ){
+						h3.contents().filter(function() {
+						      return this.nodeType === 3;
+						    }).get(0).data = "ASEGURADO"
+					} else {
+						h3.contents().filter(function() {
+						      return this.nodeType === 3;
+						    }).get(0).data = "PERJUDICADO"
+					}
+				}	  
+			});
+						
 			//---------------- trabajos:
 			
 			// calendarios para trabajos
@@ -706,6 +745,8 @@
 		    	event.preventDefault();		    	    	
 		    	confirmarEliminacionTrabajo(this); 
 		    });
+			
+			
 			
 			
 		});

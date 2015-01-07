@@ -1,6 +1,5 @@
 package com.reyma.gestion.busqueda;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -35,6 +34,8 @@ public class BusquedaHelper {
 	@Autowired
 	private SiniestroService siniestroService;
 	
+	private static int NUM_MAX_RESULT_PERMITIDOS = -1;
+	
 	public List<Siniestro> buscar(Siniestro siniestro, Domicilio domicilio, Persona persona, Map<String, Object> parametrosAdicionales) {
 		List<Siniestro> res = new ArrayList<Siniestro>();
 		
@@ -48,19 +49,19 @@ public class BusquedaHelper {
 		return siniestroService.findSiniestrosParaFecha(fecha);
 	}
 	
-	public int obtenerNumeroMaximoResultadosPermitidos() {
-		Resource resource = new ClassPathResource("com/reyma/gestion/busqueda/busquedas.properties");
-		try {
-			Properties props = PropertiesLoaderUtils.loadProperties(resource);
-			return Integer.parseInt(props.getProperty("busquedas.limiteresultados"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public int obtenerNumeroMaximoResultadosPermitidos() {		
+		if ( NUM_MAX_RESULT_PERMITIDOS == -1 ){
+			Resource resource = new ClassPathResource("com/reyma/gestion/busqueda/busquedas.properties");
+			try {
+				Properties props = PropertiesLoaderUtils.loadProperties(resource);
+				NUM_MAX_RESULT_PERMITIDOS = Integer.parseInt(props.getProperty("busquedas.limiteresultados"));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				NUM_MAX_RESULT_PERMITIDOS = -1;
+			}
 		}
-		return -1;
+		return NUM_MAX_RESULT_PERMITIDOS;
 	}
 	
 	public String obtenerResultadoLimiteExcedido() {
@@ -76,6 +77,10 @@ public class BusquedaHelper {
 			if ( listaADS != null && listaADS.size() != 0 ){
 				ads = listaADS.get(0); // nos quedamos con el primero para mostrar en el listado
 				res.add( new ResultadoBusqueda(siniestro, ads.getAdsDomId(), ads.getAdsPerId()) );
+			} else {
+				// hay informacion del siniestro pero no de afectados/asegurado
+				// (solo datos generales del siniestro)
+				res.add( new ResultadoBusqueda(siniestro, null, null) );				
 			}
 		}		
 		return res;

@@ -560,3 +560,31 @@ div.celda-formulario-busqueda label {
 	font-weight: bold;
 	padding-top: 0.5em;
 }
+
+/* ######### DETALLE DE SINIESTRO ######## */
+
+#contenedor-sin {
+	border: 1px solid #BFBFBF;
+}
+
+#contenido-sin {
+	padding: 1.6em;
+}
+
+#titulo-sin {
+	background-color: #61A023;
+	padding:0.3em;
+}
+
+#titulo-sin #titulo {
+	color: white; 
+	text-transform: uppercase; 
+	font-weight: bold;
+}
+
+#btnCancelar {
+	width: 7em;
+	height: inherit;
+	font-size: 12px;
+	margin-left: 1.2em;
+}

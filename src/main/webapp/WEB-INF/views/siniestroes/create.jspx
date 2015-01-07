@@ -26,6 +26,16 @@
 	 	           primary: "ui-icon-disk"
 	 	       }
 		});
+		
+		$( "#btnCancelar" ).button({		    	
+	 	       icons: {	 	        	
+	 	           primary: "ui-icon-eject"
+	 	       }
+		}).click(function(event) {
+	    	event.preventDefault();
+	    	document.location = "/gestion"; // al inicio
+	    });	
+		
 	});
 	//]]>			
 </script>

@@ -65,7 +65,7 @@ public class AfectadosController {
         binder.addValidators(new AfectadoValidator());
     }
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String alta(@Valid Persona persona, BindingResult bindingResultP, 
 			@Valid Domicilio domicilio, BindingResult bindingResultD, Model uiModel, HttpServletRequest request) {		

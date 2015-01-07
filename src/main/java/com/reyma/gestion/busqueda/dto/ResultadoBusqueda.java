@@ -39,9 +39,8 @@ public class ResultadoBusqueda implements Serializable {
 				siniestro.getSinFechaComunicacion().getTime());
 		tipo = siniestro.getSinTsiId().getTsiDescripcion();
 		descripcion = siniestro.getSinDescripcion();
-		this.domicilio = domicilio.getDomDireccion();
-		this.asegurado = asegurado.getPerNombre();
-		
+		this.domicilio = domicilio != null? domicilio.getDomDireccion() : "";
+		this.asegurado = asegurado != null? asegurado.getPerNombre() : "";		
 	}
 
 	public String getCompania() {

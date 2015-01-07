@@ -16,7 +16,7 @@ function generaNuevoAfectado(asegurado, perjudicado,idContador) {
 }
 
 function cargarTablaResultados(data, idTabla) {
-	 var filaCabecera = $("#" + idTabla).find(".resultados-cabecera").clone();
+	var filaCabecera = $("#" + idTabla).find(".resultados-cabecera").clone();
 	$("#" + idTabla).empty();
 	$( filaCabecera ).appendTo( "#" + idTabla );
 	var filaRaw;

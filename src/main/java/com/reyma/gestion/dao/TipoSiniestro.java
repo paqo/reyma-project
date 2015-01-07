@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -148,4 +150,11 @@ public class TipoSiniestro {
         this.entityManager.flush();
         return merged;
     }
+
+	public static TipoSiniestro findTipoSiniestroByDesc(String descripcion) {		
+		return entityManager().createQuery("SELECT o FROM TipoSiniestro o "
+				+ "WHERE o.tsiDescripcion = :desc", TipoSiniestro.class)
+				.setParameter("desc", descripcion)
+				.getSingleResult();
+	}
 }
