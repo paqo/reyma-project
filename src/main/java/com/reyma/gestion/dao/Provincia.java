@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -159,4 +161,12 @@ public class Provincia {
 	public void setPrvId(Integer id) {
         this.prvId = id;
     }
+
+	public static Provincia findProvinciaByDescripcion(String desc, boolean sensitive) {
+		String condicion = sensitive? "WHERE UPPER(o.prvDescripcion) = '" + desc.toUpperCase() + "'" : 
+									  "WHERE o.prvDescripcion = '" + desc + "'";
+		
+		String jpaQuery = "SELECT o FROM Provincia o " + condicion;       
+        return entityManager().createQuery(jpaQuery, Provincia.class).getSingleResult();
+	}
 }

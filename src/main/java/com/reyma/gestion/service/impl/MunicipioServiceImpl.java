@@ -64,4 +64,12 @@ public class MunicipioServiceImpl implements MunicipioService {
 		
 		return res;
 	}
+
+	public Municipio findMunicipioByIdProvinciaAndDesc(Integer id, String descripcion) {
+		try {
+			return Municipio.findMunicipioByIdProvinciaAndDesc(id, descripcion);
+		} catch (Exception e) {
+			return null;
+		}
+	}	
 }

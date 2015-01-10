@@ -6,7 +6,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
        			
-		  			<h3>Trabajo</h3>
+		  			<h3>
+		  				<span id="nombre-operario-1">Trabajo</span>&nbsp;&nbsp;&nbsp;
+				  		<span id="oficio-descripcion-1"></span>
+				  	</h3>
 				    <div class="cont-trabajos">				    	
 				    	<div class="formtra-separador-filas">
 						  	<div class="formtra-separador-3col-izq">

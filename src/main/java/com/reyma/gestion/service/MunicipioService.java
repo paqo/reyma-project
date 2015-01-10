@@ -22,6 +22,9 @@ public interface MunicipioService {
 	
 	
 	public abstract List<AutocompleteJSONBean> findMunicipiosByIdProvinciaAndDesc(Integer id, String desc);
+	
+	
+	public abstract Municipio findMunicipioByIdProvinciaAndDesc(Integer id, String desc);
 
 
 	public abstract List<Municipio> findMunicipioEntries(int firstResult, int maxResults);

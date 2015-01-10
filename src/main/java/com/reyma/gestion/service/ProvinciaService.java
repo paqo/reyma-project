@@ -12,6 +12,9 @@ public interface ProvinciaService {
 
 
 	public abstract Provincia findProvincia(Integer id);
+	
+	
+	public abstract Provincia findProvinciaByDescripcion(String desc, boolean sensitive);
 
 
 	public abstract List<Provincia> findAllProvincias();

@@ -1,5 +1,11 @@
 package com.reyma.gestion.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
+
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Compania;
 import com.reyma.gestion.dao.Domicilio;
@@ -32,12 +38,6 @@ import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
-import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 
 @Configurable
 /**
@@ -431,6 +431,14 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reyma.gestion.dao.TipoAfectacion>() {
             public com.reyma.gestion.dao.TipoAfectacion convert(String id) {
                 return getObject().convert(getObject().convert(id, Integer.class), TipoAfectacion.class);
+            }
+        };
+    }
+	
+	public Converter<String, TipoAfectacion> getDescripcionToTipoAfectacionConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reyma.gestion.dao.TipoAfectacion>() {
+            public com.reyma.gestion.dao.TipoAfectacion convert(String tipo) {
+            	return tipoAfectacionService.findTipoAfectacionByDesc(tipo);
             }
         };
     }

@@ -38,7 +38,6 @@
     <spring:message var="typeNamePlural" code="menu_item_${fn:toLowerCase(fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1])}_list_label" htmlEscape="false" />
 
     <spring:message arguments="${label}" code="entity_show" var="title_msg" htmlEscape="false" />
-    <!--<util:panel id="${id}" title="${title_msg}" openPane="${openPane}">-->
     <div id="contenedor-sin">
 		<div id="titulo-sin">
 			<span id="titulo">${title_msg}</span>
@@ -47,22 +46,7 @@
       		<c:choose>
 		        <c:when test="${not empty object}">
 		          <jsp:doBody />
-		          <div class="quicklinks">
-		            <span>
-		              <c:if test="${delete}">
-		                <spring:url value="${path}/${itemId}" var="delete_form_url" />
-		                <spring:url value="/resources/images/delete.png" var="delete_image_url" />
-		                <form:form action="${delete_form_url}" method="DELETE">
-		                  <spring:message arguments="${typeName}" code="entity_delete" var="delete_label" htmlEscape="false" />
-		                  <c:set var="delete_confirm_msg">
-		                    <spring:escapeBody javaScriptEscape="true">
-		                      <spring:message code="entity_delete_confirm" />
-		                    </spring:escapeBody>
-		                  </c:set>
-		                  <input alt="${fn:escapeXml(delete_label)}" class="image" src="${delete_image_url}" title="${fn:escapeXml(delete_label)}" type="image" value="${fn:escapeXml(delete_label)}" onclick="return confirm('${fn:escapeXml(delete_confirm_msg)}');" />
-		                </form:form>
-		              </c:if>
-		            </span>
+		          <div class="quicklinks">		            
 		            <span>
 		              <c:if test="${update}">
 		                <spring:url value="${path}/${itemId}" var="update_form_url">
@@ -104,7 +88,6 @@
 		        </c:otherwise>
 		      </c:choose>
       	</div>
-    </div>      
-    <!--</util:panel>-->
+    </div>  
   </c:if>
 </jsp:root>

@@ -17,7 +17,10 @@
 	  				<c:otherwise>
 			  			<c:forEach items="${trabajos}" var="item" varStatus="num">
 				  			<c:set var="contador" value="${num.count}" />
-				  			<h3>Operario</h3>
+				  			<h3>
+				  				<span id="nombre-operario-${contador}">${item.traOpeId.opeNombrePila}</span>&nbsp;&nbsp;&nbsp;
+				  				<span id="oficio-descripcion-${contador}">(${item.traOfiId.ofiDescripcion})</span>
+				  			</h3>
 						    <div class="cont-trabajos">
 						    	<input type="hidden" name="traId" id="traId-${contador}" value="${item.traId}" />						    	
 						  		<div class="formtra-separador-filas">

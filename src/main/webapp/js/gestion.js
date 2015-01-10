@@ -1,13 +1,13 @@
 function generaNuevoAfectado(asegurado, perjudicado,idContador) {
 	// encabezado
-	var h3 = "Afectado";
+	var h3 = "AFECTADO";
 	if ( asegurado ){
-		h3 = "Asegurado";
+		h3 = "ASEGURADO";
 		if ( perjudicado ){
-			h3 += " / Perjudicado";
+			h3 += " Y PERJUDICADO";
 		}
 	} else {
-		h3 = "Perjudicado";
+		h3 = "PERJUDICADO";
 	}
 	h3 = "<h3>" + h3 + "</h3>";
 	// cuerpo
@@ -69,3 +69,17 @@ function formatearResultados(contenedorResultados) {
 	return;
 }
 
+function modificarH3(){
+	$( "[id^='chkAsegurado-'], [id^='chkPerjudicado-']" ).on( "click", function() {				
+		var id = $(this).attr("id").split("-")[1];
+		var h3 = $(this).closest("div.cont-afectados").prev();
+		var txtAsegurado = !$( "#chkAsegurado-" + id ).is(":checked")? "ASEGURADO" : "";
+		var txtPerjudicado = !$( "#chkPerjudicado-" + id ).is(":checked")? "PERJUDICADO" : "";
+		var txtY = txtAsegurado != "" && txtPerjudicado != ""? " Y " : "";
+		var res = txtAsegurado + txtY + txtPerjudicado;
+		h3.contents().filter(function() {
+		      return this.nodeType === 3;
+		}).get(0).data = res == ""? 
+				"ASEGURADO Y PERJUDICADO" : res;
+	});
+}

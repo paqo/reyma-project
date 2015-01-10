@@ -178,4 +178,11 @@ public class Municipio {
 				" AND m.munDescripcion LIKE '%" + descripcion + "%'", 
 				Municipio.class).getResultList();
 	}
+	
+	public static Municipio findMunicipioByIdProvinciaAndDesc (
+			Integer idProvincia, String descripcion) {
+		return entityManager().createQuery("SELECT m FROM Municipio m WHERE m.munPrvId = " + idProvincia +
+				" AND m.munDescripcion = '" + descripcion + "'", 
+				Municipio.class).getSingleResult();
+	}
 }

@@ -40,7 +40,6 @@ public class DomicilioServiceImpl implements DomicilioService {
         return domicilio.merge();
     }
 
-	@Override
 	public Domicilio findDomicilio(Domicilio domicilio) {
 		return Domicilio.findDomicilio(domicilio);
 	}

@@ -39,4 +39,8 @@ public class TipoAfectacionServiceImpl implements TipoAfectacionService {
 	public TipoAfectacion updateTipoAfectacion(TipoAfectacion tipoAfectacion) {
         return tipoAfectacion.merge();
     }
+
+	public TipoAfectacion findTipoAfectacionByDesc(String tipo) {
+		 return TipoAfectacion.findTipoAfectacion(tipo);
+	}
 }

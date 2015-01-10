@@ -588,3 +588,22 @@ div.celda-formulario-busqueda label {
 	font-size: 12px;
 	margin-left: 1.2em;
 }
+
+.elemPosicionado {
+	position: absolute;
+}
+
+.cargando {
+	background-color: orange; 
+	color: white; 
+	width: 10em; 
+	text-align: center; 
+	padding: 0.3em;	
+	font-weight: bold;
+	font-size: 14px;
+	display: none;
+}
+
+/* .no-close .ui-dialog-titlebar-close {
+  display: none;
+} */

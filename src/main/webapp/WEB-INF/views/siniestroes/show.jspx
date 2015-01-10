@@ -3,7 +3,7 @@
 	 xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_com_reyma_gestion_dao_Siniestro" object="${siniestro}" path="/siniestroes" z="K/CAcXuFIDsIJisbwj8dfBAXA/I=">
+    <page:show-reymasur id="ps_com_reyma_gestion_dao_Siniestro" object="${siniestro}" path="/siniestroes" z="K/CAcXuFIDsIJisbwj8dfBAXA/I=">
         <field:display field="sinComId" id="s_com_reyma_gestion_dao_Siniestro_sinComId" object="${siniestro}" z="WjAz/VUGuk5bl+NsqKy7+aRn3hA="/>
         <field:display field="sinEstId" id="s_com_reyma_gestion_dao_Siniestro_sinEstId" object="${siniestro}" z="aXMHRDYz19gz+AFek6h9DdiLUcE="/>
         <field:display field="sinTsiId" id="s_com_reyma_gestion_dao_Siniestro_sinTsiId" object="${siniestro}" z="rUyY4jCG0KA95ARZ9KJn3MSIHTE="/>
@@ -24,5 +24,5 @@
 				</c:otherwise>
 	 		</c:choose>
 		</div>
-    </page:show>
+    </page:show-reymasur>
 </div>

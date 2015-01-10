@@ -12,6 +12,9 @@ public interface TipoAfectacionService {
 
 
 	public abstract TipoAfectacion findTipoAfectacion(Integer id);
+	
+	
+	public abstract TipoAfectacion findTipoAfectacionByDesc(String tipo);
 
 
 	public abstract List<TipoAfectacion> findAllTipoAfectacions();

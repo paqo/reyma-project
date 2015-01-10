@@ -156,7 +156,10 @@ public class SiniestroController {
         }
         uiModel.asMap().clear();
         siniestroService.updateSiniestro(siniestro);
-        return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
+        return "redirect:/siniestroes/" + 
+        		encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest) + 
+        		"?form";
+        
     }
 
 	@RequestMapping(value = "/{sinId}", params = "form", produces = "text/html")

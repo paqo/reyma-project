@@ -39,4 +39,12 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	public Provincia updateProvincia(Provincia provincia) {
         return provincia.merge();
     }
+
+	public Provincia findProvinciaByDescripcion(String desc, boolean sensitive) {
+		try {
+			return Provincia.findProvinciaByDescripcion(desc, sensitive);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

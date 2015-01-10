@@ -31,7 +31,8 @@
     <!--<util:panel id="${id}" title="${title_msg}" openPane="${openPane}">-->
 	<div id="contenedor-sin">
 		<div id="titulo-sin">
-			<span id="titulo">${title_msg}</span>
+			<span id="titulo" style="padding-right: 630px;">${title_msg}</span>
+			<button style="width: 1em;" title="clic para desplegar los datos del siniestro" id="toggle-cont"></button>
 		</div>
       	<div id="contenido-sin">
       		<form:form action="${form_url}" method="PUT" modelAttribute="${modelAttribute}" enctype="${enctype}">
@@ -50,6 +51,33 @@
 		    </form:form>
       	</div>    
 	</div>    
+	<script type="text/javascript">
+	 	$(function() {
+	 		$( "#toggle-cont" )
+	 		.button({
+	 			icons: {
+	 				primary: "ui-icon-circle-plus"
+	 		      },
+	 		    text: false
+	 		})
+	 		.click(function() {	 							 	
+	 			var icono = $( this ).button( "option", "icons" ).primary;
+	 			var boton = $(this);
+	 			$( "#contenido-sin" ).toggle( 500, function() {	 				
+		 			if ( icono.indexOf("circle-minus") != -1 ){
+		 				boton.button( "option", "icons", { primary: "ui-icon-circle-plus"} );	
+		 			} else {
+		 				boton.button( "option", "icons", { primary: "ui-icon-circle-minus"} );
+		 			}
+	 			});
+	 		}).tooltip({
+	 			hide: { duration: 300 }
+	 		});
+	 		// inicialmente contraido
+	 		$( "#contenido-sin" ).toggle();
+		});
+		
+	</script>
     <!--</util:panel>-->
   </c:if>
 </jsp:root>
