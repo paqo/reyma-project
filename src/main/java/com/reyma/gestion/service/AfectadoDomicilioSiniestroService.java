@@ -30,5 +30,5 @@ public interface AfectadoDomicilioSiniestroService {
 
 
 	public abstract AfectadoDomicilioSiniestro updateAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro);
-
+	
 }

@@ -1,5 +1,7 @@
 package com.reyma.gestion.integracion;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.reyma.gestion.controller.ApplicationConversionServiceFactoryBean;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
+import com.reyma.gestion.dao.CodigoPostal;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Persona;
@@ -44,7 +47,7 @@ public class IntegracionHelper {
 	
 	@Autowired
 	private PersonaService personaService;
-	
+		
 	@Autowired
 	private AfectadoDomicilioSiniestroService adsService;
 	
@@ -126,20 +129,62 @@ public class IntegracionHelper {
 		siniestroService.saveSiniestro(siniestro);
 		// crear datos de afectados
 		// 1.- añadir asegurado (en cualquier caso)
-		AfectadoDomicilioSiniestro ads1 = 
-				anyadirAsegurado(siniestro, domicilio, asegurado, request);
+		// la prov y el municipio del asegurado vienen
+		// solamente con la descripcion, buscar para
+		// añadir
+		anyadirProvyMunADomicilio(domicilio, request); 
+		// añadir el asegurado
+		AfectadoDomicilioSiniestro ads1 = anyadirAsegurado(siniestro, domicilio, asegurado);	
+		// 2.- añadir perjudicado (si es distinto)
+		// es distinto?
+		if (request.getParameter("mismolugar") != null && 
+				"true".equalsIgnoreCase( request.getParameter("mismolugar") )){
+			// es el mismo, hemos terminado
+		} else {
+			// asegurado y perjudicado distintos
+			ads1.setAdsTafId(TIPO_AFEC_ASEGURADO);
+			//TODO: hacer el ads2 y ver que se usa para 
+			// comprobar si ha fallado (excepcion?)
+			ads1.merge(); //--> no debe hacer falta
+			
+		}
 		
 		
-		adsService.saveAfectadoDomicilioSiniestro(ads1);
-		
-		
-		
-		msg.setResultado("creado");
-		msg.setDescripcion("siniestroes/" + siniestro.getSinId() + "?form");
+		if ( resultado ){
+			msg.setResultado("creado");
+			msg.setDescripcion("siniestroes/" + siniestro.getSinId() + "?form");
+		} else {
+			msg.setResultado("error");
+			msg.setDescripcion("siniestroes/" + siniestro.getSinId() + "?form");
+		}		
 		return msg;
 	}
-
+	
 	private AfectadoDomicilioSiniestro anyadirAsegurado(Siniestro siniestro, Domicilio domicilio,
+			Persona asegurado) {
+		AfectadoDomicilioSiniestro ads1 = new AfectadoDomicilioSiniestro();
+		Persona adsPersona = grabarPersona(asegurado);
+		if ( adsPersona != null ){ // grabar persona							
+			Domicilio adsDomicilio = grabarDomicilio(domicilio);
+			if ( adsDomicilio != null ) { // grabar domicilio
+				if ( grabarAfectadoDomicilioSiniestro(ads1, adsPersona, adsDomicilio, siniestro, 
+						TIPO_AFEC_AMBOS /* inicialmente consideramos que ambos */)){
+					return ads1;
+				} else {
+					// error
+				}
+			} else {
+				// error guardar domicilio
+			}
+		} else {
+			// error afectado
+		}
+		return null;
+	}
+	
+	
+
+	/*private AfectadoDomicilioSiniestro anyadirAsegurado(Siniestro siniestro, Domicilio domicilio,
 			Persona asegurado, HttpServletRequest request) {
 		AfectadoDomicilioSiniestro ads1 = new AfectadoDomicilioSiniestro();
 		anyadirProvyMunADomicilio(domicilio, request);
@@ -160,7 +205,7 @@ public class IntegracionHelper {
 		ads1.setAdsSinId(siniestro); // (ya existe)		
 		ads1.setAdsTafId(TIPO_AFEC_AMBOS); // inicialmente ambos
 		return ads1;
-	}
+	}*/
 	
 	private void anyadirProvyMunADomicilio(Domicilio domicilio, HttpServletRequest request) {
 		String prov = request.getParameter("provId");
@@ -174,7 +219,38 @@ public class IntegracionHelper {
 			provincia = provinciaService.findProvinciaByDescripcion("Sevilla", true);	
 		}
 		domicilio.setDomProvId(provincia);
-		municipio = municipioService.findMunicipioByIdProvinciaAndDesc(provincia.getPrvId(), mun);
+		
+		List<CodigoPostal> codigosPostales = CodigoPostal.findByCodPostal(String.valueOf(domicilio.getDomCp()) );
+		if ( codigosPostales != null ){
+			CodigoPostal codigoPostal = codigosPostales.get(0);
+			if (codigosPostales.size() > 1){
+				int distLev = Integer.MAX_VALUE;
+				for (CodigoPostal _codigoPostal : codigosPostales) {
+					if ( StringUtils.getLevenshteinDistance(_codigoPostal.getCpMunicipio(), mun) < distLev ){
+						codigoPostal = _codigoPostal;
+					}
+				}
+			}
+			municipio = municipioService.findMunicipioByIdProvinciaAndDesc(provincia.getPrvId(), codigoPostal.getCpMunicipio());
+		}
+		
+		// busqueda por nombre (fallaría con todos los que no sean de una sola palabra) 
+		/*List<Municipio> municipios = municipioService.findMunicipiosByIdProvAndDesc(provincia.getPrvId(), mun);
+		if ( municipios != null ){
+			Municipio munTemp = municipios.get(0);
+			if ( municipios.size() > 1  ){				
+				int distLev = Integer.MAX_VALUE;
+				for (Municipio _municipio : municipios) {
+					if ( StringUtils.getLevenshteinDistance(mun, _municipio.getMunDescripcion()) < distLev ){
+						munTemp = _municipio;
+					}
+				}				
+			}
+			municipio = munTemp;
+		}*/
+		
+		// si se ha podido encontrar el municipio
+		// (desde la importacion no se crea)
 		if ( municipio != null ){
 			domicilio.setDomMunId(municipio);
 		}
@@ -215,6 +291,66 @@ public class IntegracionHelper {
 		}
 		return null;
 	}
+	
+	public boolean grabarAfectadoDomicilioSiniestro(
+			AfectadoDomicilioSiniestro ads, Persona persona,
+			Domicilio domicilio, Siniestro sin, TipoAfectacion ta) {
+		ads.setAdsPerId(persona);
+		ads.setAdsDomId(domicilio);
+		ads.setAdsSinId(sin);
+		ads.setAdsTafId(ta);
+		try {
+			adsService.saveAfectadoDomicilioSiniestro(ads);
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public Persona grabarPersona(Persona persona) {
+		Persona personaEnc = null;		
+		try {
+			personaEnc = personaService.findPersona(persona);
+			if ( personaEnc == null){
+				// nueva persona, grabar
+				personaService.savePersona(persona);
+			} else {
+				// persona encontrada, comprobar si han
+				// cambiado los tlfs y en su caso grabar para no perder
+				// esa info
+				if ( !StringUtils.equals(persona.getPerTlf1(), personaEnc.getPerTlf1()) ||
+					 !StringUtils.equals(persona.getPerTlf2(), personaEnc.getPerTlf2()) ){
+					personaService.savePersona(persona);					
+				} else {
+					// persona ya almacenda, devolvemos la encontrada
+					return personaEnc;				
+				}
+			}
+			return persona;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Domicilio grabarDomicilio(Domicilio domicilio) {
+		try {			
+			Domicilio domBusqueda = domicilioService.findDomicilio(domicilio);
+			if ( domBusqueda == null ){
+				domicilioService.saveDomicilio(domicilio);
+				return domicilio;
+			} else {
+				// domicilio encontrado, devolvemos el persistido
+				return domBusqueda;
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/*
 	 * -------------------------------------------------	 *  
 	 * @ PERJUDICADO:
@@ -228,8 +364,4 @@ public class IntegracionHelper {
 	 * - municipio: extraer de la direccion (si se puede)
 	 *   para extraer, quizas: $("#l_DireccionLugarVaue") [ENCARGO]
 	 */
-	
-	public static void main(String[] args) {
-		StringUtils.getLevenshteinDistance("", "");
-	}
 }

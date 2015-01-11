@@ -71,7 +71,7 @@ public class MunicipioController {
 				"=> idMun: " + municipio.getMunId()+
 				", idProv: " + municipio.getMunPrvId());
 		List<AutocompleteJSONBean> municipios = municipioService.
-				findMunicipiosByIdProvinciaAndDesc(municipio.getMunPrvId().getPrvId(), municipio.getMunDescripcion());
+				findMunicipiosParaAutocomplete(municipio.getMunPrvId().getPrvId(), municipio.getMunDescripcion());
 		return serializer.exclude("*.class").serialize(municipios);
     }
 

@@ -21,10 +21,13 @@ public interface MunicipioService {
 	public abstract List<Municipio> findAllMunicipiosByIdProvincia(Integer id);
 	
 	
-	public abstract List<AutocompleteJSONBean> findMunicipiosByIdProvinciaAndDesc(Integer id, String desc);
+	public abstract List<AutocompleteJSONBean> findMunicipiosParaAutocomplete(Integer id, String desc);
 	
 	
 	public abstract Municipio findMunicipioByIdProvinciaAndDesc(Integer id, String desc);
+	
+	
+	public abstract List<Municipio> findMunicipiosByIdProvAndDesc(Integer idProvincia, String descripcion);
 
 
 	public abstract List<Municipio> findMunicipioEntries(int firstResult, int maxResults);

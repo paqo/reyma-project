@@ -2,16 +2,29 @@ package com.reyma.gestion.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
+import com.reyma.gestion.service.DomicilioService;
+import com.reyma.gestion.service.MunicipioService;
+import com.reyma.gestion.service.PersonaService;
 
 @Service
 @Transactional
 public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioSiniestroService {
 
+	@Autowired
+    PersonaService personaService;
+	
+	@Autowired
+    DomicilioService domicilioService;
+	
+	@Autowired
+	MunicipioService municipioService; 
+	
 	public long countAllAfectadoDomicilioSiniestroes() {
         return AfectadoDomicilioSiniestro.countAfectadoDomicilioSiniestroes();
     }
@@ -62,5 +75,5 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 	public List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes(
 			String sortFieldName, String sortOrder) {
 		return AfectadoDomicilioSiniestro.findAllAfectadoDomicilioSiniestroes(sortFieldName, sortOrder);
-	}
+	}	
 }

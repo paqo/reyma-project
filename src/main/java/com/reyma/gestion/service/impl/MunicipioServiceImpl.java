@@ -46,24 +46,23 @@ public class MunicipioServiceImpl implements MunicipioService {
 		return Municipio.findAllMunicipiosByIdProvincia(idProvincia);
 	}
 
-	public List<AutocompleteJSONBean> findMunicipiosByIdProvinciaAndDesc(Integer idProvincia, String descripcion) {
+	public List<AutocompleteJSONBean> findMunicipiosParaAutocomplete(Integer idProvincia, String descripcion) {
 		List<AutocompleteJSONBean> res = new ArrayList<AutocompleteJSONBean>();
-		List<Municipio> municipios = Municipio.findMunicipiosByIdProvinciaAndDesc(idProvincia, descripcion);		
-		
-		/*for (Municipio municipio : municipios) {
-			res.add(new AutocompleteJSONBean(municipio.getMunId().toString(), 
-					new String( municipio.getMunDescripcion().getBytes(Charset.forName("ISO-8859-15" )), Charset.forName("ISO-8859-15") )
-					, municipio.getMunId().toString()));
-		}*/
-		
-				
+		List<Municipio> municipios = Municipio.findMunicipiosByIdProvinciaAndDesc(idProvincia, descripcion);	
 		for (Municipio municipio : municipios) {
 			res.add(new AutocompleteJSONBean(
 					municipio.getMunId().toString(), municipio.getMunDescripcion(), municipio.getMunDescripcion()));
-		}
-		
+		}		
 		return res;
 	}
+	
+	public List<Municipio> findMunicipiosByIdProvAndDesc(Integer idProvincia, String descripcion) {
+		try {
+			return Municipio.findMunicipiosByIdProvinciaAndDesc(idProvincia, descripcion);
+		} catch (Exception e) {
+			return null;
+		}
+	}	
 
 	public Municipio findMunicipioByIdProvinciaAndDesc(Integer id, String descripcion) {
 		try {
