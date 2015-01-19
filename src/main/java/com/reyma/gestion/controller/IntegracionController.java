@@ -12,6 +12,7 @@ import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.integracion.IntegracionHelper;
 import com.reyma.gestion.integracion.MensajeResultadoIntegracion;
+import com.reyma.gestion.integracion.PerjudicadoDTO;
 
 import flexjson.JSONSerializer;
 
@@ -24,9 +25,10 @@ public class IntegracionController {
 		
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-    public String importar(Siniestro siniestro, Domicilio domicilio, Persona asegurado, HttpServletRequest request) {
+    public String importar(Siniestro siniestro, Domicilio domicilio, Persona asegurado, PerjudicadoDTO perjudicado, 
+    		HttpServletRequest request) {
 			
-		MensajeResultadoIntegracion resultado = integracion.procesarPeticion(siniestro, domicilio, asegurado, request);		
+		MensajeResultadoIntegracion resultado = integracion.procesarPeticion(siniestro, domicilio, asegurado, perjudicado, request);		
 		JSONSerializer serializer = new JSONSerializer();
 		
         return serializer.exclude("*.class").serialize(resultado);        

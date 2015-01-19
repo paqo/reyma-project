@@ -4,15 +4,14 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <page:show-reymasur id="ps_com_reyma_gestion_dao_Siniestro" object="${siniestro}" path="/siniestroes" z="K/CAcXuFIDsIJisbwj8dfBAXA/I=">
-        <field:display field="sinComId" id="s_com_reyma_gestion_dao_Siniestro_sinComId" object="${siniestro}" z="WjAz/VUGuk5bl+NsqKy7+aRn3hA="/>
-        <field:display field="sinEstId" id="s_com_reyma_gestion_dao_Siniestro_sinEstId" object="${siniestro}" z="aXMHRDYz19gz+AFek6h9DdiLUcE="/>
-        <field:display field="sinTsiId" id="s_com_reyma_gestion_dao_Siniestro_sinTsiId" object="${siniestro}" z="rUyY4jCG0KA95ARZ9KJn3MSIHTE="/>
+        <!-- <field:display field="sinComId" id="s_com_reyma_gestion_dao_Siniestro_sinComId" object="${siniestro}" z="WjAz/VUGuk5bl+NsqKy7+aRn3hA="/> -->
+        <field:display field="comDescripcion" id="s_com_reyma_gestion_dao_Siniestro_sinComId" object="${compania}" z="WjAz/VUGuk5bl+NsqKy7+aRn3hA="/>        
+        <field:display field="sinTsiId" label="Trabajo inicial" id="s_com_reyma_gestion_dao_Siniestro_sinTsiId" object="${siniestro}" z="rUyY4jCG0KA95ARZ9KJn3MSIHTE="/>
         <field:display field="sinNumero" id="s_com_reyma_gestion_dao_Siniestro_sinNumero" object="${siniestro}" z="N68eTWj9utKDC+18khsktAGtbCg="/>
         <field:display field="sinPoliza" id="s_com_reyma_gestion_dao_Siniestro_sinPoliza" object="${siniestro}" z="/DivOW9UDy7qJtIROfED7VSDdg8="/>
-        <field:display calendar="true" dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="s_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" object="${siniestro}" z="/pw9jl9nz1Zx6nyn5i/djx7UG60="/>
+        <field:display calendar="true" dateTimePattern="${siniestro_sinfechaencargo_date_format}" field="sinFechaEncargo" id="s_com_reyma_gestion_dao_Siniestro_sinFechaEncargo" object="${siniestro}" z="/pw9jl9nz1Zx6nyn5i/djx7UG60="/>
         <field:display calendar="true" dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="s_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" object="${siniestro}" z="Z3TIxd14jnDZe6su4oDyky2PI48="/>
-        <field:display field="sinDescripcion" id="s_com_reyma_gestion_dao_Siniestro_sinDescripcion" object="${siniestro}" z="RmtCqnqlBxcYSc4gClCn2KE7rP4="/>
-        <field:display field="sinObservaciones" id="s_com_reyma_gestion_dao_Siniestro_sinObservaciones" object="${siniestro}" z="sOBTkyStQKyNZw08mF9jF3QeJiI="/>
+        <field:display field="sinDescripcion" id="s_com_reyma_gestion_dao_Siniestro_sinDescripcion" object="${siniestro}" z="RmtCqnqlBxcYSc4gClCn2KE7rP4="/>        
         <div id="_s_com_reyma_gestion_dao_Siniestro_sinUrgente_id">
 			<label for="_sinUrgente_id">Urgente:</label>
 			<c:choose>
@@ -24,5 +23,26 @@
 				</c:otherwise>
 	 		</c:choose>
 		</div>
+		<br/><br/>		
+		<hr />
+		<c:forEach var="afectado" items="${afectados}">
+			<div id="_s_com_reyma_gestion_dao_Siniestro_ads_${afectado.adsId}">
+				<label for="per_${afectado.adsId}">Nombre:</label>
+		   		<div id="per_${afectado.adsId}" class="box">${afectado.adsPerId.perNombre}&#160;&#160;&#160;&#160;
+			   		<c:choose>
+			   			<c:when test="${ afectado.adsTafId.tafDescripcion == 'AMBOS' }">
+			   				(ASEGURADO Y PERJUDICADO)
+			   			</c:when>
+			   			<c:otherwise>(${afectado.adsTafId.tafDescripcion})</c:otherwise>
+			   		</c:choose>
+		   		</div>
+		   		<label for="dir_${afectado.adsId}">Dirección:</label>
+		   		<div id="dir_${afectado.adsId}" class="box">${afectado.adsDomId.domDireccion}&#160;&#160;
+		   		${afectado.adsDomId.domMunId.munDescripcion},&#160;${afectado.adsDomId.domProvId.prvDescripcion}</div>
+		   		<label for="tlf_${afectado.adsId}">Teléfono(s):</label>
+		   		<div id="lf_${afectado.adsId}" class="box">${afectado.adsPerId.perTlf1} ${afectado.adsPerId.perTlf2}</div>
+			</div>
+			<hr />	   
+		</c:forEach>
     </page:show-reymasur>
 </div>

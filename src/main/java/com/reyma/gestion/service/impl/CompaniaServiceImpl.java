@@ -39,4 +39,8 @@ public class CompaniaServiceImpl implements CompaniaService {
 	public Compania updateCompania(Compania compania) {
         return compania.merge();
     }
+	
+	public Compania findCompaniaByDesc(String desc) {
+		return Compania.findCompaniaByDesc(desc);
+	}
 }

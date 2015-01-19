@@ -112,7 +112,7 @@ table.navigation {
 }
 
 label {
-	width:100px;
+	width:120px;
 	float:left;
 	margin-left: 5px;
 	margin-top: 0px;
@@ -601,6 +601,29 @@ div.celda-formulario-busqueda label {
 	padding: 0.3em;	
 	font-weight: bold;
 	font-size: 14px;
+	display: none;
+}
+
+#_c_com_reyma_gestion_dao_Siniestro_sinMediador_id > div {
+	width: 65%;	
+}
+
+.diasCaducidad {
+	border:0; 
+	width: 2em; 
+	/* color:#f6931f; */
+	color: #538F33; 
+	font-weight:bold;
+}
+
+.alertas {
+	width: 100%; 
+	text-align: center; 
+	height:1.5em; 
+	padding-top:1em; 
+	padding-bottom:0.25em; 
+	margin-bottom: 0.8em; 
+	background-color: #D83F3F;
 	display: none;
 }
 

@@ -390,7 +390,8 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 	public Converter<Siniestro, String> getSiniestroToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Siniestro, java.lang.String>() {
             public String convert(Siniestro siniestro) {
-                return new StringBuilder().append(siniestro.getSinNumero()).append(' ').append(siniestro.getSinPoliza()).append(' ').append(siniestro.getSinFechaComunicacion()).append(' ').append(siniestro.getSinFechaOcurrencia()).toString();
+                return new StringBuilder().append(siniestro.getSinNumero()).append(' ').append(siniestro.getSinPoliza()).append(' ')
+                		.append(siniestro.getSinFechaEncargo()).append(' ').append(siniestro.getSinFechaOcurrencia()).toString();
             }
         };
     }

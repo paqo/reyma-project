@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.reyma.gestion.dao.Compania;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
@@ -15,7 +16,7 @@ import com.reyma.gestion.service.SiniestroService;
 @Service
 @Transactional
 public class SiniestroServiceImpl implements SiniestroService {
-
+	
 	public long countAllSiniestroes() {
         return Siniestro.countSiniestroes();
     }
@@ -35,6 +36,16 @@ public class SiniestroServiceImpl implements SiniestroService {
 	public List<Siniestro> findAllSiniestroes() {
         return Siniestro.findAllSiniestroes();
     }
+	
+	public List<Siniestro> findSiniestrosCaducados(Integer dias) {
+		// de momento solo para AXA y 20 dias inicialmente
+		if ( dias == null ){
+			dias = 20;
+		}
+		Compania compania = Compania.findCompaniaByDesc("AXA");	
+		List<Siniestro> encontrados = Siniestro.findSiniestrosCaducados(dias, compania);		
+		return encontrados;
+	}
 	
 	public List<Siniestro> findSiniestrosParaFecha(Calendar fecha) {
 		return Siniestro.findSiniestrosParaFecha(fecha);
@@ -69,6 +80,5 @@ public class SiniestroServiceImpl implements SiniestroService {
 		return Siniestro.buscarSiniestrosPorCriterios(siniestro, domicilio, persona, params);
 	}
 
-	
 	
 }

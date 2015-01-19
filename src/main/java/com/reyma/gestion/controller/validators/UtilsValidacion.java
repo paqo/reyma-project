@@ -83,11 +83,16 @@ public class UtilsValidacion {
 		if ( StringUtils.isBlank(persona.getPerNombre()) ){			
 			errors.rejectValue("perNombre", "", null, obtenerMensaje("persona.nombre"));
 		}		
-		if ( StringUtils.isNotBlank(persona.getPerNif()) ){
-			// si hay NIF, validar				
-			if (!UtilsValidacion.esNIFValido(persona.getPerNif())){
-				errors.rejectValue("perNif", "", null, obtenerMensaje("persona.nif"));
-			}
+		String nif = persona.getPerNif();
+		if ( StringUtils.isNotBlank(nif) ){
+			if ( StringUtils.isNumeric( nif.substring(0, 1) ) ){
+				// si hay NIF, validar				
+				if (!UtilsValidacion.esNIFValido(persona.getPerNif())){
+					errors.rejectValue("perNif", "", null, obtenerMensaje("persona.nif"));
+				}
+			} else {
+				// nif de empresas, no validar
+			}			
 		}
 	}
 	

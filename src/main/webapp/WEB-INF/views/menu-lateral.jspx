@@ -9,9 +9,8 @@
             <menu:item id="i_siniestro_list" messageCode="global_menu_list" url="/siniestroes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="Jnqse2qduIJG7jpqEaEKQj2MNjE="/>
         </menu:category>
 		<!-- facturas -->        
-        <menu:category id="c_factura" z="">
-            <menu:item id="i_factura_new" messageCode="global_generic" url="/facturas?form" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
-            <menu:item id="i_factura_list" messageCode="global_menu_list" url="/facturas?page=1&amp;size=${empty param.size ? 10 : param.size}" z="s77QdFN3Sd31RGYgNkjNIvIaJBU="/>
+        <menu:category id="c_alertas" z="">
+            <menu:item id="i_alertas_caducados" messageCode="global_generic" url="/siniestroes?caducados" z="PSOuQCwwMSA8zv0056RnoKBVzbE="/>
         </menu:category>
         <!-- busquedas -->
 		<menu:category id="c_busquedas" z="">

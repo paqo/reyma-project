@@ -18,7 +18,7 @@ public class ResultadoBusqueda implements Serializable {
 	private String domicilio;
 	private String asegurado;
 	private String estado;
-	private String fechaEntrada;
+	private String fechaOcurrencia;
 	private String tipo;
 	private String descripcion;
 	
@@ -33,14 +33,29 @@ public class ResultadoBusqueda implements Serializable {
 		compania = siniestro.getSinComId().getComCodigo();
 		numeroSiniestro = siniestro.getSinNumero();
 		fecha = Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
-				siniestro.getSinFechaOcurrencia().getTime());
+				siniestro.getSinFechaEncargo().getTime());
 		estado = siniestro.getSinEstId().getEstDescripcion();
-		fechaEntrada = Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
-				siniestro.getSinFechaComunicacion().getTime());
+		fechaOcurrencia = Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
+				siniestro.getSinFechaOcurrencia().getTime());
 		tipo = siniestro.getSinTsiId().getTsiDescripcion();
 		descripcion = siniestro.getSinDescripcion();
 		this.domicilio = domicilio != null? domicilio.getDomDireccion() : "";
 		this.asegurado = asegurado != null? asegurado.getPerNombre() : "";		
+	}
+
+	// constructor copia
+	public ResultadoBusqueda(ResultadoBusqueda resultado) {
+		super();
+		id = resultado.getId();
+		compania = resultado.getCompania();
+		numeroSiniestro = resultado.getNumeroSiniestro();
+		fecha = resultado.getFecha();
+		estado = resultado.getEstado();
+		fechaOcurrencia = resultado.getFechaOcurrencia();
+		tipo = resultado.getTipo();
+		descripcion = resultado.getDescripcion();
+		this.domicilio = resultado.getDomicilio();
+		this.asegurado = resultado.getAsegurado();
 	}
 
 	public String getCompania() {
@@ -91,14 +106,6 @@ public class ResultadoBusqueda implements Serializable {
 		this.estado = estado;
 	}
 
-	public String getFechaEntrada() {
-		return fechaEntrada;
-	}
-
-	public void setFechaEntrada(String fechaEntrada) {
-		this.fechaEntrada = fechaEntrada;
-	}
-
 	public String getTipo() {
 		return tipo;
 	}
@@ -121,6 +128,14 @@ public class ResultadoBusqueda implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getFechaOcurrencia() {
+		return fechaOcurrencia;
+	}
+
+	public void setFechaOcurrencia(String fechaOcurrencia) {
+		this.fechaOcurrencia = fechaOcurrencia;
 	}
 
 	@Override

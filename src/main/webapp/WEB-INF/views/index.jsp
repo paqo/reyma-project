@@ -23,6 +23,9 @@
   	<spring:message var="title" code="welcome_titlepane" arguments="${app_name}" htmlEscape="false" />
   
   	<div id="contenedorIndex">
+  		<div class="alertas">
+	  		<span style="font-weight: bold; color:white;">Existen <span id="num-caducados"></span> siniestros caducados</span>
+	  	</div>  		
   		<div style="width: 100%; text-align: center; height:1.5em; padding-top:1em; padding-bottom:0.25em; background-color: #61A023;">
   			<span style="font-weight: bold; color:white;">SINIESTROS DE HOY</span>
   		</div>
@@ -67,8 +70,7 @@
   		</div>
   	</div>
         
-    <script type="text/javascript">	  
-    		//var test = [{"asegurado":"nombre","compania":"AXA","descripcion":"sale agua","domicilio":"actualiza bien?","estado":"Finalizado","fecha":"17/09/2014 00:00","fechaEntrada":"01/09/2014 00:00","id":"1","numeroSiniestro":"111111111111","tipo":"Carpintería"}];
+    <script type="text/javascript">
 		  	$(document).ready(function(){	            
 	            // cargar datos hoy	            
 	           	var action = "/gestion/busquedas/inicio";
@@ -77,7 +79,7 @@
 					cargarTablaResultados(data, "sin-hoy");
 					formatearResultados("sin-hoy");
 				});	
-				// ayer
+				// ayer (inicial) y seleccionados
 				params = {fecha : "ayer"};
 				$.post(action, params, function( data ) {
 					cargarTablaResultados(data, "sin-fecha");
@@ -97,6 +99,17 @@
 					    }
 					}								
 				);
-		  	});
+				// alertas
+				var action = "/gestion/alertas";
+				$.post(action, function( data ) {
+					if ( data.caducados > 0 ){
+						$(".alertas").css("display", "block");
+						$( "#num-caducados" ).text(data.caducados);
+					}					
+				});	
+				
+				
+		  	});	  	
+		  	
 	</script>
   

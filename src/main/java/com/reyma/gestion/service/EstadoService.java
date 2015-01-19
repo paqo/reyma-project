@@ -12,6 +12,9 @@ public interface EstadoService {
 
 
 	public abstract Estado findEstado(Integer id);
+	
+	
+	public abstract Estado findEstadoByDescripcion(String descripcion);
 
 
 	public abstract List<Estado> findAllEstadoes();

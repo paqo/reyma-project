@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.reyma.gestion.busqueda.BusquedaHelper;
+import com.reyma.gestion.busqueda.dto.ResultadoBusqueda;
+import com.reyma.gestion.busqueda.dto.ResultadoBusquedaCaducados;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
@@ -77,8 +80,9 @@ public class SiniestroController {
 	@Autowired
     AfectadoDomicilioSiniestroService adsService;
 	
+	@Autowired
+	BusquedaHelper busquedas;
 	
-
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
@@ -94,7 +98,6 @@ public class SiniestroController {
         }
         uiModel.asMap().clear();
         siniestroService.saveSiniestro(siniestro);
-        //return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest);
         return "redirect:/siniestroes/" + encodeUrlPathSegment(siniestro.getSinId().toString(), httpServletRequest) + "?form";
     }
 
@@ -107,7 +110,13 @@ public class SiniestroController {
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
     public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
         addDateTimeFormatPatterns(uiModel);
-        uiModel.addAttribute("siniestro", siniestroService.findSiniestro(sinId));
+        Siniestro siniestro = siniestroService.findSiniestro(sinId);
+        uiModel.addAttribute("siniestro", siniestro);
+        uiModel.addAttribute("compania", companiaService.findCompania(siniestro.getSinComId().getComId()));
+        List<AfectadoDomicilioSiniestro> afectados = afectadoDomicilioSiniestroService.findAfectadosDomicilioByIdSiniestro(sinId);
+        
+        uiModel.addAttribute("afectados", afectados );
+        
         uiModel.addAttribute("itemId", sinId);
         return "siniestroes/show";
     }
@@ -117,7 +126,7 @@ public class SiniestroController {
 		if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            List<Siniestro> siniestros = siniestroService.findSiniestroEntries(firstResult, sizeNo, "sinFechaOcurrencia", "DESC");
+            List<Siniestro> siniestros = siniestroService.findSiniestroEntries(firstResult, sizeNo, "sinFechaEncargo", "DESC");
             List<SiniestroListadoDTO> listaSiniestros = new ArrayList<SiniestroListadoDTO>();
             SiniestroListadoDTO dto;
             for (Siniestro siniestro : siniestros) {
@@ -128,7 +137,7 @@ public class SiniestroController {
             float nrOfPages = (float) siniestroService.countAllSiniestroes() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
-        	List<Siniestro> siniestros = siniestroService.findAllSiniestroes("sinFechaOcurrencia", "DESC");
+        	List<Siniestro> siniestros = siniestroService.findAllSiniestroes("sinFechaEncargo", "DESC");
             List<SiniestroListadoDTO> listaSiniestros = new ArrayList<SiniestroListadoDTO>();
             SiniestroListadoDTO dto;
             for (Siniestro siniestro : siniestros) {
@@ -139,6 +148,25 @@ public class SiniestroController {
         }
         return "siniestroes/list";
     }
+	
+	
+	@RequestMapping(params = "caducados", produces = "text/html")
+    public String listarCaducados(@RequestParam(value = "caducados", required = false) Integer caducados, Model uiModel) {
+		
+		List<Siniestro> encontrados = siniestroService.findSiniestrosCaducados(caducados);
+		List<ResultadoBusquedaCaducados> listaCaducados = new ArrayList<ResultadoBusquedaCaducados>();
+		List<ResultadoBusqueda> _resultados = busquedas.obtenerResultadosBusqueda(encontrados);		
+		for (ResultadoBusqueda result : _resultados) {
+			ResultadoBusquedaCaducados res = new ResultadoBusquedaCaducados(result, 
+					Fechas.diasTranscurridosDesde(result.getFecha()));
+			listaCaducados.add(res);
+		}
+		
+		uiModel.addAttribute("caducados", listaCaducados );
+
+        return "siniestroes/caducados";
+    }
+	
 
 	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String update(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -181,8 +209,8 @@ public class SiniestroController {
 	void addDateTimeFormatPatterns(Model uiModel) {
         /*uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));
         uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));*/
-		uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-        uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
+		uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
+		uiModel.addAttribute("siniestro_sinfechaencargo_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);        
     }
 
 	void populateEditForm(Model uiModel, Siniestro siniestro) {
@@ -232,8 +260,7 @@ public class SiniestroController {
         int cont = 1;
         for (AfectadoDomicilioSiniestro ads : listaAfectados) {
         	 uiModel.addAttribute("domicilio-" + cont++, ads.getAdsDomId());
-		}
-        
+		}        
         cont = 1;
         for (Trabajo trabajo : trabajos) {
         	 uiModel.addAttribute("trabajo-" + cont++, trabajo);

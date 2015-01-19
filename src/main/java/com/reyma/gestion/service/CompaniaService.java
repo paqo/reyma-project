@@ -20,6 +20,9 @@ public interface CompaniaService {
 	public abstract List<Compania> findCompaniaEntries(int firstResult, int maxResults);
 
 
+	public Compania findCompaniaByDesc(String desc);
+	
+	
 	public abstract void saveCompania(Compania compania);
 
 

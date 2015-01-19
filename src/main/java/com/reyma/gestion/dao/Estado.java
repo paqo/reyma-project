@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -55,6 +57,14 @@ public class Estado {
 	public static Estado findEstado(Integer estId) {
         if (estId == null) return null;
         return entityManager().find(Estado.class, estId);
+    }
+	
+	public static Estado findEstadoByDescripcion(String descripcion) {
+        if (descripcion == null) return null;
+        return entityManager().createQuery("SELECT o FROM Estado o "
+				+ "WHERE o.estDescripcion = :desc", Estado.class)
+				.setParameter("desc", descripcion)
+				.getSingleResult();
     }
 
 	public static List<Estado> findEstadoEntries(int firstResult, int maxResults) {

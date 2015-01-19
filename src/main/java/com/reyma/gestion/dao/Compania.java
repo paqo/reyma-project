@@ -1,6 +1,7 @@
 package com.reyma.gestion.dao;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -160,4 +162,11 @@ public class Compania {
 	public String toString() {
         return new ReflectionToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).setExcludeFieldNames("siniestroes").toString();
     }
+
+	public static Compania findCompaniaByDesc(String companiaDesc) {
+		return entityManager().createQuery(
+				"SELECT o FROM Compania o WHERE o.comCodigo = '" + companiaDesc + "'", 
+				Compania.class).
+				getSingleResult();
+	}
 }

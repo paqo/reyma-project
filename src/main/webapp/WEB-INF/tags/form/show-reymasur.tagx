@@ -59,7 +59,7 @@
 		                </a>
 		              </c:if>
 		            </span>
-		            <span>
+		            <!-- <span>
 		              <c:if test="${create}">
 		                <spring:url value="${path}" var="create_form_url">
 		                  <spring:param name="form" />
@@ -70,6 +70,12 @@
 		                  <img alt="${fn:escapeXml(create_label)}" class="image" src="${create_image_url}" title="${fn:escapeXml(create_label)}" />
 		                </a>
 		              </c:if>
+		            </span> -->
+		            <span style="margin-left: 0.8em; margin-right: 0.8em;">
+		            	<spring:url value="/resources/images/printer.png" var="create_image_url" />
+		            	<a href="#" onclick="imprimirDatosSiniestro(this);" title="imprimir" id="imgPrint">
+		                	<img alt="icono_imprimir" class="image" src="${create_image_url}" />
+		                </a>
 		            </span>
 		            <span>
 		              <c:if test="${list}">

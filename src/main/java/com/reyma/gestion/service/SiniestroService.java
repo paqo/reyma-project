@@ -21,6 +21,9 @@ public interface SiniestroService {
 	public abstract List<Siniestro> findAllSiniestroes();
 	
 	
+	public abstract List<Siniestro> findSiniestrosCaducados(Integer dias);
+	
+	
 	public abstract List<Siniestro> findAllSiniestroes(String sortField, String sortOrder);
 
 

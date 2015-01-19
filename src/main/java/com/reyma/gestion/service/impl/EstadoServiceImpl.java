@@ -39,4 +39,8 @@ public class EstadoServiceImpl implements EstadoService {
 	public Estado updateEstado(Estado estado) {
         return estado.merge();
     }
+
+	public Estado findEstadoByDescripcion(String descripcion) {
+		return Estado.findEstadoByDescripcion(descripcion);
+	}
 }

@@ -8,10 +8,11 @@
         <field:select field="sinTsiId" id="c_com_reyma_gestion_dao_Siniestro_sinTsiId" itemValue="tsiId" items="${tiposiniestroes}" path="/tiposiniestroes" z="in8P0BjIRnlRlYzdKKer43tDldQ="/>
         <field:input field="sinNumero" id="c_com_reyma_gestion_dao_Siniestro_sinNumero" required="true" z="6uE23ueMQy71iBvAm1yhZLxjNKU="/>
         <field:input field="sinPoliza" id="c_com_reyma_gestion_dao_Siniestro_sinPoliza" z="TCet7X738WRMzl998GPd8PKhlaM="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechacomunicacion_date_format}" field="sinFechaComunicacion" id="c_com_reyma_gestion_dao_Siniestro_sinFechaComunicacion" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>        
+        <field:datetime dateTimePattern="${siniestro_sinfechaencargo_date_format}" field="sinFechaEncargo" id="c_com_reyma_gestion_dao_Siniestro_sinFechaEncargo" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>
+        <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>
         <field:textarea field="sinDescripcion" id="c_com_reyma_gestion_dao_Siniestro_sinDescripcion" style="width: 50%; max-width: 50% !important;" z=""/>
         <field:textarea field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" style="width: 50%; max-width: 50% !important;" z=""/>
+        <field:input field="sinMediador" id="c_com_reyma_gestion_dao_Siniestro_sinMediador" z=""/>
         <field:iphone-checkbox field="sinUrgente" id="c_com_reyma_gestion_dao_Siniestro_sinUrgente" label="Urgente"></field:iphone-checkbox>
     </form:create>
 

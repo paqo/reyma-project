@@ -14,4 +14,7 @@
 	<definition extends="default" name="siniestroes/update">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/update.jspx"/>
     </definition>
+    <definition extends="default" name="siniestroes/caducados">        
+        <put-attribute name="body" value="/WEB-INF/views/siniestroes/caducados.jsp"/>
+    </definition>
 </tiles-definitions>
