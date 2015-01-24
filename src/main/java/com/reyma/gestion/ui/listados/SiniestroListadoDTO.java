@@ -39,7 +39,8 @@ public class SiniestroListadoDTO implements Serializable {
 				sbDom.append( afectado.getAdsDomId().getDomDireccion() + ", " );
 			}
 		}
-		afectado = sbAfec.length() >= 2? sbAfec.substring(0, sbAfec.length()-2) : "";
+		afectado = sbAfec.length() >= 2? // limpiar si solo es ", " 
+				sbAfec.substring(0, sbAfec.length()-2) : "";
 		direccion = sbDom.length() >= 2? sbDom.substring(0, sbDom.length()-2) : "";
 	}
 	
