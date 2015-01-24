@@ -225,7 +225,7 @@
 		$( "#domMunId-" + contador ).autocomplete({
 			minLength: 3,
 			source: function( request, response ) {				 
-			          	$.getJSON( "/gestion/municipios/getJson", {
+			          	$.getJSON( "/reymasur/municipios/getJson", {
 			            munDescripcion: request.term,
 			            munPrvId: $("#domProvId-" + contador).val(), 
 			            munId: $("#IDdomMunId-" + contador).val()
@@ -246,7 +246,7 @@
  	        }
 		}).click(function(event) {
 	    	event.preventDefault();
-	    	var action = "/gestion/afectados/add";
+	    	var action = "/reymasur/afectados/add";
 	    	
 	    	var formulario = $(this).closest("div.cont-afectados");
 	    	var params = getDatosAfecParaEnvio(formulario);
@@ -323,7 +323,7 @@
 		    	event.preventDefault();		    	    	
 		    	var formulario = $(this).closest("div.cont-trabajos");
 		    	var params = getDatosTrabajoParaEnvio(formulario);		    	
-		    	var action = params.traId? "/gestion/trabajos/update" : "/gestion/trabajos/add";		
+		    	var action = params.traId? "/reymasur/trabajos/update" : "/reymasur/trabajos/add";		
 				$.post(action, params, function( data ) {				
 					// informar del resultado
 					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
@@ -354,7 +354,7 @@
 			dateFormat: 'dd/mm/yy',
 			constrainInput: false,
 			showOn: "button",
-		    buttonImage: "/gestion/images/calendar.png",
+		    buttonImage: "/reymasur/images/calendar.png",
 		    buttonImageOnly: true,
 		    buttonText: "Seleccionar fecha",
 		    onSelect: function(datetext){
@@ -366,7 +366,7 @@
 	}
 	
 	function eliminarDatosAfec(idAds) {
-		var action = "/gestion/afectados/remove/" + idAds;
+		var action = "/reymasur/afectados/remove/" + idAds;
 		var params = {"idAds" : idAds};
 		$( "#mensajeConfirmacion" ).dialog( "close" );
 		$.post(action, params, function( data ) {				
@@ -395,7 +395,7 @@
 	}
 	
 	function eliminarDatosTrabajo(idTra) {
-		var action = "/gestion/trabajos/remove/" + idTra;
+		var action = "/reymasur/trabajos/remove/" + idTra;
 		var params = {"idTra" : idTra};
 		$( "#mensajeConfirmacion" ).dialog( "close" );
 		$.post(action, params, function( data ) {				
@@ -549,7 +549,7 @@
 				minLength: 3,
 				source: function( request, response ) {
 					  var idInput = $(this.element).attr("id").split("-")[1];
-			          $.getJSON( "/gestion/municipios/getJson", {
+			          $.getJSON( "/reymasur/municipios/getJson", {
 			            munDescripcion: request.term,
 			            munPrvId: $("#domProvId-" + idInput).val(), 
 			            munId: $("#IDdomMunId-" + idInput).val()
@@ -619,7 +619,7 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	var action = "/gestion/afectados/add";
+		    	var action = "/reymasur/afectados/add";
 		    	
 		    	var formulario = $(this).closest("div.cont-afectados");
 		    	var params = getDatosAfecParaEnvio(formulario);
@@ -680,7 +680,7 @@
 				dateFormat: 'dd/mm/yy',
 				constrainInput: false,
 				showOn: "button",
-			    buttonImage: "/gestion/images/calendar.png",
+			    buttonImage: "/reymasur/images/calendar.png",
 			    buttonImageOnly: true,
 			    buttonText: "Seleccionar fecha",
 			    onSelect: function(datetext){
@@ -716,7 +716,7 @@
 		    	event.preventDefault();		    	    	
 		    	var formulario = $(this).closest("div.cont-trabajos");
 		    	var params = getDatosTrabajoParaEnvio(formulario);		    	
-		    	var action = params.traId? "/gestion/trabajos/update" : "/gestion/trabajos/add";		
+		    	var action = params.traId? "/reymasur/trabajos/update" : "/reymasur/trabajos/add";		
 				$.post(action, params, function( data ) {				
 					// informar del resultado
 					$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );

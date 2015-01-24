@@ -53,6 +53,6 @@
        }
 	}).click(function(event) {
 		event.preventDefault();
-		document.location = "/gestion/siniestroes?caducados=" + $( "#rango-dias" ).slider( "value");	  	
+		document.location = "/reymasur/siniestroes?caducados=" + $( "#rango-dias" ).slider( "value");	  	
 	});	
   </script>

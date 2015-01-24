@@ -73,7 +73,7 @@
     <script type="text/javascript">
 		  	$(document).ready(function(){	            
 	            // cargar datos hoy	            
-	           	var action = "/gestion/busquedas/inicio";
+	           	var action = "/reymasur/busquedas/inicio";
 				var params = {};
 				$.post(action, params, function( data ) {
 					cargarTablaResultados(data, "sin-hoy");
@@ -90,7 +90,7 @@
 						numberOfMonths: 2,
 						onSelect: function(curDate, instance){
 							$("#sin-fecha-titulo").html("SINIESTROS DEL D&Iacute;A " + curDate);
-					       	var action = "/gestion/busquedas";
+					       	var action = "/reymasur/busquedas";
 							var params = { fechaIni : curDate };
 							$.post(action, params, function( data ) {
 								cargarTablaResultados(data, "sin-fecha");
@@ -100,7 +100,7 @@
 					}								
 				);
 				// alertas
-				var action = "/gestion/alertas";
+				var action = "/reymasur/alertas";
 				$.post(action, function( data ) {
 					if ( data.caducados > 0 ){
 						$(".alertas").css("display", "block");

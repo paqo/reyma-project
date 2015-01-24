@@ -121,7 +121,7 @@
 		 	        	primary: "ui-icon-search"
 		 	        }								
 				}).click( function() {		   
-					var action = "/gestion/busquedas";
+					var action = "/reymasur/busquedas";
 					var params = {
 									sinNumero : $("#numSiniestro").val(),
 									sinPoliza : $("#numPoliza").val(),									

@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 // definicion de constantes
-const URL_REYMA = "http://localhost:8080/gestion";
+const URL_REYMA = "http://localhost:8080/reymasur";
 
 
 // funciones

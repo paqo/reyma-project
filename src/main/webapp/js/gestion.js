@@ -45,8 +45,8 @@ function cargarTablaResultados(data, idTabla) {
 			  filaRaw += "<div style='float: left; width: 30%; color:#000000;'>Fecha de entrada: " + data[index].fechaOcurrencia + "</div>";
 			  filaRaw += "<div style='float: left; width: 25%; color:#000000; text-align: center;'>(" + data[index].tipo + ")</div>";
 			  filaRaw += "<div style='float: left; width: 20%;'>";							  
-			  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "'><img style='float:left;' title='ver siniestro' src='/gestion/resources/images/show.png' class='image'/></a></div>";							  
-			  filaRaw += "<div style='float: left; width: 20%;'><a href='/gestion/siniestroes/" + data[index].id + "?form'><img style='float:left;' title='ir al siniestro' src='/gestion/resources/images/update.png' class='image'/></a></div>";
+			  filaRaw += "<div style='float: left; width: 20%;'><a href='/reymasur/siniestroes/" + data[index].id + "'><img style='float:left;' title='ver siniestro' src='/reymasur/resources/images/show.png' class='image'/></a></div>";							  
+			  filaRaw += "<div style='float: left; width: 20%;'><a href='/reymasur/siniestroes/" + data[index].id + "?form'><img style='float:left;' title='ir al siniestro' src='/reymasur/resources/images/update.png' class='image'/></a></div>";
 			  filaRaw += "</div>";
 			  filaRaw += "</div>";
 			  filaRaw += "<div style='float: left; width: 100%; margin-top: 1em; color:#000000;'>Descripci&oacute;n: " + data[index].descripcion + "</div>";

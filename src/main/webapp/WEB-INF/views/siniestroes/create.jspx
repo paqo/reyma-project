@@ -34,7 +34,7 @@
 	 	       }
 		}).click(function(event) {
 	    	event.preventDefault();
-	    	document.location = "/gestion"; // al inicio
+	    	document.location = "/reymasur"; // al inicio
 	    });	
 		
 	});
