@@ -52,11 +52,11 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 	}
 	
 	public List<AfectadoDomicilioSiniestro> findAfectadosDomicilioByIdDomicilio(Integer idSiniestro){
-		return AfectadoDomicilioSiniestro.findAfectadosDomicilioBySiniestro(idSiniestro);
+		return AfectadoDomicilioSiniestro.findAfectadosDomicilioByDomicilio(idSiniestro);
 	}
 	
 	public List<AfectadoDomicilioSiniestro> findAfectadosDomicilioByIdPersona(Integer idSiniestro){
-		return AfectadoDomicilioSiniestro.findAfectadosDomicilioBySiniestro(idSiniestro);
+		return AfectadoDomicilioSiniestro.findAfectadosDomicilioByPersona(idSiniestro);
 	}
 
 	public List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {

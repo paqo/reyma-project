@@ -20,6 +20,12 @@ public interface AfectadoDomicilioSiniestroService {
 	public abstract List<AfectadoDomicilioSiniestro> findAfectadosDomicilioByIdSiniestro(Integer idSiniestro);
 	
 	
+	public abstract List<AfectadoDomicilioSiniestro> findAfectadosDomicilioByIdDomicilio(Integer id);
+	
+	
+	public abstract List<AfectadoDomicilioSiniestro> findAfectadosDomicilioByIdPersona(Integer id);
+	
+	
 	public abstract List<AfectadoDomicilioSiniestro> findAfectadoDomicilioSiniestroEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder);
 	
 	

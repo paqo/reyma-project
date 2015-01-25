@@ -2,7 +2,9 @@ package com.reyma.gestion.ui.listados;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Siniestro;
@@ -32,11 +34,19 @@ public class SiniestroListadoDTO implements Serializable {
 		List<AfectadoDomicilioSiniestro> afectados = adsService.findAfectadosDomicilioByIdSiniestro(id);
 		StringBuilder sbAfec = new StringBuilder();
 		StringBuilder sbDom = new StringBuilder();
+		Set<Integer> domicilios = new HashSet<Integer>();
+		Set<Integer> perjudicados = new HashSet<Integer>();
 		for (AfectadoDomicilioSiniestro afectado : afectados) {
 			if ( afectado.getAdsTafId().getTafId() == 4 || 
 				 afectado.getAdsTafId().getTafId() == 5 ){ //TODO: id de bd (perjudicado)
-				sbAfec.append( afectado.getAdsPerId().getPerNombre() + ", " );
-				sbDom.append( afectado.getAdsDomId().getDomDireccion() + ", " );
+				if ( !domicilios.contains( afectado.getAdsDomId().getDomId() ) ){
+					sbDom.append( afectado.getAdsDomId().getDomDireccion() + ", " );
+					domicilios.add(afectado.getAdsDomId().getDomId());
+				}
+				if ( !perjudicados.contains(afectado.getAdsPerId().getPerId()) ){
+					sbAfec.append( afectado.getAdsPerId().getPerNombre() + ", " );
+					perjudicados.add(afectado.getAdsPerId().getPerId());
+				}
 			}
 		}
 		afectado = sbAfec.length() >= 2? // limpiar si solo es ", " 

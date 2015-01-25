@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
@@ -24,6 +25,7 @@ import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
+import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.Trabajo;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
@@ -37,8 +39,12 @@ import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.MensajeErrorJson;
+import com.reyma.gestion.ui.MensajeExitoJson;
 import com.reyma.gestion.ui.listados.SiniestroListadoDTO;
 import com.reyma.gestion.util.Fechas;
+
+import flexjson.JSONSerializer;
 
 @RequestMapping("/siniestroes")
 @Controller
@@ -195,15 +201,63 @@ public class SiniestroController {
         populateEditForm(uiModel, siniestroService.findSiniestro(sinId));
         return "siniestroes/update";
     }
+	
+	
+	
+	
+	
+	/*
+	 
+	 
+	 @RequestMapping(params = "form", produces = "text/html")
+    public String createForm(Model uiModel) {
+        populateEditForm(uiModel, new Siniestro());
+        return "siniestroes/create";
+    }
 
-	@RequestMapping(value = "/{sinId}", method = RequestMethod.DELETE, produces = "text/html")
-    public String delete(@PathVariable("sinId") Integer sinId, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Siniestro siniestro = siniestroService.findSiniestro(sinId);
-        siniestroService.deleteSiniestro(siniestro);
-        uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "5" : size.toString());
-        return "redirect:/siniestroes";
+	@RequestMapping(value = "/{sinId}", produces = "text/html")
+    public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
+        addDateTimeFormatPatterns(uiModel);
+       
+    }
+	 
+	 */
+	
+	@RequestMapping(value = "/{sinId}", params = "eliminar", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+    public String delete(@PathVariable("sinId") Integer idSiniestro, Model uiModel) {
+		JSONSerializer serializer = new JSONSerializer();
+		MensajeErrorJson mensajeError = null;
+		
+		List<AfectadoDomicilioSiniestro> listaAfectados = adsService.findAfectadosDomicilioByIdSiniestro(idSiniestro);
+		try {
+			//1.- borramos las relaciones de la tabla de afectados
+			Domicilio dom;
+			Persona per;
+			for (AfectadoDomicilioSiniestro ads : listaAfectados) {
+				dom = ads.getAdsDomId();
+				per = ads.getAdsPerId();
+				ads.remove();
+				// si la persona o domicilio ya no tiene 
+				// relacion con otro siniestro, se borra del sistema
+				if ( adsService.findAfectadosDomicilioByIdDomicilio(dom.getDomId()).size() == 0 ){
+					dom.remove();
+				}
+				if ( adsService.findAfectadosDomicilioByIdPersona(per.getPerId()).size() == 0 ){
+					per.remove();
+				}
+			}
+			//2.- borramos siniestro
+			Siniestro sinBorrar = siniestroService.findSiniestro(idSiniestro);
+			sinBorrar.remove();
+			MensajeExitoJson mensajeExito = new MensajeExitoJson("El siniestro se ha eliminado con éxito");
+			return serializer.exclude("class").serialize(mensajeExito);
+		} catch (Exception e) {			
+			e.printStackTrace();
+			mensajeError = new MensajeErrorJson("Se ha producido un error inesperado elimianando el siniestro");
+			mensajeError.setTitulo("Error eliminando siniestro");
+		}
+		return serializer.exclude("class").serialize(mensajeError);
     }
 
 	void addDateTimeFormatPatterns(Model uiModel) {

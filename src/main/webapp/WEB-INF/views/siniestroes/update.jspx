@@ -473,6 +473,51 @@
 		}		   
 	}	
 	
+	function confirmarEliminacionSiniestro(idSiniestro) {
+		
+		var funcAceptar = function(){ eliminarSiniestro(idSiniestro) };
+		$( "#mensajeConfirmacion" ).children("p").html( 
+													'<span style="font-weight: bold;">¡ATENCI&Oacute;N!</span><br/>' +
+													'<span>¿Desea eliminar definitivamente el siniestro?</span>' 
+												  );                        
+		// abrir confirmacion
+		$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+		     	"Aceptar": funcAceptar,
+		        "Cancelar": function() { $( this ).dialog( "close" ); }
+		});
+		$( "#mensajeConfirmacion" ).dialog( "open" );
+		$( "#mensajeConfirmacion" ).dialog( "option", "height", 200);
+	}	
+			
+	function eliminarSiniestro(idSiniestro) {
+		var action = "/reymasur/siniestroes/" + idSiniestro + "?eliminar";
+    	var params = {}; 
+		$.post(action, params, function( data ) {		
+			// cerrar ventana anterior
+			$( "#mensajeConfirmacion" ).dialog( "close" );
+			// informar del resultado
+			$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+			$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+			$( "#mensajesUsuario" ).dialog( "open" );
+			// redirigir al listado
+			$( "#mensajesUsuario" )
+				.off( "dialogclose" )
+				.on( "dialogclose", 
+						function( event, ui ) {
+							$( "#mensajesUsuario" ).dialog( "close" );
+							// mostrar aviso de espera
+							$("#cargando").show();
+							// ir al listado de siniestros
+							document.location = "/reymasur/siniestroes";
+						} 
+				);
+		}).error(function() {
+			$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+			$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando el siniestro" );
+			$( "#mensajesUsuario" ).dialog( "open" );				 
+		})	
+	}
+	
 	//############################ FIN TEMPORAL
 	
 		$(function() {
@@ -483,11 +528,37 @@
 				  of: "#wrapper"
 				});
 			
+			
+			//---> botones
 			$( "#proceed" ).button({		    	
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-disk"
 	 	        }
-			});			
+			});
+			
+			$( "#eliminar-sin" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-trash"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	var idSiniestro = $("[name='sinId']").val();
+		    	confirmarEliminacionSiniestro(idSiniestro);
+		    });	
+			
+			$( "#mostrar-sin" ).button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-note"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	var idSiniestro = $("[name='sinId']").val();
+		    	$("#cargando").show();
+				// ir al listado de siniestros
+				document.location = "/reymasur/siniestroes/" + idSiniestro;
+		    });	
+						
+			//<--- botones
 			
 			// crear ventana para mensajes
 			$( "#mensajesUsuario" ).dialog({

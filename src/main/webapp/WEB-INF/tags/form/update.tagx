@@ -43,6 +43,8 @@
 		          <spring:message code="button_save" var="save_button" htmlEscape="false" />
 		          <script type="text/javascript">Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));</script>
 		          <input id="proceed" type="submit" style="width: 7em; height: inherit; font-size: 12px" value="Guardar" />
+		          <button id="mostrar-sin" style="width: 8em; height: inherit; font-size: 12px; margin-left: 1em; margin-right: 1em;">Ver Datos</button>
+		          <button id="eliminar-sin" style="width: 7em; height: inherit; font-size: 12px">Eliminar</button>
 		        </div>
 		        <form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
 		        <c:if test="${versionField ne 'none'}">

@@ -85,19 +85,27 @@ public class UtilsValidacion {
 		}		
 		String nif = persona.getPerNif();
 		if ( StringUtils.isNotBlank(nif) ){
-			if ( StringUtils.isNumeric( nif.substring(0, 1) ) ){
-				// si hay NIF, validar				
-				if (!UtilsValidacion.esNIFValido(persona.getPerNif())){
-					errors.rejectValue("perNif", "", null, obtenerMensaje("persona.nif"));
-				}
-			} else {
-				// nif de empresas, no validar
+			// si hay NIF, validar				
+			if (!UtilsValidacion.esNIFValido(persona.getPerNif())){
+				errors.rejectValue("perNif", "", null, obtenerMensaje("persona.nif"));
 			}			
 		}
 	}
 	
 	public static boolean esNIFValido(String nif) {		
-		return validadorNIF.checkNif(nif) == Validador.NIF_OK;
+		
+		int chkNif = validadorNIF.checkNif(nif);
+		switch (chkNif) {
+			case Validador.NIF_OK:
+			case Validador.CIF_OK:
+			case Validador.DNI_OK:
+			case Validador.CIF_NORESIDENTES_OK:
+			case Validador.CIF_ORGANIZACION_OK:
+			case Validador.CIF_EXTRANJERO_OK:
+				return true;
+			default:
+				return false;
+		}		
 	}
 	
 	public static boolean ignorarErrorBooleanBinding(BindingResult bindingResult){
@@ -120,5 +128,12 @@ public class UtilsValidacion {
 	
 	public static String obtenerMensaje(String codigo){
 		return obtenerMensaje(codigo, null);
+	}
+	
+	public static void main(String[] args) {
+		System.out.println( "=> " + validadorNIF.checkNif("45660533J") );
+		
+		System.out.println("=> " + Validador.NIF_OK );
+
 	}
 }
