@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -40,6 +41,8 @@ public class Persona {
 	@Column(name = "per_tlf2", length = 25)
     private String perTlf2;
 
+	private static Logger logger = Logger.getLogger(Persona.class);
+	
 	public Set<AfectadoDomicilioSiniestro> getAfectadoDomicilioSiniestroes() {
         return afectadoDomicilioSiniestroes;
     }
@@ -139,12 +142,10 @@ public class Persona {
 				        .setParameter("nombre", persona.getPerNombre())
 				        .getSingleResult();
 			} catch (EmptyResultDataAccessException e){
-				//TODO: pasar a log4j
-				System.out.println("persona no encontrada: " + persona);
+				logger.debug("persona no encontrada: " + persona);
 				return null;
 			} catch (IncorrectResultSizeDataAccessException e) {		
-				//TODO: pasar a log4j
-				System.out.println("encontrada mas de una persona para criterio de busqueda: " + persona);
+				logger.debug("encontrada mas de una persona para criterio de busqueda: " + persona);
 				return null;
 			}	        
 		}        

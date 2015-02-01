@@ -31,11 +31,13 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.reyma.gestion.controller.SiniestroController;
 import com.reyma.gestion.util.Fechas;
 
 @Configurable
@@ -46,6 +48,8 @@ public class Siniestro {
 	@PersistenceContext
     transient EntityManager entityManager;
 
+	private static final Logger logger = Logger.getLogger(SiniestroController.class);
+	
 	public static final List<String> fieldNames4OrderClauseFilter = java.util.Arrays.asList("sinTsiId", "sinFechaEncargo");
 
 	public static final EntityManager entityManager() {
@@ -94,7 +98,7 @@ public class Siniestro {
         Calendar fechaCad = Fechas.getFechaHoy(true);
         fechaCad.add(GregorianCalendar.DATE, dias * (-1) );
         
-        System.out.println("fecha de caducidad: " + fechaCad.getTime());
+       logger.debug("fecha de caducidad: " + fechaCad.getTime());
         
         List<Predicate> condiciones = new ArrayList<Predicate>();
         condiciones.add(
@@ -428,7 +432,7 @@ public class Siniestro {
 			return;
 		}
 		Predicate condicion;
-		Expression<String> exp;		
+		Expression<String> exp, exp2;		
 		if ( !StringUtils.isEmpty(afectado.getPerNombre()) ){			
 			exp = joinAds.get("adsPerId").get("perNombre");
 	    	condicion = cb.like(exp, "%" + afectado.getPerNombre()+ "%");
@@ -439,12 +443,20 @@ public class Siniestro {
 	    	condicion = cb.like(exp, "%" + afectado.getPerNif()+ "%");
 	    	condiciones.add(condicion);		
 		}
-		if ( !StringUtils.isEmpty(afectado.getPerTlf1()) ){
-			exp = joinAds.get("adsPerId").get("perTlf1");
+		if ( !StringUtils.isEmpty(afectado.getPerTlf1()) ||
+				!StringUtils.isEmpty(afectado.getPerTlf2())){
+			/*exp = joinAds.get("adsPerId").get("perTlf1");
 	    	condicion = cb.like(exp, "%" + afectado.getPerTlf1() + "%");	    	
-	    	condiciones.add(condicion);		
+	    	condiciones.add(condicion);*/			
+			exp = joinAds.get("adsPerId").get("perTlf1");
+			exp2 = joinAds.get("adsPerId").get("perTlf2");				    	
+			condicion = cb.or(cb.like(exp, "%" + afectado.getPerTlf1() + "%"), 
+							  cb.like(exp2, "%" + afectado.getPerTlf1() + "%") // tlf1 las dos veces, solo se busca un valor de
+							  												   // telefono cada vez
+						);	    	
+	    	condiciones.add(condicion);
+			
 		}
-		//TODO: Tlf2 pero con OR
 	}
 
 	private static void obtenerCondicionesDomicilio(Domicilio domicilioCondiciones, 
@@ -469,7 +481,6 @@ public class Siniestro {
 		Predicate condicion;
 		Expression<String> exp;
 		
-		//TODO: hacer con reflexion?
 		if ( !StringUtils.isEmpty(siniestroCondiciones.getSinNumero()) ){
 			exp = siniestroRoot.get("sinNumero");			
 			condicion = cb.like( exp, "%" + siniestroCondiciones.getSinNumero() + "%");
@@ -521,8 +532,8 @@ public class Siniestro {
 				Persona per = (Persona) dao;
 				return !StringUtils.isEmpty(per.getPerNombre()) ||
 						!StringUtils.isEmpty(per.getPerNif()) || 
-						!StringUtils.isEmpty(per.getPerTlf1());
-				//TODO: incluir tlf2 cuando haga el OR
+						!StringUtils.isEmpty(per.getPerTlf1()) ||
+						!StringUtils.isEmpty(per.getPerTlf2());
 			}	
 		}			
 		return false;

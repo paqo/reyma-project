@@ -237,40 +237,26 @@ public class IntegracionHelper {
 		if ( provincia == null || StringUtils.isEmpty(prov) ){
 			provincia = provinciaService.findProvinciaByDescripcion("Sevilla", true);	
 		}
-		domicilio.setDomProvId(provincia);
-		
-		List<CodigoPostal> codigosPostales = CodigoPostal.findByCodPostal(String.valueOf(domicilio.getDomCp()) );		
-		if ( codigosPostales != null && codigosPostales.size() > 0 ){
-			CodigoPostal codigoPostal = codigosPostales.get(0);
-			if (codigosPostales.size() > 1){
-				int distLev = Integer.MAX_VALUE;
-				for (CodigoPostal _codigoPostal : codigosPostales) {
-					if ( StringUtils.getLevenshteinDistance(_codigoPostal.getCpMunicipio(), mun) < distLev ){
-						codigoPostal = _codigoPostal;
+		domicilio.setDomProvId(provincia);	
+		// municipio directamente el que se envia en la
+		// peticion desde tamper monkey (con geocode)
+		municipio = municipioService.findMunicipioByIdProvinciaAndDesc(provincia.getPrvId(), mun);
+		if ( municipio == null ){
+			// no se ha podido obtener mediante descripcion, intentamos con CP
+			List<CodigoPostal> codigosPostales = CodigoPostal.findByCodPostal(String.valueOf(domicilio.getDomCp()) );		
+			if ( codigosPostales != null && codigosPostales.size() > 0 ){
+				CodigoPostal codigoPostal = codigosPostales.get(0);
+				if (codigosPostales.size() > 1){
+					int distLev = Integer.MAX_VALUE;
+					for (CodigoPostal _codigoPostal : codigosPostales) {
+						if ( StringUtils.getLevenshteinDistance(_codigoPostal.getCpMunicipio(), mun) < distLev ){
+							codigoPostal = _codigoPostal;
+						}
 					}
 				}
-			}
-			municipio = municipioService.findMunicipioByIdProvinciaAndDesc(provincia.getPrvId(), codigoPostal.getCpMunicipio());
-		} else {
-			//TODO:No se ha podido encontrar el CP, intentamos buscar
-			// municipio mediante la descripcion
-			
+				municipio = municipioService.findMunicipioByIdProvinciaAndDesc(provincia.getPrvId(), codigoPostal.getCpMunicipio());
+			} 
 		}
-		
-		// busqueda por nombre (fallaría con todos los que no sean de una sola palabra) 
-		/*List<Municipio> municipios = municipioService.findMunicipiosByIdProvAndDesc(provincia.getPrvId(), mun);
-		if ( municipios != null ){
-			Municipio munTemp = municipios.get(0);
-			if ( municipios.size() > 1  ){				
-				int distLev = Integer.MAX_VALUE;
-				for (Municipio _municipio : municipios) {
-					if ( StringUtils.getLevenshteinDistance(mun, _municipio.getMunDescripcion()) < distLev ){
-						munTemp = _municipio;
-					}
-				}				
-			}
-			municipio = munTemp;
-		}*/
 		
 		// si se ha podido encontrar el municipio
 		// (desde la importacion no se crea)

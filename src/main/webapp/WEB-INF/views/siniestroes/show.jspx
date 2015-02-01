@@ -40,7 +40,7 @@
 		   		<div id="dir_${afectado.adsId}" class="box">${afectado.adsDomId.domDireccion}&#160;&#160;
 		   		${afectado.adsDomId.domMunId.munDescripcion},&#160;${afectado.adsDomId.domProvId.prvDescripcion}</div>
 		   		<label for="tlf_${afectado.adsId}">Teléfono(s):</label>
-		   		<div id="lf_${afectado.adsId}" class="box">${afectado.adsPerId.perTlf1} ${afectado.adsPerId.perTlf2}</div>
+		   		<div id="lf_${afectado.adsId}" class="box">${afectado.adsPerId.perTlf1}&#160;&#160;&#160;&#160;${afectado.adsPerId.perTlf2}</div>
 			</div>
 			<hr />	   
 		</c:forEach>

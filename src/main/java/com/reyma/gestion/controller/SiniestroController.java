@@ -26,6 +26,7 @@ import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Persona;
+import com.reyma.gestion.dao.Provincia;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.Trabajo;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
@@ -49,7 +50,7 @@ import flexjson.JSONSerializer;
 @RequestMapping("/siniestroes")
 @Controller
 public class SiniestroController {
-
+	
 	@Autowired
     SiniestroService siniestroService;
 
@@ -280,8 +281,6 @@ public class SiniestroController {
         uiModel.addAttribute("afectadodomiciliosiniestroes", afectados);
         // trabajos
         uiModel.addAttribute("trabajos", trabajos);
-        //TODO: facturas solamente del siniestro
-        uiModel.addAttribute("facturas", facturaService.findAllFacturas());         
         
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
@@ -292,8 +291,9 @@ public class SiniestroController {
         uiModel.addAttribute("municipios", municipioService.findAllMunicipiosByIdProvincia(41));
         // ponemos por defecto sevilla como provincia y municipio        
         Domicilio domicilio = new Domicilio();
-        //TODO: cargar id de sevilla desde base de datos
-        Municipio mun = municipioService.findMunicipio(757);
+        Provincia prov = provinciaService.findProvinciaByDescripcion("Sevilla", false); 
+        Municipio mun = municipioService.findMunicipioByIdProvinciaAndDesc(prov.getPrvId(), "Sevilla");
+        
         domicilio.setDomMunId(mun);
         domicilio.setDomProvId(mun.getMunPrvId());        
         uiModel.addAttribute("domicilio", domicilio);
@@ -304,8 +304,6 @@ public class SiniestroController {
         uiModel.addAttribute("operarios", operarioService.findAllOperarios() );
         
         fixPathDesplegables(uiModel, siniestro, afectados, trabajos);
-        
-        
     }
 
 	private void fixPathDesplegables(Model uiModel,

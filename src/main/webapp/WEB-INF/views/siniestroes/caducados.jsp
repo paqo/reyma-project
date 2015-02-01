@@ -40,6 +40,7 @@
     $( "#rango-dias" ).slider({
       min: 0,
       max: 180,
+      step: 1,
       slide: function( event, ui ) {
         $( "#ndias" ).val( ui.value );
       }

@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -41,6 +42,8 @@ public class Domicilio {
         this.domId = id;
     }
 
+	private static Logger logger = Logger.getLogger(Domicilio.class);
+	
 	public String toString() {
         return new ReflectionToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).setExcludeFieldNames("afectadoDomicilioSiniestroes", "domProvId", "domMunId").toString();
     }
@@ -203,12 +206,10 @@ public class Domicilio {
 						.setParameter("provincia", domicilio.getDomProvId())
 						.getSingleResult();
 			} catch (EmptyResultDataAccessException e){
-				//TODO: pasar a log4j
-				System.out.println("domicilio no encontrado: " + domicilio);
+				logger.debug("domicilio no encontrado: " + domicilio);
 				return null;
 			} catch (IncorrectResultSizeDataAccessException e) {		
-				//TODO: pasar a log4j
-				System.out.println("encontrado mas de un domicilio para criterio de busqueda: " + domicilio);
+				logger.debug("encontrado mas de un domicilio para criterio de busqueda: " + domicilio);
 				return null;
 			}	
 		}		

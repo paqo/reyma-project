@@ -72,9 +72,7 @@ public class TrabajoController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public String actualizar(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {        
-		JSONSerializer serializer = new JSONSerializer();
-		//MensajeErrorValidacionJson mensajeError = null;
-		//TODO: VALIDACIONES
+		JSONSerializer serializer = new JSONSerializer();		
 		trabajoService.updateTrabajo(trabajo);
 		MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos del trabajo se han actualizado con éxito", true);
 		return serializer.exclude("class").serialize(mensajeExito);

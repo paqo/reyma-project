@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Siniestro;
+import com.reyma.gestion.integracion.IntegracionHelper;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 
 public class SiniestroListadoDTO implements Serializable {
@@ -37,8 +38,8 @@ public class SiniestroListadoDTO implements Serializable {
 		Set<Integer> domicilios = new HashSet<Integer>();
 		Set<Integer> perjudicados = new HashSet<Integer>();
 		for (AfectadoDomicilioSiniestro afectado : afectados) {
-			if ( afectado.getAdsTafId().getTafId() == 4 || 
-				 afectado.getAdsTafId().getTafId() == 5 ){ //TODO: id de bd (perjudicado)
+			if ( afectado.getAdsTafId().getTafId() == IntegracionHelper.TIPO_AFEC_AMBOS.getTafId() || 
+				 afectado.getAdsTafId().getTafId() == IntegracionHelper.TIPO_AFEC_PERJUDICADO.getTafId() ){
 				if ( !domicilios.contains( afectado.getAdsDomId().getDomId() ) ){
 					sbDom.append( afectado.getAdsDomId().getDomDireccion() + ", " );
 					domicilios.add(afectado.getAdsDomId().getDomId());
@@ -51,7 +52,8 @@ public class SiniestroListadoDTO implements Serializable {
 		}
 		afectado = sbAfec.length() >= 2? // limpiar si solo es ", " 
 				sbAfec.substring(0, sbAfec.length()-2) : "";
-		direccion = sbDom.length() >= 2? sbDom.substring(0, sbDom.length()-2) : "";
+		direccion = sbDom.length() >= 2? 
+				sbDom.substring(0, sbDom.length()-2) : "";
 	}
 	
 	public Integer getId() {

@@ -87,7 +87,6 @@ public class BusquedaController {
 			fecha.set(Calendar.HOUR_OF_DAY, 0);
 			fecha.set(Calendar.MINUTE, 0);
 			fecha.set(Calendar.SECOND, 0);
-			//TODO: semana anterior?
 			List<Siniestro> sinEncontrados = busquedas.buscarSiniestrosParaFecha(fecha);
 			resultados = busquedas.obtenerResultadosBusqueda(sinEncontrados);
 		} catch (Exception e) {			
