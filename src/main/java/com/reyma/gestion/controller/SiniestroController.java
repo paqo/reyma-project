@@ -116,7 +116,8 @@ public class SiniestroController {
 
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
     public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
-        addDateTimeFormatPatterns(uiModel);
+       		
+		addDateTimeFormatPatterns(uiModel);
         Siniestro siniestro = siniestroService.findSiniestro(sinId);
         uiModel.addAttribute("siniestro", siniestro);
         uiModel.addAttribute("compania", companiaService.findCompania(siniestro.getSinComId().getComId()));

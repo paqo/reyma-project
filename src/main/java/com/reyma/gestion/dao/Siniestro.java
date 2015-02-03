@@ -97,9 +97,7 @@ public class Siniestro {
         
         Calendar fechaCad = Fechas.getFechaHoy(true);
         fechaCad.add(GregorianCalendar.DATE, dias * (-1) );
-        
-       logger.debug("fecha de caducidad: " + fechaCad.getTime());
-        
+                
         List<Predicate> condiciones = new ArrayList<Predicate>();
         condiciones.add(
 	        cb.lessThanOrEqualTo(siniestroRoot.<Calendar>get("sinFechaEncargo"), fechaCad)
