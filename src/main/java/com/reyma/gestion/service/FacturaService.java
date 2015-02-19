@@ -15,6 +15,9 @@ public interface FacturaService {
 
 
 	public abstract List<Factura> findAllFacturas();
+	
+	
+	public abstract List<Factura> findFacturasByIdSiniestro(Integer id);
 
 
 	public abstract List<Factura> findFacturaEntries(int firstResult, int maxResults);

@@ -627,6 +627,55 @@ div.celda-formulario-busqueda label {
 	display: none;
 }
 
-/* .no-close .ui-dialog-titlebar-close {
-  display: none;
-} */
+/* ESTILOS LISTA DE FACTURAS */
+
+#listaFacturas {
+	color: white;
+	background: #17a;
+	border-bottom: 0.2em solid #17a;
+	border-right: 0.2em solid #17a;
+	padding: 0 1px;
+	margin-left: 0;
+	/* width: 12em; */
+	width: 28em;
+	font: normal 0.8em Verdana, sans-serif;
+}
+
+#listaFacturas li {
+	list-style: none;
+	margin: 0;
+	font-size: 1em;
+}
+
+#listaFacturas a {
+	display: block;
+	text-decoration: none;
+	margin-bottom: 0.5em;
+	margin-top: 0.5em;
+	color: white;
+	background: #15B075; /* #39c; */
+	border-width: 1px;
+	border-style: solid;
+	border-color: #5bd #035 #068 #6cf;
+	border-left: 1em solid #E5F9CF; /* #fc0; */
+	padding: 0.25em 0.5em 0.4em 0.75em;
+}
+
+#listaFacturas a.current { border-color: #5bd #035 #068 #96FD14; }
+
+
+#listaFacturas a:hover, #listaFacturas a.current:hover {
+	background: #28b;
+	border-color: #069 #6cf #5bd white;
+	padding: 0.4em 0.35em 0.25em 0.9em;
+}
+
+#listaFacturas a:active, #listaFacturas a.current:active {
+	background: #17a;
+	border-color: #069 #6cf #5bd #96FD14;
+	padding: 0.4em 0.35em 0.25em 0.9em;
+}
+
+.eliminarFactura {
+	width: 1.5em !important;
+}

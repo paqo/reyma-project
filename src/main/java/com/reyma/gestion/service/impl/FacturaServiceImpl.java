@@ -39,4 +39,8 @@ public class FacturaServiceImpl implements FacturaService {
 	public Factura updateFactura(Factura factura) {
         return factura.merge();
     }
+
+	public List<Factura> findFacturasByIdSiniestro(Integer id) {
+		return Factura.findFacturasParaSiniestro(id);
+	}
 }

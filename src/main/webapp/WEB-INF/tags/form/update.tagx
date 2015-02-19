@@ -72,7 +72,7 @@
 		 				boton.button( "option", "icons", { primary: "ui-icon-circle-minus"} );
 		 			}
 	 			});
-	 		})/*.tooltip({
+	 		});/*.tooltip({
 	 			hide: { duration: 300 }
 	 		});*/
 	 		// inicialmente contraido

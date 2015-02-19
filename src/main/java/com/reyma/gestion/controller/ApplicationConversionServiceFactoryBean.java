@@ -38,6 +38,8 @@ import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.listados.FacturaListadoDTO;
+import com.reyma.gestion.util.Fechas;
 
 @Configurable
 /**
@@ -207,6 +209,15 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         return new org.springframework.core.convert.converter.Converter<java.lang.Integer, com.reyma.gestion.dao.Factura>() {
             public com.reyma.gestion.dao.Factura convert(java.lang.Integer id) {
                 return facturaService.findFactura(id);
+            }
+        };
+    }
+	
+	public Converter<Factura, FacturaListadoDTO> getFacturaToFacturaListadoDTOConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Factura, com.reyma.gestion.ui.listados.FacturaListadoDTO>() {
+            public FacturaListadoDTO convert(Factura factura) {
+            	String fecha = Fechas.formatearFechaDDMMYYYY( factura.getFacFecha().getTime() );            	
+                return new FacturaListadoDTO(factura.getFacId(), factura.getFacNumFactura(), fecha);
             }
         };
     }

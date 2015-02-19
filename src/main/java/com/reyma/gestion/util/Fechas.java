@@ -11,10 +11,12 @@ public class Fechas {
 	public static final String FORMATO_FECHA_DDMMYYYYHHMM = "dd/MM/yyyy HH:mm";
 	public static final String FORMATO_FECHA_DDMMYYYY = "dd/MM/yyyy";
 	public static final SimpleDateFormat FORMATEADOR_DDMMYYYYHHMM;
+	public static final SimpleDateFormat FORMATEADOR_DDMMYYYY;
 	public static final double UN_DIA_MILISEGUNDOS = 1000 * 60 * 60 * 24;
 	
 	static {
 		FORMATEADOR_DDMMYYYYHHMM = new SimpleDateFormat(FORMATO_FECHA_DDMMYYYYHHMM);
+		FORMATEADOR_DDMMYYYY = new SimpleDateFormat(FORMATO_FECHA_DDMMYYYY);
 	}
 	
 	public static Calendar getFechaHoy(boolean instanteInicial) {
@@ -41,9 +43,8 @@ public class Fechas {
 		}
 	}
 	
-	public static void main(String[] args) {
-		
-		System.out.println( diasTranscurridosDesde("10/01/2015") );		
-		
+	public static String formatearFechaDDMMYYYY(Date fecha) {
+		return FORMATEADOR_DDMMYYYY.format(fecha);		
 	}
+
 }

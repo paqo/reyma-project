@@ -2,6 +2,7 @@ package com.reyma.gestion.dao;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -143,6 +145,9 @@ public class Factura {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "MM")
     private Calendar facFecha;
+	
+	@Column(name = "fac_num_factura")	
+	private String facNumFactura;
 
 	public Set<LineaFactura> getLineaFacturas() {
         return lineaFacturas;
@@ -167,4 +172,17 @@ public class Factura {
 	public void setFacFecha(Calendar facFecha) {
         this.facFecha = facFecha;
     }
+	
+	public String getFacNumFactura() {
+		return facNumFactura;
+	}
+
+	public void setFacNumFactura(String facNumFactura) {
+		this.facNumFactura = facNumFactura;
+	}
+
+	public static List<Factura> findFacturasParaSiniestro(Integer id) {
+		 String jpaQuery = "SELECT o FROM Factura o WHERE o.facSinId = " + id;	        
+	     return entityManager().createQuery(jpaQuery, Factura.class).getResultList();
+	}	
 }

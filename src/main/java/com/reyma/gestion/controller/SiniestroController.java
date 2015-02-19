@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,7 @@ import com.reyma.gestion.busqueda.dto.ResultadoBusquedaCaducados;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.Factura;
 import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Provincia;
@@ -42,6 +44,7 @@ import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
+import com.reyma.gestion.ui.listados.FacturaListadoDTO;
 import com.reyma.gestion.ui.listados.SiniestroListadoDTO;
 import com.reyma.gestion.util.Fechas;
 
@@ -204,27 +207,6 @@ public class SiniestroController {
         return "siniestroes/update";
     }
 	
-	
-	
-	
-	
-	/*
-	 
-	 
-	 @RequestMapping(params = "form", produces = "text/html")
-    public String createForm(Model uiModel) {
-        populateEditForm(uiModel, new Siniestro());
-        return "siniestroes/create";
-    }
-
-	@RequestMapping(value = "/{sinId}", produces = "text/html")
-    public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
-        addDateTimeFormatPatterns(uiModel);
-       
-    }
-	 
-	 */
-	
 	@RequestMapping(value = "/{sinId}", params = "eliminar", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
     public String delete(@PathVariable("sinId") Integer idSiniestro, Model uiModel) {
@@ -272,16 +254,27 @@ public class SiniestroController {
 	void populateEditForm(Model uiModel, Siniestro siniestro) {
         uiModel.addAttribute("siniestro", siniestro);
         addDateTimeFormatPatterns(uiModel);
+        ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();
+		Converter<Factura, FacturaListadoDTO> converter = acsf.getFacturaToFacturaListadoDTOConverter();
         
         List<AfectadoDomicilioSiniestro> afectados = 
         		afectadoDomicilioSiniestroService.findAfectadosDomicilioByIdSiniestro(siniestro.getSinId());
         
         List<Trabajo> trabajos = trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId());
         
+        List<Factura> facturas = facturaService.findFacturasByIdSiniestro(siniestro.getSinId());
+        
+        List<FacturaListadoDTO> facturasListado = new ArrayList<FacturaListadoDTO>();        
+        for (Factura fac : facturas) {
+        	facturasListado.add(converter.convert(fac));
+		}
+		
         // afectados
         uiModel.addAttribute("afectadodomiciliosiniestroes", afectados);
         // trabajos
         uiModel.addAttribute("trabajos", trabajos);
+        // facturas
+        uiModel.addAttribute("facturas", facturasListado);
         
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());

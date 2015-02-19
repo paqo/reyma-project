@@ -43,7 +43,7 @@
 	   <jsp:include page="trabajos.jsp" />    
 	  </div>
 	  <div id="tabs-3">
-	    <p>(No disponible)</p>
+	    <jsp:include page="facturas.jsp" />  
 	  </div>		  
 	</div>
 		
@@ -285,7 +285,7 @@
 	    	event.preventDefault();
 	    	$(this).closest("div.cont-afectados").find("input[type='text']").val('');
 	    });	
-		
+				
 		// eliminar afectado
 		$( "#btnEliminarDatosAfec-" + contador ).button({		    	
  	        icons: {	 	        	
@@ -519,6 +519,8 @@
 	}
 	
 	//############################ FIN TEMPORAL
+	
+		var dialogFactura, formFactura;
 	
 		$(function() {
 			
@@ -822,6 +824,90 @@
 		    	event.preventDefault();		    	    	
 		    	confirmarEliminacionTrabajo(this); 
 		    });
+			
+			// ### FACTURAS:
+			// boton generar factura
+			$( "#generarFactura").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-bookmark"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	dialogFactura.dialog( "open" );
+		    });
+			
+			dialogFactura = $( "#formulario-facturas" ).dialog({
+			      autoOpen: false,
+			      height: 400,
+			      width: 890,
+			      modal: true,
+			      buttons: {
+			        "Crear factura": function() {
+			          console.log("TODO!!");
+			        },
+			        "Cancelar": function() {
+			        	dialogFactura.dialog( "close" );			       		
+			        }
+			      },
+			      close: function() {
+			        console.log("alguna cosa para limpiar?");
+			      }
+			});
+
+			// --- tabla formulario de la factura			
+			$('#tablaFactura').editableTableWidget().
+							  formularioFactura().find('td:first').focus();
+			
+			$( "#addLineaFactura").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-circle-plus"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	$( "<tr><td></td><td>0</td><td>0</td><td><button class='eliminarFactura'></button></td></tr>" )
+		    		.appendTo( $("#tablaFactura").find("tbody") );
+	       		// recargar y posicionar en fila añadida			        	
+	        	$("#tablaFactura").editableTableWidget().
+				  				  formularioFactura();
+	        	$("#tablaFactura").find("tbody > tr").last().children("td:first").focus();
+	        	$( ".eliminarFactura" )
+		 		.button({
+		 			icons: {
+		 				primary: "ui-icon-closethick"
+		 		      },
+		 		    text: false
+		 		})
+		 		.click(function() {	 							 	
+		 			event.preventDefault();
+		 		});
+		    });				
+			
+			// --- fin formulario de la factura
+						
+			$( "#verFactura").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-search"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    });	
+			
+			$( "#eliminarFactura").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-trash"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    });	
+			
+			// eventos de cambiar seleccionado
+			$( "#listaFacturas li > a").click(function(event) {
+		    	event.preventDefault();
+		    	$(this).closest("ul").find("li > a").removeClass( "current" );
+		    	$(this).addClass( "current" );
+		    });	
+				
+			// <-------- fin facturas
 			
 		});
 	//]]>
