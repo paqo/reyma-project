@@ -58,7 +58,7 @@ public class TrabajoController {
     }
 	
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
     public String alta(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {        
 		JSONSerializer serializer = new JSONSerializer();
@@ -69,7 +69,7 @@ public class TrabajoController {
 		return serializer.exclude("class").serialize(mensajeExito);
     }
 	
-	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String actualizar(@Valid Trabajo trabajo, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {        
 		JSONSerializer serializer = new JSONSerializer();		
@@ -124,7 +124,7 @@ public class TrabajoController {
         return "trabajos/update";
     }
 	
-	@RequestMapping(value = "/remove/{traId}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/remove/{traId}", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String delete(@PathVariable("traId") Integer traId, Model uiModel) {
 		MensajeDialogoUIBase mensaje;

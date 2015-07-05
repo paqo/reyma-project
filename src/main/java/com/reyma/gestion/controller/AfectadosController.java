@@ -150,7 +150,7 @@ public class AfectadosController {
 		return false;
 	}
 
-	@RequestMapping(value = "/remove/{adsId}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/remove/{adsId}", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String delete(@PathVariable("adsId") Integer adsId, Model uiModel) {
 		MensajeDialogoUIBase mensaje;
