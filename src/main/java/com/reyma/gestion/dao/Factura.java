@@ -3,6 +3,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -23,6 +24,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.reyma.gestion.util.Fechas;
 
 @Entity
 @Table(name = "FACTURA")
@@ -133,7 +136,20 @@ public class Factura {
         return new ReflectionToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).setExcludeFieldNames("lineaFacturas", "facSinId").toString();
     }
 
-	@OneToMany(mappedBy = "linFacId")
+	/*
+	 * explicacion diferencia entre orphanRemoval=true, cascade=CascadeType.REMOVE
+	 * http://nsinfra.blogspot.in/2013/03/jpa-20-hibernate-orphanremoval-true.html
+	 * 
+	 * (basicamente: con cascade=CascadeType.REMOVE, al borrar de la colección de
+	 * objetos de entidades hijas que tiene el objeto de la entidad padre, no 
+	 * borraría las entidades hijas, solamente se borrarían al borrar el propio padre, 
+	 * mientras que con orphanremoval=true, al borrar de la colección del padre, 
+	 * se borrarían también las entidades hijas
+	 * 
+	 * NOTA: es necesario poner CascadeType.ALL para que funcione con todas las operaciones, 
+	 * con CascadeType.PERSIST, por ejemplo, no valdría para los merge
+	 */
+	@OneToMany(mappedBy = "linFacId",  orphanRemoval=true, cascade=CascadeType.ALL)
     private Set<LineaFactura> lineaFacturas;
 
 	@ManyToOne
@@ -142,8 +158,8 @@ public class Factura {
 
 	@Column(name = "fac_fecha")
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(style = "MM")
+    @Temporal(TemporalType.TIMESTAMP)    
+	@DateTimeFormat( pattern = Fechas.FORMATO_FECHA_DDMMYYYYHHMM)
     private Calendar facFecha;
 	
 	@Column(name = "fac_num_factura")	

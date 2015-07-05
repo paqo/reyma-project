@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 
 import com.aeat.valida.Validador;
 import com.reyma.gestion.dao.Domicilio;
+import com.reyma.gestion.dao.LineaFactura;
 import com.reyma.gestion.dao.Persona;
 
 public class UtilsValidacion {
@@ -135,5 +136,16 @@ public class UtilsValidacion {
 		
 		System.out.println("=> " + Validador.NIF_OK );
 
+	}
+
+	public static String facturaTieneLineasValidas(List<LineaFactura> lineas) {
+		for (LineaFactura lineaFactura : lineas) {
+			if ( StringUtils.isEmpty(lineaFactura.getLinConcepto()) ){				
+				return "El concepto es obligatorio para todas las líneas";
+			} else if ( lineaFactura.getLinImporte().intValue() < 0 ) {
+				return "El importe debe tener un valor correcto";
+			}
+		}
+		return null;
 	}
 }

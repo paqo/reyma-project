@@ -129,7 +129,7 @@ $.fn.editableTableWidget = function (options) {
 			active,
 			showEditor = function (select) {
 				active = element.find('td:focus');
-				if (active.length) {
+				if (active.length && !active.children().is('select')) {
 					editor.val(active.text())
 						.removeClass('error')
 						.show()
@@ -257,38 +257,32 @@ $.fn.editableTableWidget.defaultOptions = {
 };
 
 $.fn.formularioFactura = function () {
-	'use strict';
-	var element = $(this),
+'use strict';
+	var element = $(this),		
 		footer = element.find('tfoot tr'),
 		dataRows = element.find('tbody tr'),
 		initialTotal = function () {
-			var column, total;
-			for (column = 1; column < footer.children().size(); column++) {
+			var column, total;			
+			for (column = 1; column < footer.children().size() - 1; column++) {
 				total = 0;
-				dataRows.each(function () {
-					var row = $(this);
-					total += parseFloat(row.children().eq(column).text());
-				});
-				footer.children().eq(column).text(total);
+				if ( column == 1 ){					
+					calcularTotal(element, footer, column);		
+				} else {
+					calcularTotalIVA(element, footer, column);		
+				}				
 			};
 		};
-	element.find('td').on('change', function (evt) {
+	element.find('td, select').on('change', function (evt) {
 		var cell = $(this),
-			column = cell.index(),
-			total = 0;
-		if (column === 0) {
+			column = cell.index();
+		if (column === 0) { // concepto
 			return;
-		}
-		element.find('tbody tr').each(function () {
-			var row = $(this);
-			total += parseFloat(row.children().eq(column).text());
-		});
-		if (column === 1 && total > 5000) {
-			alert("temporal: restricción de < 5000");
-			return false; // changes can be rejected
-		} else {
-			$('.alert').hide();
-			footer.children().eq(column).text(total);
+		} else  if (column == 1) { // coste
+			calcularTotal(element, footer);		
+			// (recalcular IVA siempre)
+			calcularTotalIVA(element, footer);
+		} else if (column == 2) { //iva
+			calcularTotalIVA(element, footer);		
 		}
 	}).on('validate', function (evt, value) {
 		var cell = $(this),
@@ -302,3 +296,169 @@ $.fn.formularioFactura = function () {
 	initialTotal();
 	return this;
 };
+
+function calcularTotal(element, footer) {
+	var total = 0,
+	COLUMNA_COSTE = 1;
+	element.find('tbody tr').each(function () {
+		var row = $(this);
+		total += parseFloat(row.children().eq(COLUMNA_COSTE).text());
+	});	
+	footer.children().eq(COLUMNA_COSTE).text(total);	
+}
+
+function calcularTotalIVA(element, footer) {
+	var total = 0,
+	COLUMNA_IVA = 2;
+	element.find('tbody tr').each(function () {
+		var row = $(this);
+		var coste = parseFloat( row.children().eq(COLUMNA_IVA-1).text() );
+		var iva = parseFloat( row.find("option:selected").text().replace('%','') );		
+		total += parseFloat( coste + (coste * iva)/100 );		
+	});	
+	// dos decimales
+	total = Math.floor(total * 100) / 100
+	footer.children().eq(COLUMNA_IVA).text(total);
+}
+
+function initFecFacDatePicker() {
+	$( "#facFecha" ).datepicker({
+		dateFormat: 'dd/mm/yy',
+		constrainInput: false,
+		showOn: "button",
+	    buttonImage: "/reymasur/images/calendar.png",
+	    buttonImageOnly: true,
+	    buttonText: "Seleccionar fecha",
+	    onSelect: function(datetext){
+	        var d = new Date();
+	        datetext = d.getMinutes() >=10? 
+	        		datetext+" "+d.getHours()+":"+d.getMinutes() : 
+	        		datetext+" "+d.getHours()+":0"+d.getMinutes();
+	        $(this).val(datetext);
+	    },
+	});
+}
+
+function obtenerParametroLineaFactura(contenedor, idFactura) {
+	var filas = contenedor.find("tbody tr");
+	var res = [];
+	// TODO: pasar a POO, para hacer news, con sus
+	// setters, validaciones y un metodo que haga 
+	// el JSON directamente
+	var linea = {};	
+	var auxIva = {"ivaId" : null};
+	filas.each(function( index ) {
+		linea.linConcepto = $( this ).find("td").eq(0).text();
+		linea.linImporte = parseFloat($( this ).find("td").eq(1).text());
+		auxIva.ivaId = parseInt($( this ).find("select").val());  
+		linea.linIvaId = auxIva;
+		var idLinea = $( this ).find("input[id^='idLinea-']").val();
+		linea.linId = idLinea == ""? null : parseInt(idLinea);
+		linea.linFacId = isNaN(parseInt(idFactura))? null : parseInt(idFactura);
+		res.push(linea);
+		linea = {};
+		auxIva = {"ivaId" : null};
+	});
+	console.log("json: " + JSON.stringify(res));
+	return JSON.stringify(res);
+}
+
+function limpiarLineasFactura() {	
+	//TODO: el id del tipo de IVA debe tomarse de BD, en facturas.jsp también
+
+	// limpiar fecha y numero
+	$("#facFecha, #facNumero").val('');
+	// limpiar posibles lineas de anteriores 
+	// facturas
+	$("#tablaFactura").find("tbody").empty();
+	//linea inicial vacia
+	$( "<tr>" + 
+			"<td></td>" + 
+			"<td>0</td>" + 
+			"<td>" + 
+				"<select name='cbIva-1' id='cbIva-1'>" +
+					"<option value='1'>10%</option>" + 
+					"<option value='2'>21%</option>" +
+				"</select>" + 
+			"</td>" + 
+			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
+				"<input type='hidden' name='idLinea-1' id='idLinea-1' value='' />" + 
+			"</td>" + 
+	  "</tr>" )
+	  			.appendTo( $("#tablaFactura").find("tbody") );
+	// añadir funcionalidad a la tabla			        	
+	$("#tablaFactura").editableTableWidget().formularioFactura();
+}
+
+function cargarLineaFactura(idLinea, concepto, coste, iva) {
+	var cont = $("#tablaFactura").find("tr").size() - 1;
+	var selected1 = iva == 1? " selected='selected' " : "";
+	var selected2 = iva == 2? " selected='selected' " : "";
+	$( "<tr>" + 
+			"<td>" + concepto + "</td>" + 
+			"<td>" + coste + "</td>" + 
+			"<td>" + 
+				"<select name='cbIva-" + cont + "' id='cbIva-" + cont + "'>" +
+					"<option " + selected1 + " value='1'>10%</option>" + 
+					"<option " + selected2 + " value='2'>21%</option>" +
+				"</select>" + 
+			"</td>" + 
+			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
+				"<input type='hidden' name='idLinea-" + cont + "' id='idLinea-" + cont + "' value='" + idLinea + "' />" + 
+			"</td>" + 
+	  "</tr>" )
+		.appendTo( $("#tablaFactura").find("tbody") );
+}
+
+function initFormularioFactura(ffac, nfac) {
+	$("#facFecha").val(ffac);
+	$("#facNumero").val(nfac);	
+	initFecFacDatePicker();
+	initBotonEliminarLinea();
+}
+
+function initBotonEliminarLinea() {
+	$( ".eliminarLineaFactura" )
+	.button({
+		icons: {
+			primary: "ui-icon-closethick"
+	      },
+	    text: false
+	})
+	.click(function() {	 							 		
+		event.preventDefault();		 
+		var fila = $(this).closest("tr");
+		var tam = $("#tablaFactura").find("tr").size();
+		var pos = fila.index();
+		if ( pos > 0 || 
+			 /* tam > 3: cabecera, pie y la propia fila */
+			 (pos == 0 && tam > 3 ) ){		 				
+			fila.remove();
+		}
+	});
+}
+
+function obtenerDatosFacturaJSON( idDivFormulario ) {
+	var divForm = $("#" + idDivFormulario); 
+	// campos generales
+	var idFactura = divForm.find("#idFacturaAbierta").val();
+	var numFactura = divForm.find("#facNumero").val();
+	var fechaFactura = divForm.find("#facFecha").val();
+	// lineas de factura	
+	var celdas, 
+		lineasFactura = [];
+	divForm.find("tbody > tr").each(function( index ) {
+		celdas = $( this ).children();
+		lineasFactura.push({			 
+			concepto: celdas[0].textContent, 
+			iva: $(celdas[2].firstChild).val(), 
+			coste: parseFloat(celdas[1].textContent),
+			id: $(celdas[3]).children("input[type='hidden']").eq(0).val()
+		});
+	});	
+	
+	return JSON.stringify({ 'idFactura': idFactura, 
+							'numFactura': numFactura, 
+							'fechaFactura': fechaFactura,
+							'lineasFactura' : lineasFactura });
+}

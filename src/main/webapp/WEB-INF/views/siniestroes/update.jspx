@@ -488,6 +488,20 @@
 		$( "#mensajeConfirmacion" ).dialog( "open" );
 		$( "#mensajeConfirmacion" ).dialog( "option", "height", 200);
 	}	
+	
+	function confirmarEliminacionFactura(idFactura) {
+		var funcAceptar = function(){ eliminarFactura(idFactura) };
+		$( "#mensajeConfirmacion" ).children("p").html(
+													'<span>¿Desea eliminar definitivamente la factura seleccionada?</span>' 
+												  );                        
+		// abrir confirmacion
+		$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+		     	"Aceptar": funcAceptar,
+		        "Cancelar": function() { $( this ).dialog( "close" ); }
+		});
+		$( "#mensajeConfirmacion" ).dialog( "open" );
+		$( "#mensajeConfirmacion" ).dialog( "option", "height", 200);
+	}
 			
 	function eliminarSiniestro(idSiniestro) {
 		var action = "/reymasur/siniestroes/" + idSiniestro + "?eliminar";
@@ -514,6 +528,36 @@
 		}).error(function() {
 			$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
 			$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando el siniestro" );
+			$( "#mensajesUsuario" ).dialog( "open" );				 
+		})	
+	}
+	
+	function eliminarFactura(idFactura) {
+		var action = "/reymasur/facturas/" + idFactura + "?eliminar";
+    	var params = {}; 
+		$.post(action, params, function( data ) {		
+			// cerrar ventana anterior
+			$( "#mensajeConfirmacion" ).dialog( "close" );
+			// informar del resultado
+			$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+			$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+			$( "#mensajesUsuario" ).dialog( "open" );
+			// redirigir al listado
+			$( "#mensajesUsuario" )
+				.off( "dialogclose" )
+				.on( "dialogclose", 
+						function( event, ui ) {
+							$( "#mensajesUsuario" ).dialog( "close" );
+							// mostrar aviso de espera
+							$("#cargando").show();
+							// ir a la pantalla inicial del siniestro
+							var idSiniestro = $("input[name='sinId']").val();
+							document.location = "/reymasur/siniestroes/" + idSiniestro + "?form";
+						} 
+				);
+		}).error(function() {
+			$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+			$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando la factura" );
 			$( "#mensajesUsuario" ).dialog( "open" );				 
 		})	
 	}
@@ -833,7 +877,15 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	dialogFactura.dialog( "open" );
+		    	// limpiar primero posibles linea de facturas
+		    	// que se hayan podido cargar previamente
+				limpiarLineasFactura();
+		    	// datepicker para fecha de factura		    	
+		    	initFecFacDatePicker();
+		    	// boton de eliminar inicial
+		    	initBotonEliminarLinea();		    	
+		    	// abrir ventana modal
+		    	dialogFactura.dialog( "open" );		    	
 		    });
 			
 			dialogFactura = $( "#formulario-facturas" ).dialog({
@@ -842,15 +894,68 @@
 			      width: 890,
 			      modal: true,
 			      buttons: {
-			        "Crear factura": function() {
-			          console.log("TODO!!");
+			        "Guardar factura": function() {
+			        	var nueva = $("#idFacturaAbierta").val() == ''? true : false;			        	
+			        	var action = nueva? "/reymasur/facturas/add" : "/reymasur/facturas/actualizar";
+			        	var peticion;
+			        	if ( nueva ){ // crear nueva
+			        		peticion = $.post( action, { facFecha: $( "#facFecha" ).val(), 
+								  facNumFactura : $( "#facNumero" ).val(),
+								  facSinId: $( "input[name='sinId']" ).val(),
+								  linFac: obtenerParametroLineaFactura($(this).find("table"),null) 
+								});
+			        	} else { // editar
+			        		var datosFactura = obtenerDatosFacturaJSON( "formulario-facturas" );
+			        		/*peticion = $.ajax( {
+					 				   dataType: "json",
+									   contentType: "application/json; charset=UTF-8",
+									   type: "POST",
+									   url: action,
+									   data: datosFactura,
+									   success:  function (data) {
+									       console.log(data);
+									   },
+									   error : function (e) {
+									       alert (e);
+									   }
+									} );*/
+			        		peticion = $.ajax( {
+				 				   dataType: "json",
+								   contentType: "application/json; charset=UTF-8",
+								   type: "POST",
+								   url: action,
+								   data: datosFactura
+								} );
+			        	}
+			        	peticion
+				        	.done(function( data ) {		
+					        	if ( data.exito || data.recargar ){
+					        		console.log(
+					        				data.exito? "modificada con exito!!" :
+					        							"nueva factura creada con exito!!");
+					        		dialogFactura.dialog( "close" );
+					        		// mostrar aviso de espera
+									$("#cargando").show();
+									// recargar datos siniestro
+									document.location.reload(true);
+									$( "#tabs" ).tabs( "option", "active", 2 );
+								} else {
+					        		$( "#mensajesUsuario" ).dialog( "option", "title", "Error guardando la factura" );
+									$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+									$( "#mensajesUsuario" ).dialog( "open" );
+					        	}
+				        	
+							})
+							.fail(function() {
+							    alert( "No se ha podido crear la factura" );
+							});
 			        },
 			        "Cancelar": function() {
 			        	dialogFactura.dialog( "close" );			       		
 			        }
 			      },
 			      close: function() {
-			        console.log("alguna cosa para limpiar?");
+			        //algo para limpiar
 			      }
 			});
 
@@ -864,24 +969,29 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	$( "<tr><td></td><td>0</td><td>0</td><td><button class='eliminarFactura'></button></td></tr>" )
+		    	var cont = $("#tablaFactura").find("tr").size() - 1;
+		    	$( "<tr>" + 
+		    			"<td></td>" + 
+		    			"<td>0</td>" + 
+		    			"<td>" + 
+		    				"<select name='cbIva-" + cont + "' id='cbIva-" + cont + "'>" +
+		    					"<option value='1'>10%</option>" + 
+		    					"<option value='2'>21%</option>" +
+		    				"</select>" + 
+		    			"</td>" + 
+		    			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
+		    				"<input type='hidden' name='idLinea-" + cont + "' id='idLinea-" + cont + "' value='' />" + 
+		    			"</td>" + 
+		    	  "</tr>" )
 		    		.appendTo( $("#tablaFactura").find("tbody") );
 	       		// recargar y posicionar en fila añadida			        	
 	        	$("#tablaFactura").editableTableWidget().
 				  				  formularioFactura();
-	        	$("#tablaFactura").find("tbody > tr").last().children("td:first").focus();
-	        	$( ".eliminarFactura" )
-		 		.button({
-		 			icons: {
-		 				primary: "ui-icon-closethick"
-		 		      },
-		 		    text: false
-		 		})
-		 		.click(function() {	 							 	
-		 			event.preventDefault();
-		 		});
+	        	$("#tablaFactura").find("tbody > tr").last().children("td:first").focus();	  
+	        	// evento de eliminar en linea anyadida
+	        	initBotonEliminarLinea();
 		    });				
-			
+						
 			// --- fin formulario de la factura
 						
 			$( "#verFactura").button({		    	
@@ -889,7 +999,43 @@
 	 	            primary: "ui-icon-search"
 	 	        }
 			}).click(function(event) {
-		    	event.preventDefault();
+		    	event.preventDefault();		    	
+		    	var checked = $("input[name='idFactura']:checked");
+		    	if ( checked && checked.length > 0 ){
+		    		// cargar las líneas que tenga la factura
+		    		var idFactura = checked.val();
+		    		var action = "/reymasur/lineasfactura/cargarfac";
+		    		$.getJSON( action, { idFactura: idFactura} )
+				    .done(function( data ) {		
+				    	if (data && data.length > 0){ // factura encontrada		
+				    		// limpiar la fila inicial vacia
+				    		$("#tablaFactura").find("tbody").empty();
+				    		// insertar cada linea encontrada
+				      		$.each(data, function(index, linea) {
+				      			cargarLineaFactura(linea.id, linea.concepto, linea.coste, linea.iva);
+						    });	
+				    		// fecha y numero de factura
+				    		// en el formulario modal
+				    		var ffac = $( "#contenedor-facturas" ).find("#ffac-" + idFactura).text();
+				    		var nfac = $( "#contenedor-facturas" ).find("#nfac-" + idFactura).text();
+				    		// inicializar formulario factura (fecha, numero y lineas)
+				    		initFormularioFactura(ffac, nfac);				    		
+				    		// abrir formulario modal de factura con lineas cargadas
+					    	dialogFactura.dialog( "open" );
+				    		// asignar la id de factura que se esta editando
+				    		$("#idFacturaAbierta").val(idFactura);				    		
+					    	// recargar tabla			        	
+				        	$("#tablaFactura").editableTableWidget().formularioFactura();
+				      	} else {
+				      		$( "#mensajesUsuario" ).dialog( "option", "title", "Error obteniendo líneas de factura" );
+								$( "#mensajesUsuario" ).children("p").html( "No se han podido obtener los datos de la factura" );
+								$( "#mensajesUsuario" ).dialog( "open" );
+				      	}				      	
+					})
+					.fail(function() {
+					    alert( "No se ha podido obtener la factura" );
+					});
+		    	}		    	
 		    });	
 			
 			$( "#eliminarFactura").button({		    	
@@ -898,16 +1044,22 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    });	
+		    	var checked = $("input[name='idFactura']:checked");
+		    	if ( checked && checked.length > 0 ){
+		    		confirmarEliminacionFactura( checked.val() );
+		    	}
+		    });
 			
+			// <-------- fin facturas
+						
 			// eventos de cambiar seleccionado
-			$( "#listaFacturas li > a").click(function(event) {
+			/* $( "#listaFacturas li > a").click(function(event) {
 		    	event.preventDefault();
 		    	$(this).closest("ul").find("li > a").removeClass( "current" );
 		    	$(this).addClass( "current" );
-		    });	
+		    }); */	
 				
-			// <-------- fin facturas
+			
 			
 		});
 	//]]>

@@ -4,7 +4,8 @@
 
 	<spring:url var="banner" value="/resources/images/logo.png" />
 	<spring:url var="gradiente" value="/resources/images/gradient.png" />
-  	<div style="background-image: url('${gradiente}'); background-repeat: repeat-x; height: 50px; border: 1px solid white; border-radius: 7px;">
+  	
+  	<!-- <div style="background-image: url('${gradiente}'); background-repeat: repeat-x; height: 50px; border: 1px solid white; border-radius: 7px;">
   		<div style="width: 100%;">
   			<div style="width: 80px; float: left; padding-left: 1em; padding-top: 0.25em;">
 	  			<img src="${banner}" />
@@ -13,5 +14,6 @@
 	  			<span class="titulo-logo">REYMASUR</span>
 	  		</div>
   		</div>  		
-  	</div>  	
+  	</div> -->  	
+  	<div style="background-image: url('${gradiente}'); background-repeat: repeat-x; height: 50px; border: 1px solid white; border-radius: 7px;"></div>
 </div> 

@@ -46,5 +46,9 @@ public class Fechas {
 	public static String formatearFechaDDMMYYYY(Date fecha) {
 		return FORMATEADOR_DDMMYYYY.format(fecha);		
 	}
+	
+	public static String formatearFechaDDMMYYYYHHMM(Date fecha) {
+		return FORMATEADOR_DDMMYYYYHHMM.format(fecha);		
+	}
 
 }

@@ -10,41 +10,67 @@
     	<div><!-- contenedor general -->
     	
 	  		<div id="contenedor-facturas">	  	
-	  			<c:if test="${fn:length(facturas) gt 0}">
-		  			<div id="navcontainer">
-						<ul id="listaFacturas">
-							<c:forEach items="${facturas}" var="item" varStatus="num">
-								<c:choose>
-									<c:when test="${num.count eq 1}">
-										<li><a class="current" id="facId_${item.id}" href="#">Factura ${item.numFactura}&nbsp;&nbsp;&nbsp;${item.fechaFactura}</a></li>
-									</c:when>
-									<c:otherwise>
-										<li><a id="facId_${item.id}" href="#">Factura ${item.numFactura}&nbsp;&nbsp;&nbsp;${item.fechaFactura}</a></li>
-									</c:otherwise>
-								</c:choose>																
-							</c:forEach>							
-						</ul>
-					</div>
-					<div style="margin-top: 1em;">						
-						<button id="verFactura" id="generarFactura">Ver factura</button>
-						<button id="eliminarFactura" style="margin-left: 3em;" id="generarFactura">Eliminar factura</button>
-					</div>
-	  			</c:if>		
+	  			<c:choose>
+	  				<c:when test="${fn:length(facturas) gt 0}">
+			  			<c:forEach items="${facturas}" var="item" varStatus="num">		
+							<div style="width: 100%;">
+								<input type="radio" id="facId_${item.id}" name="idFactura" value="${item.id}" />
+								<label style="width: 30em !important; padding-top: 0.5em; background-color: #F7DBB6;" 
+										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span> (<span id="nfac-${item.id}">${item.numFactura}</span>)
+								</label>
+							</div>											
+						</c:forEach>
+						<div style="margin-top: 1em;">						
+							<button id="verFactura">Ver factura</button>
+							<button id="eliminarFactura" style="margin-left: 3em;">Eliminar factura</button>
+						</div>
+	  				</c:when>
+	  				<c:otherwise>
+	  					No se ha generado ninguna factura para el siniestro
+	  				</c:otherwise>
+	  			</c:choose>
 			</div>
-			<div style="margin-top: 1.8em; text-align: center;">
+			<div style="margin-top: 1.8em; text-align: right;">
 				<button id="generarFactura">Generar factura</button>
-			</div>
+			</div>			
 			
 			<div id="formulario-facturas" title="Dar de alta nueva factura">		
+				<input type="hidden" id="idFacturaAbierta" name="idFacturaAbierta" value="" />
 				<div style="float: left; width: 100%;">
 					<div style="float: left; width: 100%;">
+						<div style="float: left; width: 30%;">
+							Fecha Factura:&nbsp;<input type="text" size="15" id="facFecha" name="facFecha"/>
+						</div>
+						<div style="float: left;">
+							N&uacute;mero Factura:&nbsp;<input type="text" size="15" id="facNumero" name="facNumero"/>
+						</div>
+					</div>
+					<div style="float: left; width: 100%; margin-top: 1.8em;">
 						<table id="tablaFactura" class="table table-striped">
-				            <thead><tr><th>Concepto</th><th>Coste</th><th>Iva</th><th></th></tr></thead>
-					            <tbody>
-					              <tr>
-					              	<td></td><td>0</td><td>0</td><td><button class="eliminarFactura"></button></td>
-					              </tr>				              			              
-					            </tbody>
+				            <thead>
+				            	<tr>
+				            		<th style="width: 75%;">Concepto</th>
+				            		<th style="width: 10%;">Coste</th>
+				            		<th style="width: 10%;">Iva</th>
+				            		<th style="width: 5%;"></th>
+				            	</tr>
+				            </thead>
+					        <tbody>
+					        	<tr>
+					            	<td></td>
+					            	<td>0</td>
+					            	<td>
+					            		<select name="cbIva-1" id="cbIva-1">
+					            			<option value="1">10%</option>
+					            			<option value="2">21%</option>
+					            		</select>
+					            	</td>
+					            	<td style="text-align: center;">
+					            		<button class="eliminarLineaFactura"></button>
+					            		<input type="hidden" name="idLinea-1" id="idLinea-1" value="" />
+					            	</td>
+					            </tr>				              			              
+					        </tbody>
 							<tfoot><tr><th><strong>TOTAL</strong></th><th></th><th></th><th></th></tr></tfoot>
 				        </table>
 					</div>					

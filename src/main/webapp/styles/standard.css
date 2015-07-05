@@ -627,8 +627,9 @@ div.celda-formulario-busqueda label {
 	display: none;
 }
 
-/* ESTILOS LISTA DE FACTURAS */
+/* ESTILOS LISTA DE FACTURAS (NO SE USAN) */
 
+/*
 #listaFacturas {
 	color: white;
 	background: #17a;
@@ -636,7 +637,6 @@ div.celda-formulario-busqueda label {
 	border-right: 0.2em solid #17a;
 	padding: 0 1px;
 	margin-left: 0;
-	/* width: 12em; */
 	width: 28em;
 	font: normal 0.8em Verdana, sans-serif;
 }
@@ -653,11 +653,11 @@ div.celda-formulario-busqueda label {
 	margin-bottom: 0.5em;
 	margin-top: 0.5em;
 	color: white;
-	background: #15B075; /* #39c; */
+	background: #15B075; 
 	border-width: 1px;
 	border-style: solid;
 	border-color: #5bd #035 #068 #6cf;
-	border-left: 1em solid #E5F9CF; /* #fc0; */
+	border-left: 1em solid #E5F9CF; 
 	padding: 0.25em 0.5em 0.4em 0.75em;
 }
 
@@ -679,3 +679,9 @@ div.celda-formulario-busqueda label {
 .eliminarFactura {
 	width: 1.5em !important;
 }
+
+#cbIva {
+	width: 100%;
+	padding-left: 1em;
+}
+*/

@@ -23,6 +23,7 @@ public class MensajeErrorValidacionJson extends MensajeDialogoUIBase implements 
 		super(mensaje);
 	}
 
+	//TODO:unificar los mensajes de error de las validaciones
 	private String getMensajeError(List<FieldError> errores) {		
 		String aux = errores.size() > 1? "Se han producido los siguientes errores: <br/>" : "";		
 		StringBuilder strBuilder = new StringBuilder(aux);				
@@ -31,7 +32,11 @@ public class MensajeErrorValidacionJson extends MensajeDialogoUIBase implements 
 				strBuilder.append("&bull; El valor '" + fieldError.getRejectedValue() + "' para " +
 						"el campo " + fieldError.getField()+ " no es correcto<br/>");
 			} else {
-				strBuilder.append("&bull; " + fieldError.getDefaultMessage() + "<br/>");
+				if ( fieldError.getDefaultMessage().contains(fieldError.getField()) ){
+					strBuilder.append("&bull; " + fieldError.getDefaultMessage() + "<br/>");
+				} else {
+					strBuilder.append("&bull; " + fieldError.getField() + " " + fieldError.getDefaultMessage() + "<br/>");
+				}
 			}
 		}
 		return strBuilder.toString();

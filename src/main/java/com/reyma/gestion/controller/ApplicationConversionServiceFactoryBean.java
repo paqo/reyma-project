@@ -1,5 +1,9 @@
 package com.reyma.gestion.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.convert.converter.Converter;
@@ -38,8 +42,11 @@ import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoAfectacionService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
 import com.reyma.gestion.util.Fechas;
+
+import flexjson.JSONDeserializer;
 
 @Configurable
 /**
@@ -170,7 +177,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             public com.reyma.gestion.dao.Domicilio convert(String id) {
                 return getObject().convert(getObject().convert(id, Integer.class), Domicilio.class);
             }
-        };
+        }; 
     }
 
 	public Converter<Estado, String> getEstadoToStringConverter() {
@@ -216,8 +223,45 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 	public Converter<Factura, FacturaListadoDTO> getFacturaToFacturaListadoDTOConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Factura, com.reyma.gestion.ui.listados.FacturaListadoDTO>() {
             public FacturaListadoDTO convert(Factura factura) {
-            	String fecha = Fechas.formatearFechaDDMMYYYY( factura.getFacFecha().getTime() );            	
+            	String fecha = Fechas.formatearFechaDDMMYYYYHHMM( factura.getFacFecha().getTime() );            	
                 return new FacturaListadoDTO(factura.getFacId(), factura.getFacNumFactura(), fecha);
+            }
+        };
+    }
+	
+	public Converter<LineaFactura, LineaFacturaDTO> getLineaFacturaToLineaFacturaListadoDTOConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.LineaFactura, com.reyma.gestion.ui.LineaFacturaDTO>() {
+            public LineaFacturaDTO convert(LineaFactura lineaFactura) {            	        	
+                return new LineaFacturaDTO(lineaFactura.getLinId(), lineaFactura.getLinConcepto(), 
+                		lineaFactura.getLinIvaId().getIvaId(), lineaFactura.getLinImporte().doubleValue());
+            }
+        };
+    }
+	
+	public Converter<LineaFacturaDTO, LineaFactura> getLineaFacturaDTOToLineaFacturaConverter() {
+        return new org.springframework.core.convert.converter.Converter<LineaFacturaDTO, LineaFactura>() {
+            public LineaFactura convert(LineaFacturaDTO lineaDto) {   
+            	LineaFactura res = new LineaFactura();
+            	res.setLinId(lineaDto.getId());
+            	res.setLinConcepto( lineaDto.getConcepto() );
+            	res.setLinImporte( new BigDecimal(lineaDto.getCoste()) );            	
+            	res.setLinIvaId( ivaService.findIva(lineaDto.getIva()) );            	
+                return res;
+            }
+        };
+    }
+	
+	public Converter<String, List<LineaFactura>> getLineaFacturaJsonStringToLineasFacturaConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, List<LineaFactura>>() {
+            public List<LineaFactura>convert(String lineasJsonStr) {            
+            	List<LineaFactura> lineas = new JSONDeserializer<ArrayList<LineaFactura>>()
+       				 .use("values", LineaFactura.class).deserialize(lineasJsonStr, ArrayList.class);
+            	Iva aux;
+            	for (LineaFactura lineaFactura : lineas) {
+            		aux = ivaService.findIva( lineaFactura.getLinIvaId().getIvaId() );
+            		lineaFactura.setLinIvaId(aux);
+				}
+            	return lineas;
             }
         };
     }
@@ -462,7 +506,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             }
         };
     }
-
+	
 	public Converter<Integer, TipoSiniestro> getIdToTipoSiniestroConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.Integer, com.reyma.gestion.dao.TipoSiniestro>() {
             public com.reyma.gestion.dao.TipoSiniestro convert(java.lang.Integer id) {

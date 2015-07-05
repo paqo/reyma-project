@@ -40,6 +40,10 @@ public class LineaFactura {
 	public static List<LineaFactura> findAllLineaFacturas() {
         return entityManager().createQuery("SELECT o FROM LineaFactura o", LineaFactura.class).getResultList();
     }
+	
+	public static List<LineaFactura> findLineaFacturasByIdFactura(Integer idFactura) {
+        return entityManager().createQuery("SELECT o FROM LineaFactura o WHERE o.linFacId = " + idFactura + " ORDER BY o.linId ", LineaFactura.class).getResultList();
+    }
 
 	public static List<LineaFactura> findAllLineaFacturas(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM LineaFactura o";

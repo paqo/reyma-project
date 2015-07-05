@@ -39,4 +39,8 @@ public class LineaFacturaServiceImpl implements LineaFacturaService {
 	public LineaFactura updateLineaFactura(LineaFactura lineaFactura) {
         return lineaFactura.merge();
     }
+
+	public List<LineaFactura> findLineasFacturaByIdFactura(Integer idFactura) {
+		return LineaFactura.findLineaFacturasByIdFactura(idFactura);
+	}
 }

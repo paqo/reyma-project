@@ -12,6 +12,9 @@ public interface LineaFacturaService {
 
 
 	public abstract LineaFactura findLineaFactura(Integer id);
+	
+	
+	public abstract List<LineaFactura> findLineasFacturaByIdFactura(Integer idFactura);
 
 
 	public abstract List<LineaFactura> findAllLineaFacturas();
