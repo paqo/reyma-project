@@ -44,7 +44,9 @@ import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
+import com.reyma.gestion.ui.listados.SiniestroListadoDataTablesDTO;
 import com.reyma.gestion.util.Fechas;
+import com.reyma.gestion.util.Utils;
 
 import flexjson.JSONDeserializer;
 
@@ -245,7 +247,23 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             	res.setLinId(lineaDto.getId());
             	res.setLinConcepto( lineaDto.getConcepto() );
             	res.setLinImporte( new BigDecimal(lineaDto.getCoste()) );            	
-            	res.setLinIvaId( ivaService.findIva(lineaDto.getIva()) );            	
+            	res.setLinIvaId( ivaService.findIva(lineaDto.getIva()) );         
+            	res.setLinOficioId(oficioService.findOficio(lineaDto.getOficio())); 
+                return res;
+            }
+        };
+    }
+	
+	public Converter<Siniestro, SiniestroListadoDataTablesDTO> getSiniestroToSiniestroListadoDataTablesDTOConverter() {
+        return new org.springframework.core.convert.converter.Converter<Siniestro, SiniestroListadoDataTablesDTO>() {
+            public SiniestroListadoDataTablesDTO convert(Siniestro siniestro) {   
+            	SiniestroListadoDataTablesDTO res = new SiniestroListadoDataTablesDTO();            	
+            	res.setId(siniestro.getSinId());
+            	res.setCompania(siniestro.getSinComId().getComCodigo());
+            	res.setNumeroSiniestro(siniestro.getSinNumero());
+            	res.setFecha( Fechas.formatearFechaDDMMYYYY(siniestro.getSinFechaEncargo().getTime() ) );
+            	// direccion y afectados (comprobar afectados, perjudicados...etc)            	
+            	Utils.cargarAfectadosYDomicilios(siniestro, res, afectadoDomicilioSiniestroService);            	
                 return res;
             }
         };

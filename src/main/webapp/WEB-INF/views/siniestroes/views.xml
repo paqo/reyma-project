@@ -3,7 +3,11 @@
 <tiles-definitions>
     <definition extends="default" name="siniestroes/list">
         <!--<put-attribute name="body" value="/WEB-INF/views/siniestroes/list.jspx"/> -->
-        <put-attribute name="body" value="/WEB-INF/views/siniestroes/listado_siniestros.jspx"/>
+        <!-- 
+        	listado usando spring 
+        	<put-attribute name="body" value="/WEB-INF/views/siniestroes/listado_siniestros.jspx"/> 
+        -->
+        <put-attribute name="body" value="/WEB-INF/views/siniestroes/listado_siniestros.jsp"/>
     </definition>
 	<definition extends="default" name="siniestroes/show">
         <put-attribute name="body" value="/WEB-INF/views/siniestroes/show.jspx"/>

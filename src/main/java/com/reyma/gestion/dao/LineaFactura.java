@@ -137,11 +137,15 @@ public class LineaFactura {
 	@ManyToOne
     @JoinColumn(name = "lin_iva_id", referencedColumnName = "iva_id")
     private Iva linIvaId;
+	
+	@ManyToOne
+    @JoinColumn(name = "lin_ofi_id", referencedColumnName = "ofi_id")
+    private Oficio linOficioId;
 
 	@Column(name = "lin_concepto", length = 200)
     @NotNull
     private String linConcepto;
-
+		
 	@Column(name = "lin_importe", precision = 10, scale = 2)
     @NotNull
     private BigDecimal linImporte;
@@ -161,6 +165,14 @@ public class LineaFactura {
 	public void setLinIvaId(Iva linIvaId) {
         this.linIvaId = linIvaId;
     }
+	
+	public Oficio getLinOficioId() {
+		return linOficioId;
+	}
+
+	public void setLinOficioId(Oficio linOficioId) {
+		this.linOficioId = linOficioId;
+	}
 
 	public String getLinConcepto() {
         return linConcepto;

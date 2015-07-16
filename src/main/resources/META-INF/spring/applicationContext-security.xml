@@ -15,19 +15,27 @@
         <intercept-url pattern="/login/**" access="permitAll" />
         <intercept-url pattern="/**" access="isAuthenticated()" />-->
 
-	<intercept-url pattern="/login/**" access="permitAll"/>
-	<intercept-url pattern="/resources/**" access="permitAll"/>
-	<intercept-url pattern="/static/**" access="permitAll"/>
-	<intercept-url pattern="/**" access="isAuthenticated()"/>
+		<!-- <session-management>		
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/login.html" session-registry-alias="sessionRegistry"/>
+		</session-management> -->
+
+		<intercept-url pattern="/login/**" access="permitAll"/>
+		<intercept-url pattern="/resources/**" access="permitAll"/>
+		<intercept-url pattern="/static/**" access="permitAll"/>
+		<intercept-url pattern="/**" access="isAuthenticated()"/>
     </http>
+    
+    
     <!-- Configure Authentication mechanism -->
     <authentication-manager alias="authenticationManager">
         <!-- SHA-256 values can be produced using 'echo -n your_desired_password | sha256sum' (using normal *nix environments) -->
-        <authentication-provider>
+        <authentication-provider>        	
             <password-encoder hash="sha-256" />
-            <user-service>
+            <!-- <user-service>
             	<user name="reymasur" password="9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" authorities="ROLE_USER"/>
-            </user-service>
+            	<user name="test" password="9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" authorities="ROLE_TECNICO"/>
+            </user-service> -->
+            <user-service id="userDetailsService" properties="/META-INF/spring/users.properties"/> 
         </authentication-provider>
     </authentication-manager>
 </beans:beans>

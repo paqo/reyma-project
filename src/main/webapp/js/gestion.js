@@ -263,9 +263,17 @@ $.fn.formularioFactura = function () {
 		dataRows = element.find('tbody tr'),
 		initialTotal = function () {
 			var column, total;			
-			for (column = 1; column < footer.children().size() - 1; column++) {
+			/*for (column = 1; column < footer.children().size() - 1; column++) {
 				total = 0;
 				if ( column == 1 ){					
+					calcularTotal(element, footer, column);		
+				} else {
+					calcularTotalIVA(element, footer, column);		
+				}				
+			};*/
+			for (column = 2; column < footer.children().size() - 1; column++) {
+				total = 0;
+				if ( column == 2 ){					
 					calcularTotal(element, footer, column);		
 				} else {
 					calcularTotalIVA(element, footer, column);		
@@ -275,19 +283,19 @@ $.fn.formularioFactura = function () {
 	element.find('td, select').on('change', function (evt) {
 		var cell = $(this),
 			column = cell.index();
-		if (column === 0) { // concepto
+		if (column === 0 || column === 1) { // oficio y concepto
 			return;
-		} else  if (column == 1) { // coste
+		} else  if (column == 2) { // coste
 			calcularTotal(element, footer);		
 			// (recalcular IVA siempre)
 			calcularTotalIVA(element, footer);
-		} else if (column == 2) { //iva
+		} else if (column == 3) { //iva
 			calcularTotalIVA(element, footer);		
 		}
 	}).on('validate', function (evt, value) {
 		var cell = $(this),
 			column = cell.index();
-		if (column === 0) {
+		if (column === 0 || column === 1) {
 			return !!value && value.trim().length > 0;
 		} else {
 			return !isNaN(parseFloat(value)) && isFinite(value);
@@ -299,7 +307,7 @@ $.fn.formularioFactura = function () {
 
 function calcularTotal(element, footer) {
 	var total = 0,
-	COLUMNA_COSTE = 1;
+	COLUMNA_COSTE = 2;
 	element.find('tbody tr').each(function () {
 		var row = $(this);
 		total += parseFloat(row.children().eq(COLUMNA_COSTE).text());
@@ -309,11 +317,12 @@ function calcularTotal(element, footer) {
 
 function calcularTotalIVA(element, footer) {
 	var total = 0,
-	COLUMNA_IVA = 2;
+	COLUMNA_IVA = 3;
 	element.find('tbody tr').each(function () {
 		var row = $(this);
 		var coste = parseFloat( row.children().eq(COLUMNA_IVA-1).text() );
-		var iva = parseFloat( row.find("option:selected").text().replace('%','') );		
+		//var iva = parseFloat( row.find("option:selected").text().replace('%','') );
+		var iva = parseFloat( row.find("select[id^='cbIva-'] > option:selected").text().replace('%','') );		
 		total += parseFloat( coste + (coste * iva)/100 );		
 	});	
 	// dos decimales
@@ -347,17 +356,21 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 	// el JSON directamente
 	var linea = {};	
 	var auxIva = {"ivaId" : null};
+	var auxOficio = {"oficioId" : null};
 	filas.each(function( index ) {
 		linea.linConcepto = $( this ).find("td").eq(0).text();
 		linea.linImporte = parseFloat($( this ).find("td").eq(1).text());
-		auxIva.ivaId = parseInt($( this ).find("select").val());  
+		auxIva.ivaId = parseInt($( this ).find("select[id^='cbIva-']").val());  
 		linea.linIvaId = auxIva;
+		auxOficio.oficioId = parseInt($( this ).find("select[id^='cbOficio-']").val());
+		linea.linOficioId = auxOficio;
 		var idLinea = $( this ).find("input[id^='idLinea-']").val();
 		linea.linId = idLinea == ""? null : parseInt(idLinea);
 		linea.linFacId = isNaN(parseInt(idFactura))? null : parseInt(idFactura);
 		res.push(linea);
 		linea = {};
 		auxIva = {"ivaId" : null};
+		auxOficio = {"oficioId" : null};
 	});
 	console.log("json: " + JSON.stringify(res));
 	return JSON.stringify(res);
@@ -365,6 +378,7 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 
 function limpiarLineasFactura() {	
 	//TODO: el id del tipo de IVA debe tomarse de BD, en facturas.jsp también
+	//TODO: igual para oficios
 
 	// limpiar fecha y numero
 	$("#facFecha, #facNumero").val('');
@@ -373,6 +387,12 @@ function limpiarLineasFactura() {
 	$("#tablaFactura").find("tbody").empty();
 	//linea inicial vacia
 	$( "<tr>" + 
+			"<td>" + 
+				"<select name='cbOficio-1' id='cbOficio-1'>" +
+					"<option value='1'>Fontaneria</option>" + 
+					"<option value='2'>Pintura</option>" +
+				"</select>" + 
+			"</td>" + 
 			"<td></td>" + 
 			"<td>0</td>" + 
 			"<td>" + 
@@ -390,11 +410,17 @@ function limpiarLineasFactura() {
 	$("#tablaFactura").editableTableWidget().formularioFactura();
 }
 
-function cargarLineaFactura(idLinea, concepto, coste, iva) {
+function cargarLineaFactura(idLinea, oficio, concepto, coste, iva) {
 	var cont = $("#tablaFactura").find("tr").size() - 1;
 	var selected1 = iva == 1? " selected='selected' " : "";
 	var selected2 = iva == 2? " selected='selected' " : "";
 	$( "<tr>" + 
+			"<td>" + 
+				"<select name='cbOficio-1' id='cbOficio-1'>" +
+					"<option value='1'>Fontaneria</option>" + 
+					"<option value='2'>Pintura</option>" +
+				"</select>" + 
+			"</td>" +
 			"<td>" + concepto + "</td>" + 
 			"<td>" + coste + "</td>" + 
 			"<td>" + 
@@ -450,10 +476,11 @@ function obtenerDatosFacturaJSON( idDivFormulario ) {
 	divForm.find("tbody > tr").each(function( index ) {
 		celdas = $( this ).children();
 		lineasFactura.push({			 
-			concepto: celdas[0].textContent, 
-			iva: $(celdas[2].firstChild).val(), 
-			coste: parseFloat(celdas[1].textContent),
-			id: $(celdas[3]).children("input[type='hidden']").eq(0).val()
+			oficio: $(celdas[0].firstChild).val(),
+			concepto: celdas[1].textContent, 
+			coste: parseFloat(celdas[2].textContent),
+			iva: $(celdas[3].firstChild).val(), 			
+			id: $(celdas[4]).children("input[type='hidden']").eq(0).val()
 		});
 	});	
 	
@@ -461,4 +488,59 @@ function obtenerDatosFacturaJSON( idDivFormulario ) {
 							'numFactura': numFactura, 
 							'fechaFactura': fechaFactura,
 							'lineasFactura' : lineasFactura });
+}
+
+
+//------------ DATATABLES ------------------
+
+function obtenerI18NParaDT() {
+	var labelsListadoSiniestros = {
+			  "sProcessing": "Procesando...",
+			  "sLoadingRecords": "Cargando...",
+			  "sEmptyTable" : "No hay resultados",
+			  "sZeroRecords" : "No hay resultados",
+			  "sInfo" : "Mostrando siniestros _START_ a _END_  (_TOTAL_ en total)",
+			  "sInfoFiltered" : "(Filtrando de un total de _MAX_)",
+			  "sInfoEmpty" : "",
+			  "sSearch": "Buscar",
+			  "sLengthMenu": "Mostrar _MENU_ resultados",
+			  "oPaginate": {
+					  "sNext": "Siguiente",
+					  "sPrevious": "Anterior",
+					  "sFirst": "Primera",
+					  "sLast": "&Uacute;ltima"
+			      },		  
+			  };
+	return labelsListadoSiniestros;
+}
+
+function crearOrdenacionFechasDT() {
+		// funcion para detectar una fecha
+		// (en realidad no es necesario, basta definir el sType)  
+		/*jQuery.fn.dataTableExt.aTypes.push(
+		    function ( sData )
+		    {
+		        var reg = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
+		        
+		        if ( reg.test(sData) )
+		        {
+		            return 'fecha';
+		        }
+		        return null;
+		    }
+		);*/
+
+		jQuery.fn.dataTableExt.oSort['fecha-asc']  = function(x,y) {
+			var fec1 = parseInt( x.split('/').reverse().join('') );
+			var fec2 = parseInt( y.split('/').reverse().join('') );
+
+		    return ( (fec1 < fec2) ? -1 : ((fec1 > fec2) ?  1 : 0) );
+		};
+		 
+		jQuery.fn.dataTableExt.oSort['fecha-desc'] = function(x,y) {
+		    var fec1 = parseInt( x.split('/').reverse().join('') );
+			var fec2 = parseInt( y.split('/').reverse().join('') );
+
+		    return ( (fec1 < fec2) ? 1 : ((fec1 > fec2) ?  -1 : 0) );
+		};
 }

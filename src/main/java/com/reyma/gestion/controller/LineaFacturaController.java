@@ -51,7 +51,7 @@ public class LineaFacturaController {
 		for (LineaFactura linea : lineas) {
 			lineasDto.add(converter.convert(linea));
 		}		
-		return serializer.exclude("class").serialize(lineasDto);
+		return serializer.exclude("*.class").serialize(lineasDto);
     }
 	
 }

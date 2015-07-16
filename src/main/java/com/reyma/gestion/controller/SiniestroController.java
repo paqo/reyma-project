@@ -1,13 +1,17 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,7 +49,7 @@ import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
-import com.reyma.gestion.ui.listados.SiniestroListadoDTO;
+import com.reyma.gestion.ui.listados.SiniestroListadoDataTablesDTO;
 import com.reyma.gestion.util.Fechas;
 
 import flexjson.JSONSerializer;
@@ -53,6 +57,20 @@ import flexjson.JSONSerializer;
 @RequestMapping("/siniestroes")
 @Controller
 public class SiniestroController {
+	
+	/*
+	 * esto seria mas para informacion de sesion
+	 * (cuantos usuarios hay logados, tiempo, caducarlos...etc)
+	 * 
+	 */
+	/* 
+	@Autowired
+	@Qualifier("sessionRegistry")
+	private SessionRegistry sessionRegistry; 
+	*/
+	
+	@Autowired
+	InMemoryUserDetailsManager inMemoryUserDetailsManager;
 	
 	@Autowired
     SiniestroService siniestroService;
@@ -133,8 +151,48 @@ public class SiniestroController {
     }
 	
 	@RequestMapping(produces = "text/html")
-    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-		if (page != null || size != null) {
+    public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel, Principal principal) {
+		 
+		/*
+		 * ###### SNIPPET PARA AUTENTICACION Y SESION ##############################		 
+		 * 
+		 String name = principal.getName();
+		 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				
+				System.out.println("=> usuario: " + user.getUsername() + ", " + user.getPassword());
+				
+				System.out.println("=> detalles: " + SecurityContextHolder.getContext().getAuthentication().getDetails()  );
+				
+				List<Object> principals = sessionRegistry.getAllPrincipals();
+
+				for (Object princ: principals) {
+				    if (princ instanceof User) {
+				       System.out.println("=> usuario encontrado: " + ((User) princ).getUsername());
+				    }
+				}
+		
+		System.out.println("=> " + principal.getName());
+		
+		Authentication user = (Authentication) principal;
+		
+		//GrantedAuthority rol = new SimpleGrantedAuthority("ROLE_TECNICO");
+		
+		System.out.println("=> detalles: " + inMemoryUserDetailsManager.loadUserByUsername("reymasur").getAuthorities());
+				
+		GrantedAuthority rol;
+		
+		Iterator<? extends GrantedAuthority> it = user.getAuthorities().iterator();
+		
+		while ( it.hasNext() ){
+			rol = it.next();
+			//rol.getAuthority();			
+			System.out.println("=> " + rol.getAuthority().equalsIgnoreCase("ROLE_TECNICO") );
+		}*/
+				
+		/*
+		 * ############## SIN DATATABLES 
+		 *
+		 if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
             List<Siniestro> siniestros = siniestroService.findSiniestroEntries(firstResult, sizeNo, "sinFechaEncargo", "DESC");
@@ -156,9 +214,30 @@ public class SiniestroController {
 				listaSiniestros.add(dto);
 			} 
             uiModel.addAttribute("siniestroes", listaSiniestros);
-        }
-        return "siniestroes/list";
+        }*/
+		
+		return "siniestroes/list";
     }
+	
+	@RequestMapping(params = "listado", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+    public String listado() {
+		
+		ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();					
+		Converter<Siniestro, SiniestroListadoDataTablesDTO> converter = acsf.getSiniestroToSiniestroListadoDataTablesDTOConverter();
+		
+		List<Siniestro> siniestros = siniestroService.findAllSiniestroes("sinFechaEncargo", "DESC");
+		List<SiniestroListadoDataTablesDTO> listadoSiniestros = new ArrayList<SiniestroListadoDataTablesDTO>();
+        
+        for (Siniestro siniestro : siniestros) {		
+			listadoSiniestros.add( converter.convert(siniestro) );
+		} 
+        
+        Map<String, List<SiniestroListadoDataTablesDTO>> test = new HashMap<String, List<SiniestroListadoDataTablesDTO>>();
+        test.put( "aaData", listadoSiniestros);
+        
+        return new JSONSerializer().exclude("*.class").deepSerialize(test);
+	}
 	
 	
 	@RequestMapping(params = "caducados", produces = "text/html")

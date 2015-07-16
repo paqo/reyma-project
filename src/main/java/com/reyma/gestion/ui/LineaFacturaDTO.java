@@ -7,6 +7,7 @@ public class LineaFacturaDTO implements Serializable {
 	private static final long serialVersionUID = 2737804049614896725L;
 	
 	private Integer id;
+	private Integer oficio;
 	private String concepto;
 	private Integer iva;
 	private Double coste;
@@ -29,6 +30,14 @@ public class LineaFacturaDTO implements Serializable {
 
 	public void setConcepto(String concepto) {
 		this.concepto = concepto;
+	}
+	
+	public Integer getOficio() {
+		return oficio;
+	}
+
+	public void setOficio(Integer oficio) {
+		this.oficio = oficio;
 	}
 
 	public Integer getIva() {

@@ -971,6 +971,12 @@
 		    	event.preventDefault();
 		    	var cont = $("#tablaFactura").find("tr").size() - 1;
 		    	$( "<tr>" + 
+		    			"<td>" + 
+							"<select name='cbOficio-1' id='cbOficio-1'>" +
+								"<option value='1'>Fontaneria</option>" + 
+								"<option value='2'>Pintura</option>" +
+							"</select>" + 
+						"</td>" +
 		    			"<td></td>" + 
 		    			"<td>0</td>" + 
 		    			"<td>" + 
@@ -1012,7 +1018,7 @@
 				    		$("#tablaFactura").find("tbody").empty();
 				    		// insertar cada linea encontrada
 				      		$.each(data, function(index, linea) {
-				      			cargarLineaFactura(linea.id, linea.concepto, linea.coste, linea.iva);
+				      			cargarLineaFactura(linea.id, linea.oficio, linea.concepto, linea.coste, linea.iva);
 						    });	
 				    		// fecha y numero de factura
 				    		// en el formulario modal

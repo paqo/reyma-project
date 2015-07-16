@@ -49,7 +49,8 @@
 						<table id="tablaFactura" class="table table-striped">
 				            <thead>
 				            	<tr>
-				            		<th style="width: 75%;">Concepto</th>
+				            		<th style="width: 25%;">Oficio</th>
+				            		<th style="width: 50%;">Concepto</th>
 				            		<th style="width: 10%;">Coste</th>
 				            		<th style="width: 10%;">Iva</th>
 				            		<th style="width: 5%;"></th>
@@ -57,6 +58,12 @@
 				            </thead>
 					        <tbody>
 					        	<tr>
+					        		<td>
+					        			<select name="cbOficio-1" id="cbOficio-1">
+					            			<option value="1">Fontaneria</option>
+					            			<option value="2">Pintura</option>
+					            		</select>
+					        		</td>
 					            	<td></td>
 					            	<td>0</td>
 					            	<td>
@@ -71,7 +78,7 @@
 					            	</td>
 					            </tr>				              			              
 					        </tbody>
-							<tfoot><tr><th><strong>TOTAL</strong></th><th></th><th></th><th></th></tr></tfoot>
+							<tfoot><tr><th><span style="font-weight: bold;">TOTAL</span></th><th></th><th></th><th></th><th></th></tr></tfoot>
 				        </table>
 					</div>					
 					<div style="float: left; width: 100%; margin-top: 1em;">
