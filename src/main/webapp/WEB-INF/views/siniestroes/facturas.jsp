@@ -33,9 +33,13 @@
 			<div style="margin-top: 1.8em; text-align: right;">
 				<button id="generarFactura">Generar factura</button>
 			</div>			
-			
+									
 			<div id="formulario-facturas" title="Dar de alta nueva factura">		
 				<input type="hidden" id="idFacturaAbierta" name="idFacturaAbierta" value="" />
+				
+				<input type="hidden" id="valoresCboIva" name="valoresCboIva" value='${valoresCboIva}' />
+				<input type="hidden" id="valoresCboOficios" name="valoresCboOficios" value='${valoresCboOficios}' />
+				
 				<div style="float: left; width: 100%;">
 					<div style="float: left; width: 100%;">
 						<div style="float: left; width: 30%;">
@@ -59,10 +63,9 @@
 					        <tbody>
 					        	<tr>
 					        		<td>
-					        			<select name="cbOficio-1" id="cbOficio-1">
-					            			<option value="1">Fontaneria</option>
-					            			<option value="2">Pintura</option>
-					            		</select>
+					        			<form:select path="oficios" id="cbOficio-1">
+					        				<form:options itemLabel="ofiDescripcion" itemValue="ofiId" items="${oficios}" />
+					        			</form:select>
 					        		</td>
 					            	<td></td>
 					            	<td>0</td>

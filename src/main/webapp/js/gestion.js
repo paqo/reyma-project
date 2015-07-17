@@ -376,7 +376,7 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 	return JSON.stringify(res);
 }
 
-function limpiarLineasFactura() {	
+function limpiarLineasFactura(oficios, iva) {	
 	//TODO: el id del tipo de IVA debe tomarse de BD, en facturas.jsp también
 	//TODO: igual para oficios
 
@@ -385,20 +385,22 @@ function limpiarLineasFactura() {
 	// limpiar posibles lineas de anteriores 
 	// facturas
 	$("#tablaFactura").find("tbody").empty();
+	
+	var _oficios = cargarOpcionesCombo(oficios);
+	var _iva = cargarOpcionesCombo(iva);
+	
 	//linea inicial vacia
 	$( "<tr>" + 
 			"<td>" + 
 				"<select name='cbOficio-1' id='cbOficio-1'>" +
-					"<option value='1'>Fontaneria</option>" + 
-					"<option value='2'>Pintura</option>" +
+					_oficios +
 				"</select>" + 
 			"</td>" + 
 			"<td></td>" + 
 			"<td>0</td>" + 
 			"<td>" + 
 				"<select name='cbIva-1' id='cbIva-1'>" +
-					"<option value='1'>10%</option>" + 
-					"<option value='2'>21%</option>" +
+					_iva +
 				"</select>" + 
 			"</td>" + 
 			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
@@ -408,6 +410,14 @@ function limpiarLineasFactura() {
 	  			.appendTo( $("#tablaFactura").find("tbody") );
 	// añadir funcionalidad a la tabla			        	
 	$("#tablaFactura").editableTableWidget().formularioFactura();
+}
+
+function cargarOpcionesCombo(opciones) {
+	var res = "";
+	$.each(opciones, function(index, opcion) {
+	     res += "<option value='" + opcion.valor + "'>" + opcion.label + "</option>";
+    });
+	return res;
 }
 
 function cargarLineaFactura(idLinea, oficio, concepto, coste, iva) {

@@ -30,7 +30,9 @@ import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Factura;
+import com.reyma.gestion.dao.Iva;
 import com.reyma.gestion.dao.Municipio;
+import com.reyma.gestion.dao.Oficio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Provincia;
 import com.reyma.gestion.dao.Siniestro;
@@ -39,6 +41,7 @@ import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.CompaniaService;
 import com.reyma.gestion.service.EstadoService;
 import com.reyma.gestion.service.FacturaService;
+import com.reyma.gestion.service.IvaService;
 import com.reyma.gestion.service.MunicipioService;
 import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.service.OperarioService;
@@ -48,6 +51,7 @@ import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
+import com.reyma.gestion.ui.listados.ElementoComboDTO;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
 import com.reyma.gestion.ui.listados.SiniestroListadoDataTablesDTO;
 import com.reyma.gestion.util.Fechas;
@@ -110,6 +114,9 @@ public class SiniestroController {
 	
 	@Autowired
 	BusquedaHelper busquedas;
+	
+	@Autowired
+	IvaService ivaService;
 	
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Siniestro siniestro, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
@@ -331,7 +338,10 @@ public class SiniestroController {
     }
 
 	void populateEditForm(Model uiModel, Siniestro siniestro) {
-        uiModel.addAttribute("siniestro", siniestro);
+        
+		JSONSerializer serializer = new JSONSerializer();
+		
+		uiModel.addAttribute("siniestro", siniestro);
         addDateTimeFormatPatterns(uiModel);
         ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();
 		Converter<Factura, FacturaListadoDTO> converter = acsf.getFacturaToFacturaListadoDTOConverter();
@@ -348,12 +358,26 @@ public class SiniestroController {
         	facturasListado.add(converter.convert(fac));
 		}
 		
+        List<Oficio> oficios = oficioService.findAllOficios();
+        
+        List<ElementoComboDTO> oficiosCbo = new ArrayList<ElementoComboDTO>();   
+        for (Oficio oficio : oficios) {
+        	oficiosCbo.add(  new ElementoComboDTO(oficio.getOfiId(), oficio.getOfiDescripcion()) );
+		}      
+        
+        List<ElementoComboDTO> ivasCbo = new ArrayList<ElementoComboDTO>(); 
+        for (Iva iva : ivaService.findAllIvas()) {
+        	ivasCbo.add( new ElementoComboDTO(iva.getIvaId(), iva.getIvaValor() + "%") );
+		}        
+        
         // afectados
         uiModel.addAttribute("afectadodomiciliosiniestroes", afectados);
         // trabajos
         uiModel.addAttribute("trabajos", trabajos);
         // facturas
         uiModel.addAttribute("facturas", facturasListado);
+        uiModel.addAttribute("valoresCboOficios", serializer.exclude("*.class").serialize(oficiosCbo));
+        uiModel.addAttribute("valoresCboIva", serializer.exclude("*.class").serialize(ivasCbo));
         
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
@@ -373,7 +397,7 @@ public class SiniestroController {
         uiModel.addAttribute("municipios", municipioService.findAllMunicipiosByIdProvincia(41));
         
         uiModel.addAttribute("trabajo-1", new Trabajo());
-        uiModel.addAttribute("oficios", oficioService.findAllOficios() );
+        uiModel.addAttribute("oficios", oficios );
         uiModel.addAttribute("operarios", operarioService.findAllOperarios() );
         
         fixPathDesplegables(uiModel, siniestro, afectados, trabajos);

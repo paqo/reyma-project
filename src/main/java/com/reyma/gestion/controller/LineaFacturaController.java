@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import com.reyma.gestion.dao.LineaFactura;
 import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.IvaService;
 import com.reyma.gestion.service.LineaFacturaService;
+import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.MensajeErrorJson;
 
@@ -31,11 +33,16 @@ public class LineaFacturaController {
 
 	@Autowired
     IvaService ivaService;
-
+	
+	@Autowired
+	OficioService oficioService;
 
 	@RequestMapping(value = "/cargarfac", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-    public String list(@RequestParam(value = "idFactura", required = true) Integer idFactura) {
+    public String list(@RequestParam(value = "idFactura", required = true) Integer idFactura, Model uiModel) {
+		
+		cargarCombos(uiModel);
+		
 		JSONSerializer serializer = new JSONSerializer();
 		MensajeErrorJson mensajeError = null;
 		if ( idFactura == null ){
@@ -53,5 +60,9 @@ public class LineaFacturaController {
 		}		
 		return serializer.exclude("*.class").serialize(lineasDto);
     }
+	
+	private void cargarCombos(Model uiModel) {		
+		uiModel.addAttribute("oficios", oficioService.findAllOficios() );
+	}
 	
 }

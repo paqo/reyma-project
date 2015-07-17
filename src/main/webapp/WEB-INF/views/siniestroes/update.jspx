@@ -879,7 +879,11 @@
 		    	event.preventDefault();
 		    	// limpiar primero posibles linea de facturas
 		    	// que se hayan podido cargar previamente
-				limpiarLineasFactura();
+		    	
+		    	var ivaTest = JSON.parse($("#valoresCboIva").val());
+		    	var oficiosTest = JSON.parse($("#valoresCboOficios").val());
+		    	
+				limpiarLineasFactura(oficiosTest, ivaTest);
 		    	// datepicker para fecha de factura		    	
 		    	initFecFacDatePicker();
 		    	// boton de eliminar inicial
