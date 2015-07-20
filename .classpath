@@ -70,5 +70,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/tiles/tiles-template/2.2.2/tiles-template-2.2.2.jar" sourcepath="M2_REPO/org/apache/tiles/tiles-template/2.2.2/tiles-template-2.2.2-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-mapper-asl-1.9.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

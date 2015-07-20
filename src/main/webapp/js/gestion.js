@@ -477,7 +477,7 @@ function initBotonEliminarLinea() {
 function obtenerDatosFacturaJSON( idDivFormulario ) {
 	var divForm = $("#" + idDivFormulario); 
 	// campos generales
-	var idFactura = divForm.find("#idFacturaAbierta").val();
+	var idFactura = parseInt( divForm.find("#idFacturaAbierta").val() );
 	var numFactura = divForm.find("#facNumero").val();
 	var fechaFactura = divForm.find("#facFecha").val();
 	// lineas de factura	
@@ -486,15 +486,15 @@ function obtenerDatosFacturaJSON( idDivFormulario ) {
 	divForm.find("tbody > tr").each(function( index ) {
 		celdas = $( this ).children();
 		lineasFactura.push({			 
-			oficio: $(celdas[0].firstChild).val(),
+			oficio: parseInt( $(celdas[0].firstChild).val() ),
 			concepto: celdas[1].textContent, 
 			coste: parseFloat(celdas[2].textContent),
-			iva: $(celdas[3].firstChild).val(), 			
-			id: $(celdas[4]).children("input[type='hidden']").eq(0).val()
+			iva: parseInt( $(celdas[3].firstChild).val() ), 			
+			id: parseInt( $(celdas[4]).children("input[type='hidden']").eq(0).val() )
 		});
 	});	
 	
-	return JSON.stringify({ 'idFactura': idFactura, 
+	return JSON.stringify({ 'idFactura': parseInt(idFactura), 
 							'numFactura': numFactura, 
 							'fechaFactura': fechaFactura,
 							'lineasFactura' : lineasFactura });

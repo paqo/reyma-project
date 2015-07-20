@@ -298,30 +298,39 @@ public class SiniestroController {
     public String delete(@PathVariable("sinId") Integer idSiniestro, Model uiModel) {
 		JSONSerializer serializer = new JSONSerializer();
 		MensajeErrorJson mensajeError = null;
-		
+		MensajeExitoJson mensajeExito = null;		
 		List<AfectadoDomicilioSiniestro> listaAfectados = adsService.findAfectadosDomicilioByIdSiniestro(idSiniestro);
-		try {
-			//1.- borramos las relaciones de la tabla de afectados
-			Domicilio dom;
-			Persona per;
-			for (AfectadoDomicilioSiniestro ads : listaAfectados) {
-				dom = ads.getAdsDomId();
-				per = ads.getAdsPerId();
-				ads.remove();
-				// si la persona o domicilio ya no tiene 
-				// relacion con otro siniestro, se borra del sistema
-				if ( adsService.findAfectadosDomicilioByIdDomicilio(dom.getDomId()).size() == 0 ){
-					dom.remove();
-				}
-				if ( adsService.findAfectadosDomicilioByIdPersona(per.getPerId()).size() == 0 ){
-					per.remove();
-				}
-			}
-			//2.- borramos siniestro
+		try {			
 			Siniestro sinBorrar = siniestroService.findSiniestro(idSiniestro);
-			sinBorrar.remove();
-			MensajeExitoJson mensajeExito = new MensajeExitoJson("El siniestro se ha eliminado con éxito");
-			return serializer.exclude("class").serialize(mensajeExito);
+			//1.- comprobar si el siniestro tiene facturas
+			int numFacturas = sinBorrar.getFacturas().size();
+			if (numFacturas > 0){
+				// si tiene facturas avisar
+				mensajeError = new MensajeErrorJson("El siniestro tiene " + numFacturas + " facturas asociadas. "
+						+ "Para poder borrar el siniestro, deben eliminarse primero las facturas asociadas.");
+				mensajeError.setTitulo("Facturas encontradas para el siniestro");
+			} else {
+				//2.- borramos las relaciones de la tabla de afectados
+				Domicilio dom;
+				Persona per;
+				for (AfectadoDomicilioSiniestro ads : listaAfectados) {
+					dom = ads.getAdsDomId();
+					per = ads.getAdsPerId();
+					ads.remove();
+					// si la persona o domicilio ya no tiene 
+					// relacion con otro siniestro, se borra del sistema
+					if ( adsService.findAfectadosDomicilioByIdDomicilio(dom.getDomId()).size() == 0 ){
+						dom.remove();
+					}
+					if ( adsService.findAfectadosDomicilioByIdPersona(per.getPerId()).size() == 0 ){
+						per.remove();
+					}
+				}
+				//3.- borrar siniestro
+				sinBorrar.remove();
+				mensajeExito = new MensajeExitoJson("El siniestro se ha eliminado con éxito");
+				return serializer.exclude("class").serialize(mensajeExito);
+			}			
 		} catch (Exception e) {			
 			e.printStackTrace();
 			mensajeError = new MensajeErrorJson("Se ha producido un error inesperado elimianando el siniestro");
@@ -351,33 +360,33 @@ public class SiniestroController {
         
         List<Trabajo> trabajos = trabajoService.findTrabajosByIdSiniestro(siniestro.getSinId());
         
-        List<Factura> facturas = facturaService.findFacturasByIdSiniestro(siniestro.getSinId());
-        
-        List<FacturaListadoDTO> facturasListado = new ArrayList<FacturaListadoDTO>();        
-        for (Factura fac : facturas) {
-        	facturasListado.add(converter.convert(fac));
-		}
-		
-        List<Oficio> oficios = oficioService.findAllOficios();
-        
-        List<ElementoComboDTO> oficiosCbo = new ArrayList<ElementoComboDTO>();   
-        for (Oficio oficio : oficios) {
-        	oficiosCbo.add(  new ElementoComboDTO(oficio.getOfiId(), oficio.getOfiDescripcion()) );
-		}      
-        
-        List<ElementoComboDTO> ivasCbo = new ArrayList<ElementoComboDTO>(); 
-        for (Iva iva : ivaService.findAllIvas()) {
-        	ivasCbo.add( new ElementoComboDTO(iva.getIvaId(), iva.getIvaValor() + "%") );
-		}        
-        
         // afectados
         uiModel.addAttribute("afectadodomiciliosiniestroes", afectados);
         // trabajos
         uiModel.addAttribute("trabajos", trabajos);
-        // facturas
-        uiModel.addAttribute("facturas", facturasListado);
+        
+        //############### facturas
+        // combo de Ivas
+        List<ElementoComboDTO> ivasCbo = new ArrayList<ElementoComboDTO>(); 
+        for (Iva iva : ivaService.findAllIvas()) {
+        	ivasCbo.add( new ElementoComboDTO(iva.getIvaId(), iva.getIvaValor() + "%") );
+		}
+        uiModel.addAttribute("valoresCboIva", serializer.exclude("*.class").serialize(ivasCbo));		
+        // combo de oficios
+        List<Oficio> oficios = oficioService.findAllOficios();        
+        List<ElementoComboDTO> oficiosCbo = new ArrayList<ElementoComboDTO>();   
+        for (Oficio oficio : oficios) {
+        	oficiosCbo.add(  new ElementoComboDTO(oficio.getOfiId(), oficio.getOfiDescripcion()) );
+		}
         uiModel.addAttribute("valoresCboOficios", serializer.exclude("*.class").serialize(oficiosCbo));
-        uiModel.addAttribute("valoresCboIva", serializer.exclude("*.class").serialize(ivasCbo));
+        // listado de facturas del siniestro 
+        List<Factura> facturas = facturaService.findFacturasByIdSiniestro(siniestro.getSinId());        
+        List<FacturaListadoDTO> facturasListado = new ArrayList<FacturaListadoDTO>();        
+        for (Factura fac : facturas) {
+        	facturasListado.add(converter.convert(fac));
+		}
+        uiModel.addAttribute("facturas", facturasListado);        
+        //############### fin facturas
         
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());
@@ -403,8 +412,8 @@ public class SiniestroController {
         fixPathDesplegables(uiModel, siniestro, afectados, trabajos);
     }
 
-	private void fixPathDesplegables(Model uiModel,
-			Siniestro siniestro, List<AfectadoDomicilioSiniestro> listaAfectados, List<Trabajo> trabajos) {
+	private void fixPathDesplegables(Model uiModel, Siniestro siniestro, 
+			List<AfectadoDomicilioSiniestro> listaAfectados, List<Trabajo> trabajos) {
 		//TODO: ver como se hace esto "bien" (acceso a elemento de lista en 'path')        
         int cont = 1;
         for (AfectadoDomicilioSiniestro ads : listaAfectados) {
