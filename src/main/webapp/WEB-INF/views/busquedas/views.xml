@@ -4,4 +4,5 @@
     <definition extends="default" name="busquedas/inicio">        
         <put-attribute name="body" value="/WEB-INF/views/busquedas/buscar.jsp"/>
     </definition>
+    
 </tiles-definitions>

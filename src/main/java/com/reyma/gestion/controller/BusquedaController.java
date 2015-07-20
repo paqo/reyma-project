@@ -97,7 +97,7 @@ public class BusquedaController {
     }
 	
 	@RequestMapping(value = "/report/{objectId}", method = RequestMethod.GET)
-	public @ResponseBody void generateReport(
+	public String generateReport(
 	        @PathVariable("objectId") Long objectId, 
 	        HttpServletRequest request, 
 	        HttpServletResponse response) {
@@ -105,7 +105,7 @@ public class BusquedaController {
 		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
 	    try {
 	    	request.setAttribute("numero", objectId);
-			request.getRequestDispatcher("/test.jsp").forward(request, customResponse);
+			request.getRequestDispatcher("/WEB-INF/facturas/generarfactura.jsp").forward(request, customResponse);
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,6 +119,8 @@ public class BusquedaController {
 	    // TODO: mostrar el pdf es así?
 	    // response.setContentType("application/pdf");
 	    // response.getOutputStream().write(...);
+	    
+	    return "busquedas/inicio";
 
 	}
 
