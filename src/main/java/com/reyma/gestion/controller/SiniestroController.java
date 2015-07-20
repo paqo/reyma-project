@@ -368,7 +368,8 @@ public class SiniestroController {
         //############### facturas
         // combo de Ivas
         List<ElementoComboDTO> ivasCbo = new ArrayList<ElementoComboDTO>(); 
-        for (Iva iva : ivaService.findAllIvas()) {
+        List<Iva> ivas = ivaService.findAllIvas();
+        for (Iva iva : ivas) {
         	ivasCbo.add( new ElementoComboDTO(iva.getIvaId(), iva.getIvaValor() + "%") );
 		}
         uiModel.addAttribute("valoresCboIva", serializer.exclude("*.class").serialize(ivasCbo));		
@@ -385,7 +386,9 @@ public class SiniestroController {
         for (Factura fac : facturas) {
         	facturasListado.add(converter.convert(fac));
 		}
-        uiModel.addAttribute("facturas", facturasListado);        
+        uiModel.addAttribute("facturas", facturasListado);     
+        // combo ivas
+        uiModel.addAttribute("ivas", ivas );
         //############### fin facturas
         
         // desplegables

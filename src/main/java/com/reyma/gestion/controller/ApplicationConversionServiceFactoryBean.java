@@ -235,7 +235,9 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.LineaFactura, com.reyma.gestion.ui.LineaFacturaDTO>() {
             public LineaFacturaDTO convert(LineaFactura lineaFactura) {            	        	
                 return new LineaFacturaDTO(lineaFactura.getLinId(), lineaFactura.getLinConcepto(), 
-                		lineaFactura.getLinIvaId().getIvaId(), lineaFactura.getLinImporte().doubleValue());
+                		lineaFactura.getLinIvaId().getIvaId(), 
+                		lineaFactura.getLinImporte().doubleValue(), 
+                		lineaFactura.getLinOficioId().getOfiId());
             }
         };
     }

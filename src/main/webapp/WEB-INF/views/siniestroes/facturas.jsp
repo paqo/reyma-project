@@ -70,10 +70,9 @@
 					            	<td></td>
 					            	<td>0</td>
 					            	<td>
-					            		<select name="cbIva-1" id="cbIva-1">
-					            			<option value="1">10%</option>
-					            			<option value="2">21%</option>
-					            		</select>
+					            		<form:select path="ivas" id="cbIva-1">
+						        			<form:options itemLabel="ivaValor" itemValue="ivaId" items="${ivas}" />
+						        		</form:select>
 					            	</td>
 					            	<td style="text-align: center;">
 					            		<button class="eliminarLineaFactura"></button>

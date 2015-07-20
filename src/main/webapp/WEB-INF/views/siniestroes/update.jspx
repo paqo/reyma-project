@@ -972,7 +972,7 @@
 	 	            primary: "ui-icon-circle-plus"
 	 	        }
 			}).click(function(event) {
-		    	event.preventDefault();
+		    	/*event.preventDefault();
 		    	var cont = $("#tablaFactura").find("tr").size() - 1;
 		    	$( "<tr>" + 
 		    			"<td>" + 
@@ -992,8 +992,8 @@
 		    			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
 		    				"<input type='hidden' name='idLinea-" + cont + "' id='idLinea-" + cont + "' value='' />" + 
 		    			"</td>" + 
-		    	  "</tr>" )
-		    		.appendTo( $("#tablaFactura").find("tbody") );
+		    	  "</tr>" ).appendTo( $("#tablaFactura").find("tbody") );*/
+		    	generarLineaFacturaVacia();
 	       		// recargar y posicionar en fila añadida			        	
 	        	$("#tablaFactura").editableTableWidget().
 				  				  formularioFactura();

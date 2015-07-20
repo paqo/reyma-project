@@ -420,30 +420,48 @@ function cargarOpcionesCombo(opciones) {
 	return res;
 }
 
+function generarLineaFacturaVacia() {
+	cargarLineaFactura("", "", "", 0, ""); // 0 por defecto para el coste (evitar NAN)
+}
+
 function cargarLineaFactura(idLinea, oficio, concepto, coste, iva) {
 	var cont = $("#tablaFactura").find("tr").size() - 1;
-	var selected1 = iva == 1? " selected='selected' " : "";
-	var selected2 = iva == 2? " selected='selected' " : "";
+	
+	var ivasArray = JSON.parse($("#valoresCboIva").val());
+	var oficiosArray = JSON.parse($("#valoresCboOficios").val());
+	
+	var opcionesIva = cargarCombo(ivasArray, iva);
+	var opcionesOficios = cargarCombo(oficiosArray, oficio);
+	
 	$( "<tr>" + 
 			"<td>" + 
-				"<select name='cbOficio-1' id='cbOficio-1'>" +
-					"<option value='1'>Fontaneria</option>" + 
-					"<option value='2'>Pintura</option>" +
+				"<select name='cbOficio-" + cont + "' id='cbOficio-" + cont + "'>" +
+					opcionesOficios +
 				"</select>" + 
 			"</td>" +
 			"<td>" + concepto + "</td>" + 
 			"<td>" + coste + "</td>" + 
 			"<td>" + 
 				"<select name='cbIva-" + cont + "' id='cbIva-" + cont + "'>" +
-					"<option " + selected1 + " value='1'>10%</option>" + 
-					"<option " + selected2 + " value='2'>21%</option>" +
+					opcionesIva +
 				"</select>" + 
 			"</td>" + 
 			"<td style='text-align: center;'><button class='eliminarLineaFactura'></button>" +
 				"<input type='hidden' name='idLinea-" + cont + "' id='idLinea-" + cont + "' value='" + idLinea + "' />" + 
 			"</td>" + 
-	  "</tr>" )
-		.appendTo( $("#tablaFactura").find("tbody") );
+	  "</tr>" ).appendTo( $("#tablaFactura").find("tbody") );
+}
+
+function cargarCombo(array, objValor) {
+	var opciones = "";
+	$.each(array, function(index, elem) {
+		opciones += "<option value='" + elem.valor + "'";
+		if ( elem.valor === objValor ){
+			opciones += " selected='selected'";
+		} 
+		opciones += ">" + elem.label + "</option>";
+	});
+	return opciones;
 }
 
 function initFormularioFactura(ffac, nfac) {

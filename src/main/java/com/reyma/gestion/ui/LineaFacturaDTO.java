@@ -16,12 +16,13 @@ public class LineaFacturaDTO implements Serializable {
 		super();
 	}
 	
-	public LineaFacturaDTO(Integer id, String concepto, Integer iva, Double coste) {
+	public LineaFacturaDTO(Integer id, String concepto, Integer iva, Double coste, Integer oficio) {
 		super();
 		this.id = id;
 		this.concepto = concepto;
-		this.iva = iva;
+		this.iva = iva;		
 		this.coste = coste;
+		this.oficio = oficio;
 	}
 
 	public String getConcepto() {
@@ -70,6 +71,7 @@ public class LineaFacturaDTO implements Serializable {
 				"id: " + id +				
 				", concepto: " + concepto +
 				", iva: " + iva +
+				", oficio: " + oficio +
 				", coste: " + coste +
 				"]";
 	}
