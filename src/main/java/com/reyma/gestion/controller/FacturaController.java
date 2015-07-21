@@ -1,4 +1,9 @@
 package com.reyma.gestion.controller;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,8 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
@@ -30,7 +40,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
+import org.w3c.dom.Document;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.xml.sax.SAXException;
 
+import com.lowagie.text.DocumentException;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.Factura;
 import com.reyma.gestion.dao.LineaFactura;
@@ -42,6 +56,7 @@ import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
+import com.reyma.gestion.util.CharArrayWriterResponse;
 
 import flexjson.JSONSerializer;
 
@@ -116,56 +131,75 @@ public class FacturaController {
 		return serializer.exclude("class").serialize(mensajeError);
     }	
 	
-	/*@ResponseBody
-	@RequestMapping(value = "/actualizar", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public String foo( @RequestBody List<LineaFacturaDTO> lineasFactura ) {
+	@RequestMapping(value = "/generar/{objectId}", method = RequestMethod.GET)
+	public String generateReport(
+	        @PathVariable("objectId") Integer objectId, 
+	        HttpServletRequest request, 
+	        HttpServletResponse response) {
 		
-		MensajeErrorJson mensajeError = new MensajeErrorJson("error actualizando las líneas de la factura");
-		JSONSerializer serializer = new JSONSerializer();
-		
-		ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();
-		Converter<LineaFacturaDTO, LineaFactura> converter = acsf.getLineaFacturaDTOToLineaFacturaConverter();
+		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
+	    try {
+	    	
+	    	Factura factura = facturaService.findFactura( objectId );	    	
+	    	request.setAttribute("factura", factura);
+			request.getRequestDispatcher("/WEB-INF/facturas/generarfactura.jsp").forward(request, customResponse);
+			
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	    String facturaHtml = customResponse.getOutput();
+	    
+	    System.out.println(facturaHtml);
+	    
+	    
+	    generarPDF(facturaHtml);
+	    
+	    //System.out.println(String.format("La salida es %s", facturaHtml));
 
-		for (LineaFacturaDTO lineaDto : lineasFactura) {			
-			lineaFacturaService.updateLineaFactura( converter.convert(lineaDto) );			
+	    // TODO: mostrar el pdf es así?
+	    // response.setContentType("application/pdf");
+	    // response.getOutputStream().write(...);
+	    
+	    return "busquedas/inicio";
+
+	}
+	
+	private void generarPDF(String htmlStr) {		
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			//Document doc = builder.parse(new StringBufferInputStream(htmlStr));
+			
+			Document doc = builder.parse( new ByteArrayInputStream(htmlStr.getBytes("UTF-8")) );
+
+			ITextRenderer renderer = new ITextRenderer();
+			renderer.setDocument(doc, null);
+
+			String outputFile = "C:/temp/test.pdf";
+			OutputStream os = new FileOutputStream(outputFile);
+			renderer.layout();
+			renderer.createPDF(os);
+			os.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	    	
-	        LOG.debug("Recibida solicitud de actulizar factura con: " + lineasFactura);        
-	        mensajeError.setRecargar(false);
-			return serializer.exclude("class").serialize(mensajeError);
-	}*/
-	
-	
-	 /*@ResponseBody
-	    @RequestMapping(value = "/test", method = RequestMethod.GET)
-	    public EjemploMapeoJSON foo( @RequestBody List<EjemploMapeoJSON> ejemplos ) {
-	    	 
-	    	  peticion:
-	    	  $.ajax( {
-				   dataType: "json",
-				   contentType: "application/json; charset=UTF-8",
-				   type: "POST",
-				   url: "./api/test",
-				   data: JSON.stringify([{ name: "John", age: 27 }, { name: "Peter", age: 24 }]),
-				   success:  function (data) {
-				       console.log(data);
-				   },
-				   error : function (e) {
-				       alert (e);
-				   }
-				} );
-	    	  
-	    	
-	        LOG.debug("Recibida solicitud de POST: " + ejemplos);        
-	        return new EjemploMapeoJSON(ejemplos.get(0));
-	    }*/
-	
-	/* @ResponseBody
-    @RequestMapping(value = "/actualizar/{facId}", method = RequestMethod.POST)
-	public EjemploMapeoJSON foo(@PathVariable("facId") Integer idFactura, @RequestBody List<EjemploMapeoJSON> ejemplos ) {
-		
-	}*/
-	
+	}
 	
 	@ResponseBody
     @RequestMapping(value = "/actualizar", method = RequestMethod.POST)

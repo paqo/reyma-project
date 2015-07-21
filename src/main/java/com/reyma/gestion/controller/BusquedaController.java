@@ -1,5 +1,4 @@
 package com.reyma.gestion.controller;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,14 +7,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +24,6 @@ import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.CompaniaService;
-import com.reyma.gestion.util.CharArrayWriterResponse;
 
 import flexjson.JSONSerializer;
 
@@ -96,34 +91,6 @@ public class BusquedaController {
         return serializer.exclude("*.class").serialize(resultados);        
     }
 	
-	@RequestMapping(value = "/report/{objectId}", method = RequestMethod.GET)
-	public String generateReport(
-	        @PathVariable("objectId") Long objectId, 
-	        HttpServletRequest request, 
-	        HttpServletResponse response) {
-		
-		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
-	    try {
-	    	request.setAttribute("numero", objectId);
-			request.getRequestDispatcher("/WEB-INF/facturas/generarfactura.jsp").forward(request, customResponse);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	 
-	    System.out.println(String.format("La salida es %s", customResponse.getOutput()));
-
-	    // TODO: mostrar el pdf es así?
-	    // response.setContentType("application/pdf");
-	    // response.getOutputStream().write(...);
-	    
-	    return "busquedas/inicio";
-
-	}
-
 	@RequestMapping(params = "form", produces = "text/html")
     public String createForm(Model uiModel) {
         populateEditForm(uiModel);
