@@ -343,7 +343,8 @@ public class SiniestroController {
         /*uiModel.addAttribute("siniestro_sinfechacomunicacion_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));
         uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));*/
 		uiModel.addAttribute("siniestro_sinfechaocurrencia_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
-		uiModel.addAttribute("siniestro_sinfechaencargo_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);        
+		uiModel.addAttribute("siniestro_sinfechaencargo_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
+		uiModel.addAttribute("siniestro_sinfechafin_date_format", Fechas.FORMATO_FECHA_DDMMYYYYHHMM);
     }
 
 	void populateEditForm(Model uiModel, Siniestro siniestro) {

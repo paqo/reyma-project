@@ -10,7 +10,8 @@
         <field:input field="sinNumero" id="c_com_reyma_gestion_dao_Siniestro_sinNumero" required="true" z="6uE23ueMQy71iBvAm1yhZLxjNKU="/>
         <field:input field="sinPoliza" id="c_com_reyma_gestion_dao_Siniestro_sinPoliza" z="TCet7X738WRMzl998GPd8PKhlaM="/>
         <field:datetime dateTimePattern="${siniestro_sinfechaocurrencia_date_format}" field="sinFechaOcurrencia" id="c_com_reyma_gestion_dao_Siniestro_sinFechaOcurrencia" z="kGx9CTCg2bOe7ImvZXpujuza7jU="/>
-        <field:datetime dateTimePattern="${siniestro_sinfechaencargo_date_format}" field="sinFechaEncargo" id="c_com_reyma_gestion_dao_Siniestro_sinFechaEncargo" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>                
+        <field:datetime dateTimePattern="${siniestro_sinfechaencargo_date_format}" field="sinFechaEncargo" id="c_com_reyma_gestion_dao_Siniestro_sinFechaEncargo" required="true" z="A2dvP3T8OVr0eDpuHoHV0rBT9Vk="/>
+        <field:datetime dateTimePattern="${siniestro_sinfechafin_date_format}" field="sinFechaFin" id="c_com_reyma_gestion_dao_Siniestro_sinFechaFin" z=""/>                
         <field:textarea field="sinDescripcion" id="c_com_reyma_gestion_dao_Siniestro_sinDescripcion" style="width: 65%; max-width: 65% !important; height: 10em;" z=""/>
         <field:textarea field="sinObservaciones" id="c_com_reyma_gestion_dao_Siniestro_sinObservaciones" style="width: 65%; max-width: 65% !important; height: 10em;" z=""/>                
        	<field:input field="sinMediador" max="70" id="c_com_reyma_gestion_dao_Siniestro_sinMediador" z=""/>

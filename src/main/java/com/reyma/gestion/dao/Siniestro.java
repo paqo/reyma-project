@@ -259,6 +259,11 @@ public class Siniestro {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat( pattern = Fechas.FORMATO_FECHA_DDMMYYYYHHMM)
     private Calendar sinFechaOcurrencia;
+	
+	@Column(name = "sin_fecha_fin")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat( pattern = Fechas.FORMATO_FECHA_DDMMYYYYHHMM)
+    private Calendar sinFechaFin;
 
 	@Column(name = "sin_descripcion", length = 500)
     private String sinDescripcion;
@@ -359,6 +364,14 @@ public class Siniestro {
 	public void setSinFechaOcurrencia(Calendar sinFechaOcurrencia) {
         this.sinFechaOcurrencia = sinFechaOcurrencia;
     }
+
+	public Calendar getSinFechaFin() {
+		return sinFechaFin;
+	}
+
+	public void setSinFechaFin(Calendar sinFechaFin) {
+		this.sinFechaFin = sinFechaFin;
+	}
 
 	public String getSinDescripcion() {
         return sinDescripcion;

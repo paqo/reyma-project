@@ -9,12 +9,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +56,7 @@ import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.LineaFacturaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.ui.FacturaDTO;
+import com.reyma.gestion.ui.FacturaPdfDTO;
 import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeErrorValidacionJson;
@@ -140,9 +145,50 @@ public class FacturaController {
 		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
 	    try {
 	    	
-	    	Factura factura = facturaService.findFactura( objectId );	    	
-	    	request.setAttribute("factura", factura);
-			request.getRequestDispatcher("/WEB-INF/facturas/generarfactura.jsp").forward(request, customResponse);
+	    	FacturaPdfDTO pdf = new FacturaPdfDTO();
+	    	
+	    	Factura factura = facturaService.findFactura( objectId );
+	    	// datos factura
+	    	pdf.setNumFactura(factura.getFacNumFactura());
+	    	//TODO: el resto...
+	    	
+	    	// lineas factura
+	    	//1.- obtener lineas de factura ordenadas por oficio
+	    	Set<LineaFactura> _lineasFac = facturaService.findFactura( objectId ).getLineaFacturas();	    	
+	    	SortedSet<LineaFactura> lineasFac =new TreeSet<LineaFactura>(new Comparator<LineaFactura>(){
+	    	    public int compare(LineaFactura a, LineaFactura b){
+	    	        return  a.getLinOficioId().getOfiId().compareTo(b.getLinOficioId().getOfiId());
+	    	    }
+	    	});
+	    	
+	    	Iterator<LineaFactura> it = _lineasFac.iterator();
+	    	LineaFactura lineaFactura;
+	    	while ( it.hasNext() ) {
+				lineaFactura = it.next();
+				lineasFac.add(lineaFactura);
+			}
+	    	
+	    	//2.- crear mapa: oficio -> lista de lineas
+	    	
+	    	Map<String, List<LineaFactura>> mapa = new HashMap<String, List<LineaFactura>>();
+	    	
+	    	// acabar el bucle
+	    	acabar
+	    	List<LineaFactura> aux = new ArrayList<LineaFactura>();
+	    	String ofiActual = "", ofiAnt = "";
+	    	for (LineaFactura linea : lineasFac) {
+	    		aux.add(linea);
+	    		ofiActual = linea.getLinOficioId().getOfiDescripcion();
+	    		if ( !ofiActual.equals(ofiAnt) ){
+	    			mapa.put(ofiActual, aux);		
+	    			aux = new ArrayList<LineaFactura>();
+	    			ofiAnt = ofiActual;
+	    		} 	    		
+			}
+	    	
+	    	request.setAttribute("factura", pdf);
+
+			request.getRequestDispatcher("/WEB-INF/views/facturas/generarfactura.jsp").forward(request, customResponse);
 			
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
