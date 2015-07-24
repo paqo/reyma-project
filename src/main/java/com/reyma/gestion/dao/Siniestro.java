@@ -47,8 +47,6 @@ public class Siniestro {
 
 	@PersistenceContext
     transient EntityManager entityManager;
-
-	private static final Logger logger = Logger.getLogger(SiniestroController.class);
 	
 	public static final List<String> fieldNames4OrderClauseFilter = java.util.Arrays.asList("sinTsiId", "sinFechaEncargo");
 

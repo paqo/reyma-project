@@ -75,5 +75,11 @@ public class AfectadoDomicilioSiniestroServiceImpl implements AfectadoDomicilioS
 	public List<AfectadoDomicilioSiniestro> findAllAfectadoDomicilioSiniestroes(
 			String sortFieldName, String sortOrder) {
 		return AfectadoDomicilioSiniestro.findAllAfectadoDomicilioSiniestroes(sortFieldName, sortOrder);
+	}
+
+	@Override
+	public AfectadoDomicilioSiniestro findAfectadoParaFactura(
+			Integer idSiniestro) {
+		return AfectadoDomicilioSiniestro.findAfectadoParaFactura(idSiniestro);
 	}	
 }

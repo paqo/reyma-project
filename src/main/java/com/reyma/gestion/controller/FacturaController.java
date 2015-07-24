@@ -9,16 +9,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +49,11 @@ import org.xml.sax.SAXException;
 
 import com.lowagie.text.DocumentException;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
+import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Factura;
 import com.reyma.gestion.dao.LineaFactura;
+import com.reyma.gestion.dao.Siniestro;
+import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.LineaFacturaService;
 import com.reyma.gestion.service.SiniestroService;
@@ -62,6 +64,7 @@ import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 import com.reyma.gestion.util.CharArrayWriterResponse;
+import com.reyma.gestion.util.Fechas;
 
 import flexjson.JSONSerializer;
 
@@ -77,6 +80,9 @@ public class FacturaController {
 
 	@Autowired
     SiniestroService siniestroService;
+	
+	@Autowired
+	AfectadoDomicilioSiniestroService adsService;
 
 	private static final Logger LOG = Logger.getLogger(FacturaController.class);
 	
@@ -145,46 +151,27 @@ public class FacturaController {
 		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
 	    try {
 	    	
+	    	
+	    	/*Font font = FontFactory.getFont("/fonts/Sansation_Regular.ttf",
+	    		    BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 0.8f, Font.NORMAL, new Color(0));
+	    	
+	    	BaseFont baseFont = font.getBaseFont();*/
+	    	
 	    	FacturaPdfDTO pdf = new FacturaPdfDTO();
 	    	
 	    	Factura factura = facturaService.findFactura( objectId );
-	    	// datos factura
-	    	pdf.setNumFactura(factura.getFacNumFactura());
-	    	//TODO: el resto...
+	    	Siniestro siniestro = 
+	    			factura.getFacSinId();	    	
+	    	AfectadoDomicilioSiniestro ads = adsService.findAfectadoParaFactura(siniestro.getSinId());
+	    		    	
+	    	// 1.- datos factura:
+	    	setDatosFactura(pdf, factura, siniestro, ads);
 	    	
-	    	// lineas factura
-	    	//1.- obtener lineas de factura ordenadas por oficio
-	    	Set<LineaFactura> _lineasFac = facturaService.findFactura( objectId ).getLineaFacturas();	    	
-	    	SortedSet<LineaFactura> lineasFac =new TreeSet<LineaFactura>(new Comparator<LineaFactura>(){
-	    	    public int compare(LineaFactura a, LineaFactura b){
-	    	        return  a.getLinOficioId().getOfiId().compareTo(b.getLinOficioId().getOfiId());
-	    	    }
-	    	});
+	    	// 2.- lineas factura	    	
+	    	setLineasFactura(pdf, factura);
 	    	
-	    	Iterator<LineaFactura> it = _lineasFac.iterator();
-	    	LineaFactura lineaFactura;
-	    	while ( it.hasNext() ) {
-				lineaFactura = it.next();
-				lineasFac.add(lineaFactura);
-			}
-	    	
-	    	//2.- crear mapa: oficio -> lista de lineas
-	    	
-	    	Map<String, List<LineaFactura>> mapa = new HashMap<String, List<LineaFactura>>();
-	    	
-	    	// acabar el bucle
-	    	acabar
-	    	List<LineaFactura> aux = new ArrayList<LineaFactura>();
-	    	String ofiActual = "", ofiAnt = "";
-	    	for (LineaFactura linea : lineasFac) {
-	    		aux.add(linea);
-	    		ofiActual = linea.getLinOficioId().getOfiDescripcion();
-	    		if ( !ofiActual.equals(ofiAnt) ){
-	    			mapa.put(ofiActual, aux);		
-	    			aux = new ArrayList<LineaFactura>();
-	    			ofiAnt = ofiActual;
-	    		} 	    		
-			}
+	    	// 3.- datos reyma
+	    	setDatosReyma(pdf);	   
 	    	
 	    	request.setAttribute("factura", pdf);
 
@@ -201,7 +188,6 @@ public class FacturaController {
 	    
 	    System.out.println(facturaHtml);
 	    
-	    
 	    generarPDF(facturaHtml);
 	    
 	    //System.out.println(String.format("La salida es %s", facturaHtml));
@@ -212,6 +198,59 @@ public class FacturaController {
 	    
 	    return "busquedas/inicio";
 
+	}
+
+	private void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {
+		Set<LineaFactura> _lineasFac = factura.getLineaFacturas();
+		//TODO: orden?
+		Map<String, Set<LineaFactura>> mapa = new HashMap<String, Set<LineaFactura>>();
+		Iterator<LineaFactura> it = _lineasFac.iterator();
+		LineaFactura lineaFactura;
+		Set<LineaFactura> listaLineasMismoOfi; 
+		while ( it.hasNext() ) {
+			lineaFactura = it.next();
+			listaLineasMismoOfi = mapa.get(lineaFactura.getLinOficioId().getOfiDescripcion());
+			if ( listaLineasMismoOfi == null ){
+				listaLineasMismoOfi = new HashSet<LineaFactura>();
+				mapa.put(lineaFactura.getLinOficioId().getOfiDescripcion(), listaLineasMismoOfi);					
+			}
+			listaLineasMismoOfi.add(lineaFactura);
+		}	    	
+		pdf.setLineasFactura(mapa);
+	}
+
+	private void setDatosFactura(FacturaPdfDTO pdf, Factura factura,
+			Siniestro siniestro, AfectadoDomicilioSiniestro ads) {
+		pdf.setNumFactura(factura.getFacNumFactura());
+		pdf.setFechaEncargo( Fechas.formatearFechaDDMMYYYY(
+								siniestro.getSinFechaEncargo().getTime()) );
+		pdf.setFechaFin( Fechas.formatearFechaDDMMYYYY(
+								siniestro.getSinFechaFin().getTime()) );
+		pdf.setDomicilio( ads.getAdsDomId().getDomDireccion() + ", " 
+						+ ads.getAdsDomId().getDomMunId().getMunDescripcion() + ", (" 
+						+ ads.getAdsDomId().getDomProvId().getPrvDescripcion() + ")"
+		);
+		pdf.setCp( ads.getAdsDomId().getDomCp().toString() );
+		pdf.setNif( ads.getAdsPerId().getPerNif() );
+		pdf.setNombre( ads.getAdsPerId().getPerNombre() );
+		pdf.setNumEncargo( siniestro.getSinNumero() );
+		pdf.setNumFactura(factura.getFacNumFactura());
+	}
+
+	private void setDatosReyma(FacturaPdfDTO pdf) {
+		ResourceBundleMessageSource mensajes = new ResourceBundleMessageSource();
+		mensajes.setBasename("reymasur");
+		
+		pdf.setNombreR(
+				mensajes.getMessage("nombre", null, Locale.getDefault()) );
+		pdf.setDomicilioR(
+				mensajes.getMessage("direccion", null, Locale.getDefault()) );
+		pdf.setLocalidadR(					
+				mensajes.getMessage("localidad", null, Locale.getDefault()) );
+		pdf.setCpR(					
+				mensajes.getMessage("cp", null, Locale.getDefault()) );
+		pdf.setNifR(
+				mensajes.getMessage("cif", null, Locale.getDefault()) );
 	}
 	
 	private void generarPDF(String htmlStr) {		

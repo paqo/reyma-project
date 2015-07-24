@@ -36,5 +36,8 @@ public interface AfectadoDomicilioSiniestroService {
 
 
 	public abstract AfectadoDomicilioSiniestro updateAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro afectadoDomicilioSiniestro);
+
+
+	public abstract AfectadoDomicilioSiniestro findAfectadoParaFactura(Integer idSiniestro);
 	
 }

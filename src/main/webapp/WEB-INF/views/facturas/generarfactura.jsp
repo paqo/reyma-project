@@ -14,16 +14,17 @@
 		/*		
 		Para embeber una fuente:
 		
+		(poner la fuente en otra ruta)
+		
 		@font-face {
-	        font-family: "UbuntuMono";
-	        src: url("UbuntuMono-R.ttf");
+	        font-family: "Arial";
+	        src: url("http://localhost:8080/reymasur/resources/images/win-arial.ttf");
 	        -fs-pdf-font-embed: embed;
 	        -fs-pdf-font-encoding: Identity-H; 
-		}		
-		*/
+		}*/		
 		
 		* {
-			font-family: sans-serif;
+			font-family: sans-serif;			
 		}
 		
 		.titulo-factura {
@@ -86,7 +87,7 @@
 		
 	</style>
 	
-	<title>Factura ${factura.facNumFactura}</title>
+	<title>Factura ${factura.numFactura}</title>
 </head>
 <body>
 
@@ -101,30 +102,22 @@
 	<div style="width: 100%;"> <%-- cont datos personales --%>
 		<div style="float: left; width: 65%;">
 			<div class="tituloFactura">FACTURA</div>
-			<div class="datos-fac">N&#250;m. encargo: 1111</div>
-			<div class="datos-fac">N&#250;m. factura: 2222</div>
-			<div class="datos-fac">Fecha finalizaci&#243;n: 10/18/1977</div>
-			<div class="datos-fac">Fecha factura: 10/18/1977</div>			
+			<div class="datos-fac">Fecha factura: ${factura.fechaEncargo}</div>	
+			<div class="datos-fac">Fecha finalizaci&#243;n: ${factura.fechaFin}</div>
+			<div class="datos-fac">N&#250;m. encargo: ${factura.numEncargo}</div>
+			<div class="datos-fac">N&#250;m. factura: ${factura.numFactura}</div>		
 		</div>
 		<div style="float: right; width: 30%; font-size:10px; padding:3px; border: 1px solid black;">
-			MARIA MERCEDES COLCHERO GONZ&#193;LEZ<br/>
-			CALLE ALFONSO XII, 93<br/>
-			CP 41920, SAN JUAN DE AZNALFARACHE, SEVILLA<br/>
-			NIF: 46778922P<br/>
+			${factura.nombre}<br/>
+			${factura.domicilio}<br/>
+			CP: ${factura.cp}<br/>
+			NIF: ${factura.nif}<br/>
 		</div>
 	</div> 	<%-- fin cont datos personales --%>
-	
-	<%--
-		num encargo
-		num factura		
-		fecha finalizacion
-		fecha factura
-	
-	 --%>
-	
+		
 	<div class="espaciador10px">&#160;</div>
 	
-	<div style="width: 100%; float: left;"> <%-- lineas de factura --%>
+	<div style="width: 100%; float: left; min-height: 700px;"> <%-- lineas de factura --%>
 		<div style="width: 1%; float: left;">&#160;</div>
 		<div style="width: 98%; float: left;">
 			<table class="tabla-lin-fac">
@@ -144,7 +137,7 @@
 						</td>
 					</tr>
 					<%-- lineas --%>
-					<c:forEach var="ofi" items="${prueba}">
+					<c:forEach var="ofi" items="${factura.lineasFactura}">
 						<tr>
 							<td class="tipo-oficio" colspan="4">${ofi.key}</td>
 						</tr>
@@ -162,6 +155,10 @@
 		</div>
 		<div style="width: 1%; float: left;">&#160;</div>		
 	</div> <%-- fin lineas de factura --%>
+	
+	<div style="width: 100%; float: left; height:100px; background-color: #FAFCF7;">
+		${factura.nombreR}
+	</div>
 
 </div>
 

@@ -188,4 +188,33 @@ public class AfectadoDomicilioSiniestro {
 	public void setAdsTafId(TipoAfectacion adsTafId) {
         this.adsTafId = adsTafId;
     }
+
+	public static AfectadoDomicilioSiniestro findAfectadoParaFactura( 
+			Integer idSiniestro) {
+		String jpaQuery = "SELECT o " +
+				"    FROM AfectadoDomicilioSiniestro o " +
+				"         LEFT JOIN o.adsTafId t " +
+				"   WHERE o.adsSinId.sinId = :numero " +
+				"         AND (t.tafDescripcion = 'AMBOS' OR t.tafDescripcion = 'ASEGURADO') " +
+				"ORDER BY o.adsPerId ";
+		
+		return entityManager().createQuery(jpaQuery, AfectadoDomicilioSiniestro.class)
+				.setParameter("numero", idSiniestro)
+				.setMaxResults(1)				
+				.getSingleResult();		
+		
+		/*String nativeQuery = "SELECT * " +
+		"    FROM    afectado_domicilio_siniestro " +
+		"         LEFT JOIN tipo_afectacion ON ads_taf_id = taf_id " +
+		"   WHERE ads_sin_id = 37 " +
+		"         AND (taf_descripcion = 'AMBOS' OR taf_descripcion = 'ASEGURADO') " +
+		"ORDER BY ads_per_id " +
+		"LIMIT 1 ";
+		entityManager().createNativeQuery(nativeQuery, AfectadoDomicilioSiniestro.class)
+		.setParameter("numero", idSiniestro)
+		.setMaxResults(1)
+		.getSingleResult();*/
+
+		
+	}
 }

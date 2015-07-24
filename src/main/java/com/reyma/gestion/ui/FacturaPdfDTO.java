@@ -22,6 +22,12 @@ public class FacturaPdfDTO implements Serializable {
 	private String nif;	
 	// lineas factura
 	private Map<String, Set<LineaFactura>> lineasFactura;
+	// datos reymasur
+	private String nombreR;
+	private String domicilioR;
+	private String localidadR;
+	private String cpR;
+	private String nifR;
 
 	public FacturaPdfDTO() {
 		super();
@@ -97,6 +103,46 @@ public class FacturaPdfDTO implements Serializable {
 
 	public void setLineasFactura(Map<String, Set<LineaFactura>> lineasFactura) {
 		this.lineasFactura = lineasFactura;
-	}	
+	}
+
+	public String getNombreR() {
+		return nombreR;
+	}
+
+	public void setNombreR(String nombreR) {
+		this.nombreR = nombreR;
+	}
+
+	public String getDomicilioR() {
+		return domicilioR;
+	}
+
+	public void setDomicilioR(String domicilioR) {
+		this.domicilioR = domicilioR;
+	}
+
+	public String getLocalidadR() {
+		return localidadR;
+	}
+
+	public void setLocalidadR(String localidadR) {
+		this.localidadR = localidadR;
+	}
+
+	public String getCpR() {
+		return cpR;
+	}
+
+	public void setCpR(String cpR) {
+		this.cpR = cpR;
+	}
+
+	public String getNifR() {
+		return nifR;
+	}
+
+	public void setNifR(String nifR) {
+		this.nifR = nifR;
+	}		
 	
 }
