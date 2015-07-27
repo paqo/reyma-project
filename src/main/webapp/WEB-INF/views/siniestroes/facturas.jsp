@@ -45,8 +45,14 @@
 						<div style="float: left; width: 30%;">
 							Fecha Factura:&nbsp;<input type="text" size="15" id="facFecha" name="facFecha"/>
 						</div>
-						<div style="float: left;">
+						<div style="float: left; width: 30%;">
 							N&uacute;mero Factura:&nbsp;<input type="text" size="15" id="facNumero" name="facNumero"/>
+						</div>
+						<div style="float: left; padding-top: 2px;">
+							Asegurado/Perjudicado:&nbsp;
+							<form:select path="afectadodomiciliosiniestroes" id="cbAfectados">
+					        	<form:options itemLabel="adsPerId.perNombre" itemValue="adsId" items="${afectadodomiciliosiniestroes}" />
+					        </form:select>
 						</div>
 					</div>
 					<div style="float: left; width: 100%; margin-top: 1.8em;">
@@ -68,7 +74,7 @@
 					        			</form:select>
 					        		</td>
 					            	<td></td>
-					            	<td>11111</td>
+					            	<td>0</td>
 					            	<td>
 					            		<form:select path="ivas" id="cbIva-1">
 						        			<form:options itemLabel="ivaValor" itemValue="ivaId" items="${ivas}" />

@@ -625,4 +625,5 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         super.afterPropertiesSet();
         installLabelConverters(getObject());
     }
+
 }

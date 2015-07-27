@@ -386,11 +386,11 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 	// el JSON directamente
 	
 	var auxIva = {"ivaId" : null};
-	var auxOficio = {"oficioId" : null};
+	var auxOficio = {"ofiId" : null};
 	filas.each(function( index ) {
 		celdas = $( this ).children();
 		auxIva.ivaId = parseInt( $(celdas[3].firstChild).val() );
-		auxOficio.oficioId = parseInt( $(celdas[0].firstChild).val() );
+		auxOficio.ofiId = parseInt( $(celdas[0].firstChild).val() );
 		res.push({			 
 			linOficioId: auxOficio,
 			linConcepto: celdas[1].textContent, 
@@ -400,7 +400,7 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 		});
 	});	
 	
-	console.log("json: " + JSON.stringify(res));
+	//console.log("json: " + JSON.stringify(res));
 	return JSON.stringify(res);
 }
 

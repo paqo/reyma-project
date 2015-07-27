@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -155,6 +156,10 @@ public class Factura {
 	@ManyToOne
     @JoinColumn(name = "fac_sin_id", referencedColumnName = "sin_id", nullable = false)
     private Siniestro facSinId;
+	
+	@OneToOne
+	@JoinColumn(name = "fac_ads_id", referencedColumnName = "ads_id", nullable = false)
+	private AfectadoDomicilioSiniestro facAdsId;
 
 	@Column(name = "fac_fecha")
     @NotNull
@@ -195,6 +200,14 @@ public class Factura {
 
 	public void setFacNumFactura(String facNumFactura) {
 		this.facNumFactura = facNumFactura;
+	}
+	
+	public AfectadoDomicilioSiniestro getFacAdsId() {
+		return facAdsId;
+	}
+
+	public void setFacAdsId(AfectadoDomicilioSiniestro facAdsId) {
+		this.facAdsId = facAdsId;
 	}
 
 	public static List<Factura> findFacturasParaSiniestro(Integer id) {

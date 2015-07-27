@@ -389,7 +389,7 @@ public class SiniestroController {
 		}
         uiModel.addAttribute("facturas", facturasListado);     
         // combo ivas
-        uiModel.addAttribute("ivas", ivas );
+        uiModel.addAttribute("ivas", ivas );        
         //############### fin facturas
         
         // desplegables
