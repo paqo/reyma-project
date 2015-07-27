@@ -68,7 +68,7 @@
 					        			</form:select>
 					        		</td>
 					            	<td></td>
-					            	<td>0</td>
+					            	<td>11111</td>
 					            	<td>
 					            		<form:select path="ivas" id="cbIva-1">
 						        			<form:options itemLabel="ivaValor" itemValue="ivaId" items="${ivas}" />

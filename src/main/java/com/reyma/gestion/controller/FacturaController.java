@@ -263,7 +263,7 @@ public class FacturaController {
 			ITextRenderer renderer = new ITextRenderer();
 			renderer.setDocument(doc, null);
 
-			String outputFile = "C:/temp/test.pdf";
+			String outputFile = "/tmp/test.pdf";
 			OutputStream os = new FileOutputStream(outputFile);
 			renderer.layout();
 			renderer.createPDF(os);

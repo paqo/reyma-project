@@ -276,10 +276,13 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             public List<LineaFactura>convert(String lineasJsonStr) {            
             	List<LineaFactura> lineas = new JSONDeserializer<ArrayList<LineaFactura>>()
        				 .use("values", LineaFactura.class).deserialize(lineasJsonStr, ArrayList.class);
-            	Iva aux;
+            	Iva auxIva;
+            	Oficio auxOficio;
             	for (LineaFactura lineaFactura : lineas) {
-            		aux = ivaService.findIva( lineaFactura.getLinIvaId().getIvaId() );
-            		lineaFactura.setLinIvaId(aux);
+            		auxIva = ivaService.findIva( lineaFactura.getLinIvaId().getIvaId() );
+            		auxOficio = oficioService.findOficio(lineaFactura.getLinOficioId().getOfiId() );
+            		lineaFactura.setLinIvaId(auxIva);
+            		lineaFactura.setLinOficioId(auxOficio);
 				}
             	return lineas;
             }

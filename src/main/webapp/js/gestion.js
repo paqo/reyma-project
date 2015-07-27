@@ -348,12 +348,13 @@ function initFecFacDatePicker() {
 	});
 }
 
-function obtenerParametroLineaFactura(contenedor, idFactura) {
+/* function obtenerParametroLineaFactura(contenedor, idFactura) {
 	var filas = contenedor.find("tbody tr");
 	var res = [];
 	// TODO: pasar a POO, para hacer news, con sus
 	// setters, validaciones y un metodo que haga 
 	// el JSON directamente
+	
 	var linea = {};	
 	var auxIva = {"ivaId" : null};
 	var auxOficio = {"oficioId" : null};
@@ -372,6 +373,33 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 		auxIva = {"ivaId" : null};
 		auxOficio = {"oficioId" : null};
 	});
+	console.log("json: " + JSON.stringify(res));
+	return JSON.stringify(res);
+} */
+
+function obtenerParametroLineaFactura(contenedor, idFactura) {
+	var res = [];
+	var filas = contenedor.find("tbody > tr");
+	
+	// TODO: pasar a POO, para hacer news, con sus
+	// setters, validaciones y un metodo que haga 
+	// el JSON directamente
+	
+	var auxIva = {"ivaId" : null};
+	var auxOficio = {"oficioId" : null};
+	filas.each(function( index ) {
+		celdas = $( this ).children();
+		auxIva.ivaId = parseInt( $(celdas[3].firstChild).val() );
+		auxOficio.oficioId = parseInt( $(celdas[0].firstChild).val() );
+		res.push({			 
+			linOficioId: auxOficio,
+			linConcepto: celdas[1].textContent, 
+			linImporte: parseFloat(celdas[2].textContent),
+			linIvaId: auxIva, 			
+			linId: parseInt( $(celdas[4]).children("input[type='hidden']").eq(0).val() )
+		});
+	});	
+	
 	console.log("json: " + JSON.stringify(res));
 	return JSON.stringify(res);
 }
