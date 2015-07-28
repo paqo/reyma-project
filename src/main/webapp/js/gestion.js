@@ -492,9 +492,10 @@ function cargarCombo(array, objValor) {
 	return opciones;
 }
 
-function initFormularioFactura(ffac, nfac) {
+function initFormularioFactura(ffac, nfac, afac) {
 	$("#facFecha").val(ffac);
 	$("#facNumero").val(nfac);	
+	$("#facAfectado").val(afac);
 	initFecFacDatePicker();
 	initBotonEliminarLinea();
 }
@@ -524,6 +525,7 @@ function obtenerDatosFacturaJSON( idDivFormulario ) {
 	var divForm = $("#" + idDivFormulario); 
 	// campos generales
 	var idFactura = parseInt( divForm.find("#idFacturaAbierta").val() );
+	var idAfectado = parseInt( divForm.find("#facAfectado").val() );
 	var numFactura = divForm.find("#facNumero").val();
 	var fechaFactura = divForm.find("#facFecha").val();
 	// lineas de factura	
@@ -543,6 +545,7 @@ function obtenerDatosFacturaJSON( idDivFormulario ) {
 	return JSON.stringify({ 'idFactura': parseInt(idFactura), 
 							'numFactura': numFactura, 
 							'fechaFactura': fechaFactura,
+							'idAfectado': idAfectado,
 							'lineasFactura' : lineasFactura });
 }
 

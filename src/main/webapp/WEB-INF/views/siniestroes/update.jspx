@@ -906,6 +906,7 @@
 			        	if ( nueva ){ // crear nueva
 			        		peticion = $.post( action, { facFecha: $( "#facFecha" ).val(), 
 								  facNumFactura : $( "#facNumero" ).val(),
+								  facAdsId : $("#facAfectado").val(),
 								  facSinId: $( "input[name='sinId']" ).val(),
 								  linFac: obtenerParametroLineaFactura($(this).find("table"),null) 
 								});
@@ -1025,12 +1026,13 @@
 				      		$.each(data, function(index, linea) {
 				      			cargarLineaFactura(linea.id, linea.oficio, linea.concepto, linea.coste, linea.iva);
 						    });	
-				    		// fecha y numero de factura
+				    		// fecha, numero de factura y afectado
 				    		// en el formulario modal
 				    		var ffac = $( "#contenedor-facturas" ).find("#ffac-" + idFactura).text();
 				    		var nfac = $( "#contenedor-facturas" ).find("#nfac-" + idFactura).text();
+				    		var afac = $( "#contenedor-facturas" ).find("#afectadoFactura-" + idFactura).val();
 				    		// inicializar formulario factura (fecha, numero y lineas)
-				    		initFormularioFactura(ffac, nfac);				    		
+				    		initFormularioFactura(ffac, nfac, afac);				    		
 				    		// abrir formulario modal de factura con lineas cargadas
 					    	dialogFactura.dialog( "open" );
 				    		// asignar la id de factura que se esta editando

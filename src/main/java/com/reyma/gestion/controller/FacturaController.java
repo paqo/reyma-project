@@ -1,9 +1,7 @@
 package com.reyma.gestion.controller;
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +43,7 @@ import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.lowagie.text.DocumentException;
@@ -142,30 +141,33 @@ public class FacturaController {
 		return serializer.exclude("class").serialize(mensajeError);
     }	
 	
-	@RequestMapping(value = "/generar/{objectId}", method = RequestMethod.GET)
+	/*
+	 * --- version que devuelve un 'forward'
+	 * @RequestMapping(value = "/generar/{objectId}", method = RequestMethod.GET)
 	public String generateReport(
+	        @PathVariable("objectId") Integer objectId, 
+	        HttpServletRequest request, 
+	        HttpServletResponse response) {*/
+	@RequestMapping(value = "/generar/{objectId}", method = RequestMethod.GET)
+	public void generateReport(
 	        @PathVariable("objectId") Integer objectId, 
 	        HttpServletRequest request, 
 	        HttpServletResponse response) {
 		
 		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
+		Factura factura = null;
 	    try {
-	    	
-	    	
 	    	/*Font font = FontFactory.getFont("/fonts/Sansation_Regular.ttf",
 	    		    BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 0.8f, Font.NORMAL, new Color(0));
 	    	
 	    	BaseFont baseFont = font.getBaseFont();*/
 	    	
 	    	FacturaPdfDTO pdf = new FacturaPdfDTO();
-	    	
-	    	Factura factura = facturaService.findFactura( objectId );
-	    	Siniestro siniestro = 
-	    			factura.getFacSinId();	    	
-	    	AfectadoDomicilioSiniestro ads = adsService.findAfectadoParaFactura(siniestro.getSinId());
+	    	factura = facturaService.findFactura( objectId );
+	    	Siniestro siniestro = factura.getFacSinId();
 	    		    	
 	    	// 1.- datos factura:
-	    	setDatosFactura(pdf, factura, siniestro, ads);
+	    	setDatosFactura(pdf, factura, siniestro);
 	    	
 	    	// 2.- lineas factura	    	
 	    	setLineasFactura(pdf, factura);
@@ -184,20 +186,74 @@ public class FacturaController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	    
+	    
 	    String facturaHtml = customResponse.getOutput();
 	    
-	    System.out.println(facturaHtml);
+	    //System.out.println(facturaHtml);
 	    
-	    generarPDF(facturaHtml);
+	    // generarPDF(facturaHtml);	    
 	    
-	    //System.out.println(String.format("La salida es %s", facturaHtml));
+	    /*try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	    
+			Document doc = builder.parse( new ByteArrayInputStream(facturaHtml.getBytes("UTF-8")) );
+			ITextRenderer renderer = new ITextRenderer();
+			renderer.setDocument(doc, null);
 
-	    // TODO: mostrar el pdf es así?
-	    // response.setContentType("application/pdf");
-	    // response.getOutputStream().write(...);
+			response.setHeader("Content-Disposition", "attachment; filename=\"factura_" + factura.getFacNumFactura() + ".pdf\"");
+			OutputStream os = response.getOutputStream();
+			renderer.layout();
+			renderer.createPDF(os);
+			
+			os.flush();
+			os.close();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	    
-	    return "busquedas/inicio";
-
+	    try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			StringReader contentReader = new StringReader(facturaHtml);
+			InputSource source = new InputSource(contentReader);
+			Document xhtmlContent = builder.parse(source);
+			
+			ITextRenderer renderer = new ITextRenderer();
+			renderer.setDocument(xhtmlContent,"");
+			renderer.layout();
+			response.setContentType("application/pdf");
+			response.setHeader("Content-Disposition", "attachment; filename=\"factura_" + factura.getFacNumFactura() + ".pdf\"");			
+			OutputStream browserStream = response.getOutputStream();
+			renderer.createPDF(browserStream);
+			browserStream.flush();
+			browserStream.close();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    return;
+	    
 	}
 
 	private void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {
@@ -220,7 +276,8 @@ public class FacturaController {
 	}
 
 	private void setDatosFactura(FacturaPdfDTO pdf, Factura factura,
-			Siniestro siniestro, AfectadoDomicilioSiniestro ads) {
+			Siniestro siniestro) {
+		AfectadoDomicilioSiniestro ads = factura.getFacAdsId();
 		pdf.setNumFactura(factura.getFacNumFactura());
 		pdf.setFechaEncargo( Fechas.formatearFechaDDMMYYYY(
 								siniestro.getSinFechaEncargo().getTime()) );
@@ -251,9 +308,15 @@ public class FacturaController {
 				mensajes.getMessage("cp", null, Locale.getDefault()) );
 		pdf.setNifR(
 				mensajes.getMessage("cif", null, Locale.getDefault()) );
+		pdf.setUrlR(
+				mensajes.getMessage("url", null, Locale.getDefault()) );
+		pdf.setEmailR(
+				mensajes.getMessage("email", null, Locale.getDefault()) );
+		pdf.setNombreCortoR(
+				mensajes.getMessage("nombreCorto", null, Locale.getDefault()) );
 	}
 	
-	private void generarPDF(String htmlStr) {		
+	/* private void generarPDF(String htmlStr) {		
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			//Document doc = builder.parse(new StringBufferInputStream(htmlStr));
@@ -263,10 +326,10 @@ public class FacturaController {
 			ITextRenderer renderer = new ITextRenderer();
 			renderer.setDocument(doc, null);
 
-			String outputFile = "/tmp/test.pdf";
+			String outputFile = "C:/temp/test.pdf";
 			OutputStream os = new FileOutputStream(outputFile);
 			renderer.layout();
-			renderer.createPDF(os);
+			renderer.createPDF(os);			
 			os.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -284,7 +347,7 @@ public class FacturaController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	@ResponseBody
     @RequestMapping(value = "/actualizar", method = RequestMethod.POST)
@@ -305,9 +368,12 @@ public class FacturaController {
 			return serializer.exclude("class").serialize(mensajeError);
 		} else {
 			try {
+				// campos generales de fecha, num fac y afectado
 				cal.setTime( sdf.parse( facturaDto.getFechaFactura() ) );
 				fac.setFacFecha(cal);
 				fac.setFacNumFactura(facturaDto.getNumFactura());
+				AfectadoDomicilioSiniestro afectado = adsService.findAfectadoDomicilioSiniestro(facturaDto.getIdAfectado());
+				fac.setFacAdsId(afectado);
 				// actualizar lineas				
 				Set<LineaFactura> lineasEditadas = new HashSet<LineaFactura>();
 				LineaFactura lin;

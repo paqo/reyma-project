@@ -226,7 +226,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Factura, com.reyma.gestion.ui.listados.FacturaListadoDTO>() {
             public FacturaListadoDTO convert(Factura factura) {
             	String fecha = Fechas.formatearFechaDDMMYYYYHHMM( factura.getFacFecha().getTime() );            	
-                return new FacturaListadoDTO(factura.getFacId(), factura.getFacNumFactura(), fecha);
+                return new FacturaListadoDTO(factura.getFacId(), factura.getFacAdsId().getAdsId(), factura.getFacNumFactura(), fecha);
             }
         };
     }

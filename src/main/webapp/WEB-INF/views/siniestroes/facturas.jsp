@@ -18,6 +18,7 @@
 								<label style="width: 30em !important; padding-top: 0.5em; background-color: #F7DBB6;" 
 										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span> (<span id="nfac-${item.id}">${item.numFactura}</span>)
 								</label>
+								<input type="hidden" value="${item.idAfectado}" id="afectadoFactura-${item.id}" />
 							</div>											
 						</c:forEach>
 						<div style="margin-top: 1em;">						
@@ -50,7 +51,7 @@
 						</div>
 						<div style="float: left; padding-top: 2px;">
 							Asegurado/Perjudicado:&nbsp;
-							<form:select path="afectadodomiciliosiniestroes" id="cbAfectados">
+							<form:select path="afectadodomiciliosiniestroes" id="facAfectado">
 					        	<form:options itemLabel="adsPerId.perNombre" itemValue="adsId" items="${afectadodomiciliosiniestroes}" />
 					        </form:select>
 						</div>

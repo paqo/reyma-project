@@ -28,6 +28,9 @@ public class FacturaPdfDTO implements Serializable {
 	private String localidadR;
 	private String cpR;
 	private String nifR;
+	private String urlR;
+	private String nombreCortoR;
+	private String emailR;
 
 	public FacturaPdfDTO() {
 		super();
@@ -143,6 +146,30 @@ public class FacturaPdfDTO implements Serializable {
 
 	public void setNifR(String nifR) {
 		this.nifR = nifR;
-	}		
+	}
+
+	public String getUrlR() {
+		return urlR;
+	}
+
+	public void setUrlR(String urlR) {
+		this.urlR = urlR;
+	}
+
+	public String getNombreCortoR() {
+		return nombreCortoR;
+	}
+
+	public void setNombreCortoR(String nombreCortoR) {
+		this.nombreCortoR = nombreCortoR;
+	}
+
+	public String getEmailR() {
+		return emailR;
+	}
+
+	public void setEmailR(String emailR) {
+		this.emailR = emailR;
+	}	
 	
 }

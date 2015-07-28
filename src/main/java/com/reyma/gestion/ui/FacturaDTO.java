@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class FacturaDTO implements Serializable {
 	
 	private Integer idFactura;
+	private Integer idAfectado;
 	private String numFactura;
 	private String fechaFactura;
 	private LineaFacturaDTO[] lineasFactura;
@@ -45,6 +46,14 @@ public class FacturaDTO implements Serializable {
 
 	public void setLineasFactura(LineaFacturaDTO[] lineasFactura) {
 		this.lineasFactura = lineasFactura;
+	}
+
+	public Integer getIdAfectado() {
+		return idAfectado;
+	}
+
+	public void setIdAfectado(Integer idAfectado) {
+		this.idAfectado = idAfectado;
 	}
 	
 }
