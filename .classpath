@@ -21,13 +21,13 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<!-- 
+	 
 		<classpathentry kind="var" path="M2_REPO/com/aet/valnif/2.01/valnif-2.01.jar">
 			<attributes>
 				<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 			</attributes>
 		</classpathentry>
-	 -->
+	
 	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-pool/commons-pool/1.5.6/commons-pool-1.5.6.jar" sourcepath="M2_REPO/commons-pool/commons-pool/1.5.6/commons-pool-1.5.6-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" sourcepath="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"/>

@@ -7,6 +7,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+		<script type="text/javascript">
+				function imprimir(idFac) {
+					window.location = 'http://test-reymasur.rhcloud.com/reymasur/facturas/generar/' + idFac;
+				}
+		</script>
+
     	<div><!-- contenedor general -->
     	
 	  		<div id="contenedor-facturas">	  	
@@ -18,6 +24,7 @@
 								<label style="width: 30em !important; padding-top: 0.5em; background-color: #F7DBB6;" 
 										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span> (<span id="nfac-${item.id}">${item.numFactura}</span>)
 								</label>
+								<a href="#" onclick="imprimir('${item.id}');">Imprimir factura en pdf (temporal)</a>
 								<input type="hidden" value="${item.idAfectado}" id="afectadoFactura-${item.id}" />
 							</div>											
 						</c:forEach>
@@ -51,7 +58,7 @@
 						</div>
 						<div style="float: left; padding-top: 2px;">
 							Asegurado/Perjudicado:&nbsp;
-							<form:select path="afectadodomiciliosiniestroes" id="facAfectado">
+							<form:select cssStyle="width: 170px;" path="afectadodomiciliosiniestroes" id="facAfectado">
 					        	<form:options itemLabel="adsPerId.perNombre" itemValue="adsId" items="${afectadodomiciliosiniestroes}" />
 					        </form:select>
 						</div>

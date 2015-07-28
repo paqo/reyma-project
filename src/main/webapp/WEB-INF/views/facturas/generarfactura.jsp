@@ -107,6 +107,10 @@
 			font-size: 13px;
 		}
 		
+		.info-fecha-hoy {
+			padding-top: 100px;
+		}
+		
 		.pie {
 			float: left; 
 			width: 100%; 
@@ -123,13 +127,14 @@
 	
 	<title>Factura ${factura.numFactura}</title>
 </head>
-<body>
+<body style="margin-top: 2px;">
 
 <%-- color de fondo cabecera: #69A322 --%>
 
 <div style="width: 100%; float: left; height: 5em; background-color: #69A322; margin-bottom: 15px;">
 	<div class="div-img-logo">
-		<img alt="LOGO" src="http://localhost:8080/reymasur/resources/images/logo.png" />
+		<!--<img alt="LOGO" src="http://localhost:8080/reymasur/resources/images/logo.png" /> -->
+		<img alt="LOGO" src="http://test-reymasur.rhcloud.com/reymasur/resources/images/logo.png" /> 
 	</div>	
 	<div class="div-titulo-logo">
 		<span class="titulo-logo">REYMASUR</span>
@@ -157,7 +162,7 @@
 		
 	<div class="espaciador10px">&#160;</div>
 	
-	<div style="width: 100%; float: left; min-height: 670px;"> <%-- lineas de factura --%>
+	<div style="width: 100%; float: left; min-height: 540px;"> <%-- lineas de factura --%>
 		<div style="width: 1%; float: left;">&#160;</div>
 		<div style="width: 98%; float: left;">
 			<table class="tabla-lin-fac">
@@ -210,10 +215,9 @@
 	
 	<jsp:useBean class="java.util.Date" id="hoy" scope="page" />
 	
-	<div style="width: 100%; float: left; height:100px; background-color: #EDEFEA;">
+	<div style="width: 100%; float: left; height:150px; background-color: #EDEFEA;">
 		<div style="width: 40%; float: left; padding: 15px;">
 			<div class="info-fecha-hoy">FECHA:&#160;<fmt:formatDate pattern="dd/MM/yyyy" value="${hoy}" /></div>
-			<div class="info-nombre" style="margin-top: 5px;">&#191;Alguna informaci&#243;n m&#225;s aqu&#237;?</div>
 		</div>
 		<div style="width: 40%; float: right; padding: 15px;">
 			<div class="info-nombre">${factura.nombreR}</div>

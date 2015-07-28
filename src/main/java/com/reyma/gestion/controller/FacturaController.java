@@ -281,8 +281,14 @@ public class FacturaController {
 		pdf.setNumFactura(factura.getFacNumFactura());
 		pdf.setFechaEncargo( Fechas.formatearFechaDDMMYYYY(
 								siniestro.getSinFechaEncargo().getTime()) );
-		pdf.setFechaFin( Fechas.formatearFechaDDMMYYYY(
-								siniestro.getSinFechaFin().getTime()) );
+		if ( siniestro.getSinFechaFin() != null ){
+			pdf.setFechaFin( Fechas.formatearFechaDDMMYYYY(
+					siniestro.getSinFechaFin().getTime()) );
+		} else { 
+			// se deja a vacio si no hay fecha de fin
+			pdf.setFechaFin( "" );
+		}
+		
 		pdf.setDomicilio( ads.getAdsDomId().getDomDireccion() + ", " 
 						+ ads.getAdsDomId().getDomMunId().getMunDescripcion() + ", (" 
 						+ ads.getAdsDomId().getDomProvId().getPrvDescripcion() + ")"
