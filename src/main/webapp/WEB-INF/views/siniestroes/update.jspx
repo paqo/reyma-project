@@ -871,20 +871,22 @@
 		    });
 			
 			// ### FACTURAS:
-			// boton generar factura
+			// boton crear nueva factura 
 			$( "#generarFactura").button({		    	
 	 	        icons: {	 	        	
-	 	            primary: "ui-icon-bookmark"
+	 	            primary: "ui-icon-clipboard"
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	// limpiar primero posibles linea de facturas
-		    	// que se hayan podido cargar previamente
-		    	
-		    	var ivaTest = JSON.parse($("#valoresCboIva").val());
-		    	var oficiosTest = JSON.parse($("#valoresCboOficios").val());
-		    	
-				limpiarLineasFactura(oficiosTest, ivaTest);
+		    	// deseleccionar si hubiera alguna factura seleccionada
+		    	// para no sobrescribir
+		    	$("#contenedor-facturas").
+		    			find("input[type='radio']").
+		    			prop('checked', false);
+		    	// cargar linea inicial
+		    	var oficiosJson = JSON.parse($("#valoresCboOficios").val());
+		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
+		    	cargarLineaFacturaInicial(oficiosJson, ivasJson);
 		    	// datepicker para fecha de factura		    	
 		    	initFecFacDatePicker();
 		    	// boton de eliminar inicial
@@ -892,6 +894,34 @@
 		    	// abrir ventana modal
 		    	dialogFactura.dialog( "open" );		    	
 		    });
+			
+			// boton para imprimir en pdf
+			$( "#imprimirFactura").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-print"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();	
+		    	var checked = $("input[name='idFactura']:checked");
+		    	if ( checked && checked.length > 0 ){
+		    		document.location.href = '/reymasur/facturas/generar/' + checked.val();
+		    	}		    	
+		    });
+			
+			
+			// boton para imprirmir como presupuesto
+			$( "#imprimirPresupuesto").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-calculator"
+	 	        }
+			}).click(function(event) {
+				event.preventDefault();	
+		    	var checked = $("input[name='idFactura']:checked");
+		    	if ( checked && checked.length > 0 ){
+		    		document.location.href = '/reymasur/facturas/generar/' + checked.val() + "?pres";
+		    	}
+		    });
+			
 			
 			dialogFactura = $( "#formulario-facturas" ).dialog({
 			      autoOpen: false,

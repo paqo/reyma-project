@@ -176,6 +176,7 @@ public class FacturaController {
 	    	setDatosReyma(pdf);	   
 	    	
 	    	request.setAttribute("factura", pdf);
+	    	request.setAttribute("servidor", request.getServerName() + ":" + request.getServerPort() );
 
 			request.getRequestDispatcher("/WEB-INF/views/facturas/generarfactura.jsp").forward(request, customResponse);
 			
@@ -250,10 +251,16 @@ public class FacturaController {
 		} catch (DocumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	    
-	    return;
-	    
+		}	    
+	    return;	    
+	}
+	
+	@RequestMapping(value = "/generar/{objectId}", params = "pres", method = RequestMethod.GET)
+	public void generatePresupuesto(
+	        @PathVariable("objectId") Integer objectId, 
+	        HttpServletRequest request, 
+	        HttpServletResponse response) {
+		return;
 	}
 
 	private void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {

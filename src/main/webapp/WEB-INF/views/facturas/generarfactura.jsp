@@ -133,8 +133,8 @@
 
 <div style="width: 100%; float: left; height: 5em; background-color: #69A322; margin-bottom: 15px;">
 	<div class="div-img-logo">
-		<!--<img alt="LOGO" src="http://localhost:8080/reymasur/resources/images/logo.png" /> -->
-		<img alt="LOGO" src="http://test-reymasur.rhcloud.com/reymasur/resources/images/logo.png" /> 
+		<img alt="LOGO" src="${servidor}/reymasur/resources/images/logo.png" /> 
+		<!-- <img alt="LOGO" src="http://test-reymasur.rhcloud.com/reymasur/resources/images/logo.png" /> --> 
 	</div>	
 	<div class="div-titulo-logo">
 		<span class="titulo-logo">REYMASUR</span>

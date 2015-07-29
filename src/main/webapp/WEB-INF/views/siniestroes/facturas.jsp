@@ -7,12 +7,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-		<script type="text/javascript">
-				function imprimir(idFac) {
-					window.location = 'http://test-reymasur.rhcloud.com/reymasur/facturas/generar/' + idFac;
-				}
-		</script>
-
     	<div><!-- contenedor general -->
     	
 	  		<div id="contenedor-facturas">	  	
@@ -23,14 +17,15 @@
 								<input type="radio" id="facId_${item.id}" name="idFactura" value="${item.id}" />
 								<label style="width: 30em !important; padding-top: 0.5em; background-color: #F7DBB6;" 
 										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span> (<span id="nfac-${item.id}">${item.numFactura}</span>)
-								</label>
-								<a href="#" onclick="imprimir('${item.id}');">Imprimir factura en pdf (temporal)</a>
+								</label>								
 								<input type="hidden" value="${item.idAfectado}" id="afectadoFactura-${item.id}" />
-							</div>											
+							</div>
 						</c:forEach>
 						<div style="margin-top: 1em;">						
 							<button id="verFactura">Ver factura</button>
 							<button id="eliminarFactura" style="margin-left: 3em;">Eliminar factura</button>
+							<button id="imprimirFactura" style="margin-left: 3em;">Imprmir en PDF</button>
+							<button id="imprimirPresupuesto" style="margin-left: 3em;">Generar Como Presupuesto</button>
 						</div>
 	  				</c:when>
 	  				<c:otherwise>
@@ -38,8 +33,8 @@
 	  				</c:otherwise>
 	  			</c:choose>
 			</div>
-			<div style="margin-top: 1.8em; text-align: right;">
-				<button id="generarFactura">Generar factura</button>
+			<div style="margin-top: 2em; text-align: right;">
+				<button id="generarFactura">Crear factura</button>
 			</div>			
 									
 			<div id="formulario-facturas" title="Dar de alta nueva factura">		

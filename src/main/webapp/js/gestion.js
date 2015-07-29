@@ -404,15 +404,13 @@ function obtenerParametroLineaFactura(contenedor, idFactura) {
 	return JSON.stringify(res);
 }
 
-function limpiarLineasFactura(oficios, iva) {	
-	//TODO: el id del tipo de IVA debe tomarse de BD, en facturas.jsp también
-	//TODO: igual para oficios
-
-	// limpiar fecha y numero
-	$("#facFecha, #facNumero").val('');
+function cargarLineaFacturaInicial(oficios, iva) {	
+	
 	// limpiar posibles lineas de anteriores 
 	// facturas
 	$("#tablaFactura").find("tbody").empty();
+	// limpiar fecha y numero
+	$("#facFecha, #facNumero").val('');
 	
 	var _oficios = cargarOpcionesCombo(oficios);
 	var _iva = cargarOpcionesCombo(iva);

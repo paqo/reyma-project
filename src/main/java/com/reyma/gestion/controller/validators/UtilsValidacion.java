@@ -1,5 +1,6 @@
 package com.reyma.gestion.controller.validators;
 
+/*
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,13 +29,13 @@ public class UtilsValidacion {
 		mensajes.setBasename("mensajes-validacion");
 	}
 	
-	/*
+	*
 	 * filtrar errores que son exclusivamente de la validación propia
 	 * definida para los formularios, excluyendo bindings errors y
 	 * de JPA (actualmente solo NotNull)
 	 * @param errores lista con todos los errores
 	 * @return lista con los errores de validación propiamente dichos
-	 */
+	 *
 	public static List<FieldError> getErroresValidacion( List<FieldError> errores) {
 		FieldError fieldError;
 		List<FieldError> res = new ArrayList<FieldError>();
@@ -144,8 +145,8 @@ public class UtilsValidacion {
 
 }
 
+*/
 
-/*
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -172,13 +173,13 @@ public class UtilsValidacion {
 		mensajes.setBasename("mensajes-validacion");
 	}
 	
-	 *
+	 /*
 	 * filtrar errores que son exclusivamente de la validación propia
 	 * definida para los formularios, excluyendo bindings errors y
 	 * de JPA (actualmente solo NotNull)
 	 * @param errores lista con todos los errores
 	 * @return lista con los errores de validación propiamente dichos
-	 *
+	 */
 	public static List<FieldError> getErroresValidacion( List<FieldError> errores) {
 		FieldError fieldError;
 		List<FieldError> res = new ArrayList<FieldError>();
@@ -274,4 +275,3 @@ public class UtilsValidacion {
 		return null;
 	}
 }
-*/
