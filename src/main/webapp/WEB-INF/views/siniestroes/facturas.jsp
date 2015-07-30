@@ -16,7 +16,10 @@
 							<div style="width: 100%;">
 								<input type="radio" id="facId_${item.id}" name="idFactura" value="${item.id}" />
 								<label style="width: 30em !important; padding-top: 0.5em; background-color: #F7DBB6;" 
-										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span> (<span id="nfac-${item.id}">${item.numFactura}</span>)
+										for="facId_${item.id}">Factura del d&iacute;a <span id="ffac-${item.id}">${item.fechaFactura}</span>
+											<c:if test="${not empty item.numFactura}">
+												(<span id="nfac-${item.id}">${item.numFactura}</span>)
+											</c:if>											
 								</label>								
 								<input type="hidden" value="${item.idAfectado}" id="afectadoFactura-${item.id}" />
 							</div>

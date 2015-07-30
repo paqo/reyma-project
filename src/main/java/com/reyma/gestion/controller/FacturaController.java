@@ -1,7 +1,4 @@
 package com.reyma.gestion.controller;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,25 +7,19 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,29 +32,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
-import org.w3c.dom.Document;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import com.lowagie.text.DocumentException;
 import com.reyma.gestion.controller.validators.UtilsValidacion;
 import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Factura;
 import com.reyma.gestion.dao.LineaFactura;
-import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.FacturaService;
 import com.reyma.gestion.service.LineaFacturaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.ui.FacturaDTO;
-import com.reyma.gestion.ui.FacturaPdfDTO;
 import com.reyma.gestion.ui.LineaFacturaDTO;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
-import com.reyma.gestion.util.CharArrayWriterResponse;
-import com.reyma.gestion.util.Fechas;
+import com.reyma.gestion.util.UtilsFactura;
 
 import flexjson.JSONSerializer;
 
@@ -154,213 +137,32 @@ public class FacturaController {
 	        HttpServletRequest request, 
 	        HttpServletResponse response) {
 		
-		CharArrayWriterResponse customResponse  = new CharArrayWriterResponse(response);
-		Factura factura = null;
-	    try {
-	    	/*Font font = FontFactory.getFont("/fonts/Sansation_Regular.ttf",
-	    		    BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 0.8f, Font.NORMAL, new Color(0));
-	    	
-	    	BaseFont baseFont = font.getBaseFont();*/
-	    	
-	    	FacturaPdfDTO pdf = new FacturaPdfDTO();
-	    	factura = facturaService.findFactura( objectId );
-	    	Siniestro siniestro = factura.getFacSinId();
-	    		    	
-	    	// 1.- datos factura:
-	    	setDatosFactura(pdf, factura, siniestro);
-	    	
-	    	// 2.- lineas factura	    	
-	    	setLineasFactura(pdf, factura);
-	    	
-	    	// 3.- datos reyma
-	    	setDatosReyma(pdf);	   
-	    	
-	    	request.setAttribute("factura", pdf);
-	    	request.setAttribute("servidor", request.getServerName() + ":" + request.getServerPort() );
-
-			request.getRequestDispatcher("/WEB-INF/views/facturas/generarfactura.jsp").forward(request, customResponse);
-			
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	    
+		Factura factura = facturaService.findFactura( objectId );
+		
+	    String facturaHtml = UtilsFactura.generarHTMLParaFactura(request, response, factura);	
+	    String nombre = StringUtils.isNotEmpty(factura.getFacNumFactura())? 
+	    											"factura_" + factura.getFacNumFactura() : "factura";
+	    UtilsFactura.generarPDFDesdeHTML(response, factura, facturaHtml, nombre);	 
 	    
-	    String facturaHtml = customResponse.getOutput();
-	    
-	    //System.out.println(facturaHtml);
-	    
-	    // generarPDF(facturaHtml);	    
-	    
-	    /*try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();	    
-			Document doc = builder.parse( new ByteArrayInputStream(facturaHtml.getBytes("UTF-8")) );
-			ITextRenderer renderer = new ITextRenderer();
-			renderer.setDocument(doc, null);
-
-			response.setHeader("Content-Disposition", "attachment; filename=\"factura_" + factura.getFacNumFactura() + ".pdf\"");
-			OutputStream os = response.getOutputStream();
-			renderer.layout();
-			renderer.createPDF(os);
-			
-			os.flush();
-			os.close();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-	    
-	    try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			StringReader contentReader = new StringReader(facturaHtml);
-			InputSource source = new InputSource(contentReader);
-			Document xhtmlContent = builder.parse(source);
-			
-			ITextRenderer renderer = new ITextRenderer();
-			renderer.setDocument(xhtmlContent,"");
-			renderer.layout();
-			response.setContentType("application/pdf");
-			response.setHeader("Content-Disposition", "attachment; filename=\"factura_" + factura.getFacNumFactura() + ".pdf\"");			
-			OutputStream browserStream = response.getOutputStream();
-			renderer.createPDF(browserStream);
-			browserStream.flush();
-			browserStream.close();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	    
 	    return;	    
-	}
+	}	
 	
 	@RequestMapping(value = "/generar/{objectId}", params = "pres", method = RequestMethod.GET)
 	public void generatePresupuesto(
 	        @PathVariable("objectId") Integer objectId, 
 	        HttpServletRequest request, 
 	        HttpServletResponse response) {
+		
+		Factura factura = facturaService.findFactura( objectId );
+		String nombre = StringUtils.isNotEmpty( factura.getFacSinId().getSinNumero() )? 
+					"presupuesto_" + factura.getFacSinId().getSinNumero() : 
+					"presupuesto"; 
+		
+	    String facturaHtml = UtilsFactura.generarHTMLParaPresupuesto(request, response, factura);    	    
+	    UtilsFactura.generarPDFDesdeHTML(response, factura, facturaHtml, nombre);
+		
 		return;
 	}
-
-	private void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {
-		Set<LineaFactura> _lineasFac = factura.getLineaFacturas();
-		//TODO: orden?
-		Map<String, Set<LineaFactura>> mapa = new HashMap<String, Set<LineaFactura>>();
-		Iterator<LineaFactura> it = _lineasFac.iterator();
-		LineaFactura lineaFactura;
-		Set<LineaFactura> listaLineasMismoOfi; 
-		while ( it.hasNext() ) {
-			lineaFactura = it.next();
-			listaLineasMismoOfi = mapa.get(lineaFactura.getLinOficioId().getOfiDescripcion());
-			if ( listaLineasMismoOfi == null ){
-				listaLineasMismoOfi = new HashSet<LineaFactura>();
-				mapa.put(lineaFactura.getLinOficioId().getOfiDescripcion(), listaLineasMismoOfi);					
-			}
-			listaLineasMismoOfi.add(lineaFactura);
-		}	    	
-		pdf.setLineasFactura(mapa);
-	}
-
-	private void setDatosFactura(FacturaPdfDTO pdf, Factura factura,
-			Siniestro siniestro) {
-		AfectadoDomicilioSiniestro ads = factura.getFacAdsId();
-		pdf.setNumFactura(factura.getFacNumFactura());
-		pdf.setFechaEncargo( Fechas.formatearFechaDDMMYYYY(
-								siniestro.getSinFechaEncargo().getTime()) );
-		if ( siniestro.getSinFechaFin() != null ){
-			pdf.setFechaFin( Fechas.formatearFechaDDMMYYYY(
-					siniestro.getSinFechaFin().getTime()) );
-		} else { 
-			// se deja a vacio si no hay fecha de fin
-			pdf.setFechaFin( "" );
-		}
-		
-		pdf.setDomicilio( ads.getAdsDomId().getDomDireccion() + ", " 
-						+ ads.getAdsDomId().getDomMunId().getMunDescripcion() + ", (" 
-						+ ads.getAdsDomId().getDomProvId().getPrvDescripcion() + ")"
-		);
-		pdf.setCp( ads.getAdsDomId().getDomCp().toString() );
-		pdf.setNif( ads.getAdsPerId().getPerNif() );
-		pdf.setNombre( ads.getAdsPerId().getPerNombre() );
-		pdf.setNumEncargo( siniestro.getSinNumero() );
-		pdf.setNumFactura(factura.getFacNumFactura());
-	}
-
-	private void setDatosReyma(FacturaPdfDTO pdf) {
-		ResourceBundleMessageSource mensajes = new ResourceBundleMessageSource();
-		mensajes.setBasename("reymasur");
-		
-		pdf.setNombreR(
-				mensajes.getMessage("nombre", null, Locale.getDefault()) );
-		pdf.setDomicilioR(
-				mensajes.getMessage("direccion", null, Locale.getDefault()) );
-		pdf.setLocalidadR(					
-				mensajes.getMessage("localidad", null, Locale.getDefault()) );
-		pdf.setCpR(					
-				mensajes.getMessage("cp", null, Locale.getDefault()) );
-		pdf.setNifR(
-				mensajes.getMessage("cif", null, Locale.getDefault()) );
-		pdf.setUrlR(
-				mensajes.getMessage("url", null, Locale.getDefault()) );
-		pdf.setEmailR(
-				mensajes.getMessage("email", null, Locale.getDefault()) );
-		pdf.setNombreCortoR(
-				mensajes.getMessage("nombreCorto", null, Locale.getDefault()) );
-	}
-	
-	/* private void generarPDF(String htmlStr) {		
-		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			//Document doc = builder.parse(new StringBufferInputStream(htmlStr));
-			
-			Document doc = builder.parse( new ByteArrayInputStream(htmlStr.getBytes("UTF-8")) );
-
-			ITextRenderer renderer = new ITextRenderer();
-			renderer.setDocument(doc, null);
-
-			String outputFile = "C:/temp/test.pdf";
-			OutputStream os = new FileOutputStream(outputFile);
-			renderer.layout();
-			renderer.createPDF(os);			
-			os.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 	
 	@ResponseBody
     @RequestMapping(value = "/actualizar", method = RequestMethod.POST)

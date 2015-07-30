@@ -15,6 +15,7 @@ public class FacturaPdfDTO implements Serializable {
 	private String numFactura;
 	private String fechaEncargo;
 	private String fechaFin;
+	private String fechaFactura;
 	// datos perjudicado
 	private String nombre;
 	private String domicilio;
@@ -58,6 +59,14 @@ public class FacturaPdfDTO implements Serializable {
 
 	public void setFechaEncargo(String fechaEncargo) {
 		this.fechaEncargo = fechaEncargo;
+	}
+	
+	public String getFechaFactura() {
+		return fechaFactura;
+	}
+
+	public void setFechaFactura(String fechaFactura) {
+		this.fechaFactura = fechaFactura;
 	}
 
 	public String getNombre() {

@@ -145,12 +145,21 @@
 
 	<div style="width: 100%;"> <%-- cont datos personales --%>
 		<div style="float: left; width: 65%;">
-			<div class="tituloFactura">FACTURA</div>
-			<div class="espaciador">&#160;</div>			
-			<div class="datos-fac">Fecha factura: ${factura.fechaEncargo}</div>	
-			<div class="datos-fac">Fecha finalizaci&#243;n: ${factura.fechaFin}</div>
-			<div class="datos-fac">N&#250;m. encargo: ${factura.numEncargo}</div>
-			<div class="datos-fac">N&#250;m. factura: ${factura.numFactura}</div>		
+			<c:choose>
+				<c:when test="${presupuesto eq true}">
+					<div class="tituloFactura">PRESUPUESTO</div>
+					<div class="espaciador">&#160;</div>   
+					<div class="datos-fac">N&#250;m. encargo: ${factura.numEncargo}</div>
+					<div class="datos-fac">&#160;</div>
+				</c:when>
+				<c:otherwise>
+					<div class="tituloFactura">FACTURA</div>
+					<div class="espaciador">&#160;</div>   
+					<div class="datos-fac">N&#250;m. encargo: ${factura.numEncargo}</div>
+					<div class="datos-fac">N&#250;m. factura: ${factura.numFactura}</div>
+				</c:otherwise>
+			</c:choose>			
+					
 		</div>
 		<div style="float: right; width: 30%; font-size:11px; padding:3px; border: 1px solid black;">
 			${factura.nombre}<br/>
@@ -162,7 +171,7 @@
 		
 	<div class="espaciador10px">&#160;</div>
 	
-	<div style="width: 100%; float: left; min-height: 540px;"> <%-- lineas de factura --%>
+	<div style="width: 100%; float: left; min-height: 570px;"> <%-- lineas de factura --%>
 		<div style="width: 1%; float: left;">&#160;</div>
 		<div style="width: 98%; float: left;">
 			<table class="tabla-lin-fac">
@@ -191,7 +200,7 @@
 							<tr>
 								<td class="dato-lin-desc">${linea.linConcepto}</td>
 								<td class="dato-lin-prec">${linea.linImporte}</td>
-								<td class="dato-lin-iva">${linea.linIvaId.ivaValor}</td>
+								<td class="dato-lin-iva">${linea.linIvaId.ivaValor}%</td>
 								<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />
 								<td class="dato-lin-sub">${subototal}</td>
 								<c:set var="totalFactura" value="${totalFactura + subototal}" />
@@ -217,7 +226,7 @@
 	
 	<div style="width: 100%; float: left; height:150px; background-color: #EDEFEA;">
 		<div style="width: 40%; float: left; padding: 15px;">
-			<div class="info-fecha-hoy">FECHA:&#160;<fmt:formatDate pattern="dd/MM/yyyy" value="${hoy}" /></div>
+			<div class="info-fecha-hoy">FECHA:&#160;${factura.fechaFactura}</div>	
 		</div>
 		<div style="width: 40%; float: right; padding: 15px;">
 			<div class="info-nombre">${factura.nombreR}</div>

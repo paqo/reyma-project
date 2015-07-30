@@ -906,8 +906,7 @@
 		    	if ( checked && checked.length > 0 ){
 		    		document.location.href = '/reymasur/facturas/generar/' + checked.val();
 		    	}		    	
-		    });
-			
+		    });			
 			
 			// boton para imprirmir como presupuesto
 			$( "#imprimirPresupuesto").button({		    	
@@ -920,8 +919,7 @@
 		    	if ( checked && checked.length > 0 ){
 		    		document.location.href = '/reymasur/facturas/generar/' + checked.val() + "?pres";
 		    	}
-		    });
-			
+		    });			
 			
 			dialogFactura = $( "#formulario-facturas" ).dialog({
 			      autoOpen: false,
