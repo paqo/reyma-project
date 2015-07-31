@@ -366,6 +366,9 @@ public class SiniestroController {
         // trabajos
         uiModel.addAttribute("trabajos", trabajos);
         
+        // estado finalizado para poner fecha automaticamente
+        uiModel.addAttribute("idEstadoFinalizado", estadoService.findEstadoByDescripcion("Finalizado").getEstId() );
+        
         //############### facturas
         // combo de Ivas
         List<ElementoComboDTO> ivasCbo = new ArrayList<ElementoComboDTO>(); 

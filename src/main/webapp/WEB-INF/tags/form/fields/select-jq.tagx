@@ -48,19 +48,23 @@
             <c:out value="${fn:escapeXml(label)}" />
             :
           </label>
-          <form:select id="_${sec_field}_id" items="${items}" path="${sec_field}" disabled="${disabled}" itemValue="${fn:escapeXml(itemValue)}" onchange="javascript:alert('test');" />
+          <form:select id="_${sec_field}_id" items="${items}" path="${sec_field}" disabled="${disabled}" itemValue="${fn:escapeXml(itemValue)}" />
           <c:choose>
             <c:when test="${multiple == false}">
               <script type="text/javascript">
               	
               
               	Spring.addDecoration(new Spring.ElementDecoration({elementId : '_${sec_field}_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true,
-																					              		onChange: function(idProvincia){
-																					              			console.log("id provincia: ", idProvincia);
-																					              			$.post( "domicilios/ajax", { domProvId: idProvincia }, function( data ) {
-																					              				console.log( data.provincia );
-																					              				console.log( data.id );
-																					              			}, "json");
+																					              		onChange: function(id){
+																					              			console.log("=> " + id);
+																					              			if ( id == $("#id-est-fin").val() ){
+																					              				var fec = $.datepicker.formatDate( "dd/mm/yy", new Date() ) + " 00:00";
+																					              				$("#_sinFechaFin_id").val(fec);
+																					              				$("input[name='sinFechaFin']").val(fec);
+																					              			} else {
+																					              				$("#_sinFechaFin_id").val('');
+																					              				$("input[name='sinFechaFin']").val('');
+																					              			}																					              			
 																					                    }	
               	}}));
               </script>
