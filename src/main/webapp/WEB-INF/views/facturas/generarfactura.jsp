@@ -171,7 +171,7 @@
 		
 	<div class="espaciador10px">&#160;</div>
 	
-	<div style="width: 100%; float: left; min-height: 570px;"> <%-- lineas de factura --%>
+	<div style="width: 100%; float: left; min-height: 585px;"> <%-- lineas de factura --%>
 		<div style="width: 1%; float: left;">&#160;</div>
 		<div style="width: 98%; float: left;">
 			<table class="tabla-lin-fac">
