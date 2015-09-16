@@ -109,7 +109,7 @@ public class AfectadosController {
 						
 						Persona adsPersona = grabarPersona(persona);
 						if ( adsPersona != null ){ // grabar persona							
-							Domicilio adsDomicilio = grabarDomicilio(domicilio);
+							Domicilio adsDomicilio = grabarDomicilio(domicilio, request.getParameter("munDescripcion"));
 							if ( adsDomicilio != null ) { // grabar domicilio
 								if ( grabarAfectadoDomicilioSiniestro(ads, adsPersona, adsDomicilio, sin, ta) ){
 									MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
@@ -120,6 +120,7 @@ public class AfectadosController {
 								}
 							} else {
 								mensajeError = new MensajeErrorValidacionJson("No se han podido guardar los datos del domicilio");
+								mensajeError.setTitulo("Error guardando domicilio");
 							}
 						} else {
 							mensajeError = new MensajeErrorValidacionJson("No se han podido guardar los datos del afectado");
@@ -192,12 +193,13 @@ public class AfectadosController {
 		return null;
 	}
 	
-	private Domicilio grabarDomicilio(Domicilio domicilio) {
+	private Domicilio grabarDomicilio(Domicilio domicilio, String municipio) {
 		try {
-			if ( domicilio.getDomMunId().getMunId() == null ){
+			if ( domicilio.getDomMunId() == null || 
+					domicilio.getDomMunId().getMunId() == null ){
 				// municipio nuevo, crear primero
 				Municipio nuevoMunicipio = new Municipio();
-				nuevoMunicipio.setMunDescripcion(domicilio.getDomMunId().getMunDescripcion());
+				nuevoMunicipio.setMunDescripcion(municipio);
 				nuevoMunicipio.setMunPrvId( domicilio.getDomProvId() );
 				municipioService.saveMunicipio(nuevoMunicipio);
 			}

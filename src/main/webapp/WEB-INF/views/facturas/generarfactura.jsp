@@ -67,7 +67,7 @@
 			height: 14px; font-size: 12px;
 		}
 						
-		.cabecera1-txt, .cabecera2-txt, .cabecera3-txt, .cabecera4-txt {			
+		.cabecera1-txt, .cabecera2-txt, .cabecera3-txt, .cabecera4-txt, .cabecera5-txt {			
 			direction: ltr;	font-weight: bold; color: white;	
 		}
 		
@@ -75,9 +75,15 @@
 			text-align: left; width: 55%; background-color: #20A627;
 		}
 		
-		.cabecera-prec, .cabecera-iva, .cabecera-sub {
+		.cabecera-prec, .cabecera-iva, .cabecera-base, .cabecera-sub {
 			text-align: center;	
-			width: 15%;
+			width: 10%;
+			background-color: #20A627;
+		}
+		
+		.cabecera-porc {
+			text-align: center;	
+			width: 5%;
 			background-color: #20A627;
 		}
 		
@@ -97,13 +103,13 @@
 			font-weight: lighter !important;
 		}
 		
-		.dato-lin-prec, .dato-lin-iva, .dato-lin-sub {
+		.dato-lin-prec, .dato-lin-iva, .dato-lin-porc, .dato-lin-sub {
 			text-align: center;
 			font-size: 12px;
 			font-weight: lighter !important;
 		}
 		
-		.info-nombre, .info-cif, .info-fecha-hoy, .info-domicilio {
+		.info-nombre, .info-cif, .info-fecha-hoy, .info-tlf, .info-domicilio {
 			font-size: 13px;
 		}
 		
@@ -180,27 +186,32 @@
 						<td class="cabecera-desc">
 							<span class="cabecera1-txt">DESCRIPCION</span>
 						</td>
-						<td class="cabecera-prec">
-							<span class="cabecera2-txt">PRECIO</span>
+						<td class="cabecera-base">
+							<span class="cabecera2-txt">BASE IMP.</span>
+						</td>
+						<td class="cabecera-porc">
+							<span class="cabecera3-txt">%</span>
 						</td>
 						<td class="cabecera-iva">
-							<span class="cabecera3-txt">IVA</span>
+							<span class="cabecera4-txt">IVA</span>
 						</td>
 						<td class="cabecera-sub">
-							<span class="cabecera4-txt">SUBTOTAL</span>
+							<span class="cabecera5-txt">SUBTOTAL</span>
 						</td>
 					</tr>
 					<%-- lineas --%>
 					<c:set var="totalFactura" value="0" />
 					<c:forEach var="ofi" items="${factura.lineasFactura}">
 						<tr>
-							<td class="tipo-oficio" colspan="4">${ofi.key}</td>
+							<td class="tipo-oficio" colspan="5">${ofi.key}</td>
 						</tr>						
 						<c:forEach var="linea" items="${ofi.value}">
 							<tr>
 								<td class="dato-lin-desc">${linea.linConcepto}</td>
 								<td class="dato-lin-prec">${linea.linImporte}</td>
-								<td class="dato-lin-iva">${linea.linIvaId.ivaValor}%</td>
+								<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
+								<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
+								<td class="dato-lin-iva">${porcaplicado}</td>
 								<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />
 								<td class="dato-lin-sub">${subototal}</td>
 								<c:set var="totalFactura" value="${totalFactura + subototal}" />
@@ -210,7 +221,7 @@
 					<%-- fin lineas --%>
 					<%-- Linea de totales --%>
 					<tr style="border-collapse: collapse;">
-						<td colspan="3" class="tipo-oficio">
+						<td colspan="4" class="tipo-oficio">
 							<div style="width:100%; text-align: right;">TOTAL:&#160;</div>
 						</td>						
 						<td class="tipo-oficio" style="text-align: center;">${totalFactura}</td>
@@ -231,8 +242,9 @@
 		<div style="width: 40%; float: right; padding: 15px;">
 			<div class="info-nombre">${factura.nombreR}</div>
 			<div class="info-domicilio">${factura.domicilioR}</div>
-			<div class="info-domicilio">CP:&#160;${factura.cpR}, ${factura.localidadR}</div>
+			<div class="info-domicilio">CP:&#160;${factura.cpR}, ${factura.localidadR}</div>			
 			<div class="info-cif">CIF:&#160;${factura.nifR}</div>			
+			<div class="info-tlf">TLF:&#160;${factura.telefonoR},&#160;FAX:&#160;${factura.faxR}</div>
 		</div>		
 	</div>
 	

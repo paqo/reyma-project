@@ -29,9 +29,12 @@ public class FacturaPdfDTO implements Serializable {
 	private String localidadR;
 	private String cpR;
 	private String nifR;
+	private String telefonoR;
+	private String faxR;	
 	private String urlR;
 	private String nombreCortoR;
 	private String emailR;
+	
 
 	public FacturaPdfDTO() {
 		super();
@@ -179,6 +182,24 @@ public class FacturaPdfDTO implements Serializable {
 
 	public void setEmailR(String emailR) {
 		this.emailR = emailR;
+	}
+
+	public String getTelefonoR() {
+		return telefonoR;
+	}
+
+	public void setTelefonoR(String telefonoR) {
+		this.telefonoR = telefonoR;
+	}
+
+	public String getFaxR() {
+		return faxR;
+	}
+
+	public void setFaxR(String faxR) {
+		this.faxR = faxR;
 	}	
+	
+	
 	
 }

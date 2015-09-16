@@ -123,12 +123,16 @@ public class UtilsFactura {
 				mensajes.getMessage("cp", null, Locale.getDefault()) );
 		pdf.setNifR(
 				mensajes.getMessage("cif", null, Locale.getDefault()) );
+		pdf.setTelefonoR(
+				mensajes.getMessage("telefono", null, Locale.getDefault()) );
+		pdf.setFaxR(
+				mensajes.getMessage("fax", null, Locale.getDefault()) );
 		pdf.setUrlR(
 				mensajes.getMessage("url", null, Locale.getDefault()) );
 		pdf.setEmailR(
 				mensajes.getMessage("email", null, Locale.getDefault()) );
 		pdf.setNombreCortoR(
-				mensajes.getMessage("nombreCorto", null, Locale.getDefault()) );
+				mensajes.getMessage("nombreCorto", null, Locale.getDefault()) );		
 	}
 	
 	private static void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {

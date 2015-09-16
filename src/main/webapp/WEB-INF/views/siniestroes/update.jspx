@@ -108,6 +108,7 @@
 				  	"domProvId" : datosAfectado.find("[id^='domProvId']").val(),
 				  	//"domMunId" : datosAfectado.find("[id^='domMunId']").val(),
 				  	"domMunId" : datosAfectado.find("[id^='IDdomMunId']").val(),
+				  	"munDescripcion" : datosAfectado.find("[id^='domMunId']").val(),
 				  	/* siniestro */
 				  	"sinId" : $("[name='sinId']").val(),
 				  	/* tipo afectacion */
