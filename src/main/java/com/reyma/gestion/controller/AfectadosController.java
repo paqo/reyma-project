@@ -108,8 +108,9 @@ public class AfectadosController {
 						sin.setSinId( Integer.parseInt(request.getParameter("sinId")) );
 						
 						Persona adsPersona = grabarPersona(persona);
-						if ( adsPersona != null ){ // grabar persona							
-							Domicilio adsDomicilio = grabarDomicilio(domicilio, request.getParameter("munDescripcion"));
+						if ( adsPersona != null ){ // grabar persona	
+							comprobarExisteMunicDomicilio(domicilio, request.getParameter("munDescripcion"));
+							Domicilio adsDomicilio = grabarDomicilio(domicilio);
 							if ( adsDomicilio != null ) { // grabar domicilio
 								if ( grabarAfectadoDomicilioSiniestro(ads, adsPersona, adsDomicilio, sin, ta) ){
 									MensajeExitoJson mensajeExito = new MensajeExitoJson("Los datos se han guardado con éxito", true);
@@ -134,6 +135,22 @@ public class AfectadosController {
 		}
 		return serializer.exclude("class").serialize(mensajeError); // class siempre lo lleva, hay que excluir 
     }	
+	
+	/*
+	 * Método para comprobar si existe el municipio del nuevo
+	 * domicilio, si no existe se crea y se le asocia
+	 */
+	private void comprobarExisteMunicDomicilio(Domicilio domicilio, String municipio) {
+		if ( domicilio.getDomMunId() == null || 
+				domicilio.getDomMunId().getMunId() == null ){
+			// municipio nuevo, crear
+			Municipio nuevoMunicipio = new Municipio();
+			nuevoMunicipio.setMunDescripcion(municipio);
+			nuevoMunicipio.setMunPrvId( domicilio.getDomProvId() );
+			municipioService.saveMunicipio(nuevoMunicipio);
+			domicilio.setDomMunId(nuevoMunicipio);
+		}		
+	}
 	
 	private boolean grabarAfectadoDomicilioSiniestro(AfectadoDomicilioSiniestro ads, 
 			Persona persona, Domicilio domicilio, Siniestro sin, TipoAfectacion ta) {
@@ -193,16 +210,8 @@ public class AfectadosController {
 		return null;
 	}
 	
-	private Domicilio grabarDomicilio(Domicilio domicilio, String municipio) {
+	private Domicilio grabarDomicilio(Domicilio domicilio) {
 		try {
-			if ( domicilio.getDomMunId() == null || 
-					domicilio.getDomMunId().getMunId() == null ){
-				// municipio nuevo, crear primero
-				Municipio nuevoMunicipio = new Municipio();
-				nuevoMunicipio.setMunDescripcion(municipio);
-				nuevoMunicipio.setMunPrvId( domicilio.getDomProvId() );
-				municipioService.saveMunicipio(nuevoMunicipio);
-			}
 			Domicilio domBusqueda = domicilioService.findDomicilio(domicilio);
 			if ( domBusqueda == null ){
 				domicilioService.saveDomicilio(domicilio);
