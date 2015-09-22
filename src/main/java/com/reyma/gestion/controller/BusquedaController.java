@@ -24,6 +24,7 @@ import com.reyma.gestion.dao.Domicilio;
 import com.reyma.gestion.dao.Persona;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.service.CompaniaService;
+import com.reyma.gestion.service.EstadoService;
 
 import flexjson.JSONSerializer;
 
@@ -36,6 +37,9 @@ public class BusquedaController {
 	
 	@Autowired
 	CompaniaService companiaService;
+	
+	@Autowired
+	EstadoService estadoService;
 
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -99,6 +103,7 @@ public class BusquedaController {
 
 	void populateEditForm(Model uiModel) {	
 		 uiModel.addAttribute("companias", companiaService.findAllCompanias());		
+		 uiModel.addAttribute("estados", estadoService.findAllEstadoes());		
     }
 
 	String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {

@@ -62,6 +62,15 @@
 					      	</c:forEach>
 					    </select>
 	    			</div>
+	    			<div class="celda-formulario-busqueda">
+	    				<label for="estado">Estado:&nbsp;</label>
+	    				<select name="estado" id="estado" style="width: 12em;">
+	    					<option value="">-- cualquiera --</option>
+					      	<c:forEach items="${estados}" var="estado" >
+					      		<option value="${estado.estId}">${estado.estDescripcion}</option>					      		
+					      	</c:forEach>
+					    </select>
+	    			</div>
     			</div>
     			<%--
     			
@@ -131,7 +140,8 @@
 									perNombre: $("#nombre").val(),
 									domDireccion : $("#direccion").val(),
 									perTlf1 : $("#tlf").val(),
-									sinComId : $("#compania").val()
+									sinComId : $("#compania").val(),
+									sinEstId : $("#estado").val()
 					 			 };
 					$.post(action, params, function( data ) {	
 						if ( data.excedido ){
@@ -151,10 +161,12 @@
 				});	
 	            formatearResultados("resultados");
 	            
-	            // datepickers y combo de companias
+	            // datepickers 
 	            $( "#fechaDesde" ).datepicker();
 	            $( "#fechaHasta" ).datepicker();
+	            //combos de companias y estado siniestro
 	            $( "#compania" ).selectmenu();
+	            $( "#estado" ).selectmenu();
 	            
 		  	});
 

@@ -31,13 +31,11 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.reyma.gestion.controller.SiniestroController;
 import com.reyma.gestion.util.Fechas;
 
 @Configurable
@@ -394,7 +392,7 @@ public class Siniestro {
 	public void setSinUrgente(Short sinUrgente) {
         this.sinUrgente = sinUrgente;
     }
-
+	
 	public static List<Siniestro> buscarSiniestrosPorCriterios(Siniestro siniestro, Domicilio domicilio, 
 			Persona afectado, Map<String, Object> parametrosAdicionales) {
 		if (siniestro == null) return null;
@@ -415,7 +413,7 @@ public class Siniestro {
         		anyadirCondicionesParaEntidad(afectado, null) ){
         	joinAds = siniestroRoot.join("afectadoDomicilioSiniestroes");
         }
-        
+               
         //2.- si hay condiciones del domicilio        
         obtenerCondicionesDomicilio(domicilio, siniestroRoot, joinAds, condiciones, cb);
         
@@ -430,6 +428,38 @@ public class Siniestro {
             			cb.desc(siniestroRoot.get("sinFechaEncargo")) ); 
         
         return entityManager().createQuery( query ).getResultList();  
+	}
+	
+	/**
+	 * Método para comprobar si se debe hacer join (crer un objeto
+	 * de tipo Root) con esa entidad
+	 * @param dao
+	 * @return
+	 */
+	private static boolean anyadirCondicionesParaEntidad(Object dao, Map<String, Object> parametrosAdicionales) {
+		if ( dao != null ){
+			if ( dao.getClass().isAssignableFrom(Siniestro.class) ){
+				Siniestro sin = (Siniestro) dao;
+				return !StringUtils.isEmpty(sin.getSinNumero() ) || 
+						!StringUtils.isEmpty(sin.getSinPoliza() ) || 
+						(sin.getSinEstId() != null && sin.getSinEstId().getEstId() != null ) ||
+						(sin.getSinComId() != null && sin.getSinComId().getComId() != null ) || 
+						parametrosAdicionales.containsKey("fechaIni");
+			} else if ( dao.getClass().isAssignableFrom(Domicilio.class) ){
+				Domicilio dom = (Domicilio) dao;
+				return !StringUtils.isEmpty(dom.getDomDireccion());
+			} else if ( dao.getClass().isAssignableFrom(Estado.class) ){
+				Estado estado = (Estado) dao;
+				return !StringUtils.isEmpty(estado.getEstDescripcion());
+			} else if ( dao.getClass().isAssignableFrom(Persona.class) ){
+				Persona per = (Persona) dao;
+				return !StringUtils.isEmpty(per.getPerNombre()) ||
+						!StringUtils.isEmpty(per.getPerNif()) || 
+						!StringUtils.isEmpty(per.getPerTlf1()) ||
+						!StringUtils.isEmpty(per.getPerTlf2());
+			}	
+		}			
+		return false;
 	}
 	
 	private static void obtenerCondicionesAfectado(Persona afectado,
@@ -483,7 +513,7 @@ public class Siniestro {
 	    	condiciones.add(condicion);		
 		}
 	}
-	
+		
 	private static List<Predicate> obtenerCondicionesSiniestro(Siniestro siniestroCondiciones, Map<String, Object> parametrosAdicionales, 
 			Root<Siniestro> siniestroRoot, List<Predicate> condiciones, CriteriaBuilder cb){
 		
@@ -505,6 +535,11 @@ public class Siniestro {
 			condicion = cb.equal(siniestroRoot.get("sinComId"), siniestroCondiciones.getSinComId());
 			condiciones.add(condicion);
 		}
+		
+		if ( siniestroCondiciones.getSinEstId() != null ){
+			condicion = cb.equal(siniestroRoot.get("sinEstId"), siniestroCondiciones.getSinEstId() );
+			condiciones.add(condicion);
+		}
 
 		if ( parametrosAdicionales.containsKey("fechaIni") ){
 			Calendar cal1 = (Calendar)parametrosAdicionales.get("fechaIni");
@@ -520,32 +555,4 @@ public class Siniestro {
 		return condiciones;
 	}
 	
-	/**
-	 * Método para comprobar si se debe hacer join (crer un objeto
-	 * de tipo Root) con esa entidad
-	 * @param dao
-	 * @return
-	 */
-	private static boolean anyadirCondicionesParaEntidad(Object dao, Map<String, Object> parametrosAdicionales) {
-		if ( dao != null ){
-			if ( dao.getClass().isAssignableFrom(Siniestro.class) ){
-				Siniestro sin = (Siniestro) dao;
-				return !StringUtils.isEmpty(sin.getSinNumero() ) || 
-						!StringUtils.isEmpty(sin.getSinPoliza() ) || 
-						(sin.getSinComId() != null && sin.getSinComId().getComId() != null ) || 
-						parametrosAdicionales.containsKey("fechaIni");
-			} else if ( dao.getClass().isAssignableFrom(Domicilio.class) ){
-				Domicilio dom = (Domicilio) dao;
-				return !StringUtils.isEmpty(dom.getDomDireccion());
-			} else if ( dao.getClass().isAssignableFrom(Persona.class) ){
-				Persona per = (Persona) dao;
-				return !StringUtils.isEmpty(per.getPerNombre()) ||
-						!StringUtils.isEmpty(per.getPerNif()) || 
-						!StringUtils.isEmpty(per.getPerTlf1()) ||
-						!StringUtils.isEmpty(per.getPerTlf2());
-			}	
-		}			
-		return false;
-	}
-		
 }
