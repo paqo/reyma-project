@@ -19,6 +19,7 @@
 			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/login.html" session-registry-alias="sessionRegistry"/>
 		</session-management> -->
 
+		<intercept-url pattern="/mob/**" access="permitAll"/>
 		<intercept-url pattern="/login/**" access="permitAll"/>
 		<intercept-url pattern="/resources/**" access="permitAll"/>
 		<intercept-url pattern="/static/**" access="permitAll"/>
