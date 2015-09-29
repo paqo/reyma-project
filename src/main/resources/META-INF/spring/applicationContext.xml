@@ -38,6 +38,10 @@
         areas, such as @PersistenceContext injection into entities.
     -->
     <context:spring-configured/>
+    
+    
+    <mvc:resources mapping="/mob/**" location="/mob/" />
+    
     <!--
         This declaration will cause Spring to locate every @Component,
         @Repository and @Service in your application. In practical terms this
