@@ -204,7 +204,7 @@
 					<c:forEach var="ofi" items="${factura.lineasFactura}">
 						<tr>
 							<td class="tipo-oficio" colspan="5">${ofi.key}</td>
-						</tr>						
+						</tr>	
 						<c:forEach var="linea" items="${ofi.value}">
 							<tr>
 								<td class="dato-lin-desc">${linea.linConcepto}</td>

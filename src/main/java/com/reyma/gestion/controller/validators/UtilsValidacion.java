@@ -268,9 +268,10 @@ public class UtilsValidacion {
 		for (LineaFactura lineaFactura : lineas) {
 			if ( StringUtils.isEmpty(lineaFactura.getLinConcepto()) ){				
 				return "El concepto es obligatorio para todas las líneas";
-			} else if ( lineaFactura.getLinImporte().intValue() < 0 ) {
+			}// permitir valores negativos
+			/* else if ( lineaFactura.getLinImporte().intValue() < 0 ) {
 				return "El importe debe tener un valor correcto";
-			}
+			}*/
 		}
 		return null;
 	}

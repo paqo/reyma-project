@@ -8,10 +8,10 @@
   	<div style="background-image: url('${gradiente}'); background-repeat: repeat-x; height: 50px; border: 1px solid white; border-radius: 7px;">
   		<div style="width: 100%;">
   			<div style="width: 80px; float: left; padding-left: 1em; padding-top: 0.25em;">
-	  			<!-- <img src="${banner}" />  -->
+	  			<img src="${banner}" />
 	  		</div>
 	  		<div style="float: left;">
-	  			<!-- <span class="titulo-logo">REYMASUR</span>  -->
+	  			<span class="titulo-logo">REYMASUR</span>
 	  		</div>
   		</div>  		
   	</div> 	
