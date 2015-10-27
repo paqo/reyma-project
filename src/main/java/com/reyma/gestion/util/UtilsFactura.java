@@ -3,9 +3,13 @@ package com.reyma.gestion.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -136,10 +140,24 @@ public class UtilsFactura {
 	}
 	
 	private static void setLineasFactura(FacturaPdfDTO pdf, Factura factura) {
-		Set<LineaFactura> _lineasFac = factura.getLineaFacturas();
-		//TODO: orden?
+		
+		List<LineaFactura> _lineasFac = new ArrayList<LineaFactura>(factura.getLineaFacturas());		
+		Collections.sort(_lineasFac, new Comparator<LineaFactura>() {			
+			@Override
+			public int compare(LineaFactura linea1, LineaFactura linea2) {
+				if ( linea1.getLinId() > linea2.getLinId() ) {
+					return 1;
+				} else if ( linea1.getLinId() < linea2.getLinId() ) {
+					return -1;
+				} else {
+					return 0;
+				}				
+			}
+		});
+		
 		Map<String, Set<LineaFactura>> mapa = new HashMap<String, Set<LineaFactura>>();
 		Iterator<LineaFactura> it = _lineasFac.iterator();
+				
 		LineaFactura lineaFactura;
 		Set<LineaFactura> listaLineasMismoOfi; 
 		while ( it.hasNext() ) {
