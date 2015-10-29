@@ -3,6 +3,9 @@ package com.reyma.gestion.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,6 +71,12 @@ public class UtilsFactura {
 	    	
 	    	if ( presupuesto ){
 	    		request.setAttribute("presupuesto", Boolean.TRUE);
+	    		List<String[]> subtotales = comprobarImporteCeroEnConceptos(pdf);
+	    		if ( subtotales.size() > 0 ){
+	    			request.setAttribute("gremiosConCero", Boolean.TRUE);
+	    			request.setAttribute("subtotales", subtotales);
+	    			request.setAttribute("totalGremios", totalizarSubTotales(subtotales));
+	    		}
 	    	}
 	    	
 	    	request.setAttribute("factura", pdf);
@@ -82,6 +91,65 @@ public class UtilsFactura {
 		}
 		return customResponse;
 	}	
+
+	private static BigDecimal totalizarSubTotales(List<String[]> subtotales) {		
+		BigDecimal res = new BigDecimal("0");
+		for (String[] subtotal : subtotales) {			
+			res = res.add( new BigDecimal(subtotal[4]) ); 
+		}
+		return res.setScale(2, RoundingMode.FLOOR);
+	}
+
+	private static List<String[]> comprobarImporteCeroEnConceptos(FacturaPdfDTO facPdf) {
+		
+		List<String[]> res = new ArrayList<String[]>();
+		Map<String, List<LineaFactura>> mapaLineas = facPdf.getLineasFactura();
+		
+		Iterator<String> it = mapaLineas.keySet().iterator();
+		String gremio;
+		List<LineaFactura> lineas;
+		int cont;
+		String [] subtotal = null;
+		while ( it.hasNext() ){
+			gremio = it.next();
+			lineas = mapaLineas.get(gremio);
+			cont = 0;
+			for (LineaFactura linea : lineas) { //linea.getLinImporte().unscaledValue() == BigInteger.valueOf(0)
+				if ( !linea.getLinImporte().unscaledValue().equals(BigInteger.ZERO) ) {
+					cont++;
+					subtotal = new String[]{"", // el concepto queda a vacio
+									 linea.getLinImporte().toString(), 
+									 linea.getLinIvaId().getIvaValor() + "%", 
+									 obtenerIvaAplicado(linea), 
+									 obtenerSubtotal(linea)
+									 };
+				}				
+			}
+			if ( cont == 1 && lineas.size() > 1 ) {
+				// para ese gremio, generamos linea de subtotal
+				if (subtotal != null) { 
+					res.add(subtotal);
+				} else { // no deberia pasar
+					res.add( new String[]{"", "", "", "", ""} );					
+				}				
+			}
+		}		
+		return res;
+	}
+	
+	private static String obtenerIvaAplicado(LineaFactura linea) {		
+		BigDecimal res = new BigDecimal(
+								(linea.getLinImporte().doubleValue() * 
+								 linea.getLinIvaId().getIvaValor()) / 100 );
+		return res.setScale(2, RoundingMode.FLOOR).toString();
+	}
+	
+	private static String obtenerSubtotal(LineaFactura linea) {		
+		BigDecimal res = new BigDecimal(
+								linea.getLinImporte().doubleValue() + 
+								(linea.getLinImporte().doubleValue() * linea.getLinIvaId().getIvaValor()) / 100 );
+		return res.setScale(2, RoundingMode.FLOOR).toString();
+	}
 
 	public static void generarPDFDesdeHTML(HttpServletResponse response,
 			Factura factura, String facturaHtml, String nombre) {

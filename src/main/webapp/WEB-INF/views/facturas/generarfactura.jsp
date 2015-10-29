@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="rey" uri="/WEB-INF/tags/reymasur/reymasur.tld"%>
 
 <!DOCTYPE html>
 <html>
@@ -201,22 +202,55 @@
 					</tr>
 					<%-- lineas --%>
 					<c:set var="totalFactura" value="0" />
-					<c:forEach var="ofi" items="${factura.lineasFactura}">
+					<c:forEach var="ofi" items="${factura.lineasFactura}" varStatus="contador">
 						<tr>
 							<td class="tipo-oficio" colspan="5">${ofi.key}</td>
 						</tr>	
+												
 						<c:forEach var="linea" items="${ofi.value}">
 							<tr>
-								<td class="dato-lin-desc">${linea.linConcepto}</td>
-								<td class="dato-lin-prec">${linea.linImporte}</td>
-								<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
-								<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
-								<td class="dato-lin-iva">${porcaplicado}</td>
-								<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />
-								<td class="dato-lin-sub">${subototal}</td>
-								<c:set var="totalFactura" value="${totalFactura + subototal}" />
+								<td class="dato-lin-desc">${linea.linConcepto}</td>																							
+								<c:choose>
+									<c:when test="${presupuesto eq true}">																				
+										<c:choose>											
+											<c:when test="${gremiosConCero eq true}">
+												<td class="dato-lin-prec"></td>
+												<td class="dato-lin-porc"></td>												
+												<td class="dato-lin-iva"></td>												
+												<td class="dato-lin-sub"></td>
+											</c:when>
+											<c:otherwise>
+												<td class="dato-lin-prec">${linea.linImporte}</td>
+												<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
+												<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
+												<td class="dato-lin-iva">${porcaplicado}</td>
+												<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />
+												<td class="dato-lin-sub">${subototal}</td>
+												<c:set var="totalFactura" value="${totalFactura + subototal}" />
+											</c:otherwise>
+										</c:choose>										
+									</c:when>
+									<c:otherwise>
+										<td class="dato-lin-prec">${linea.linImporte}</td>
+										<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
+										<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
+										<td class="dato-lin-iva">${porcaplicado}</td>
+										<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />										
+										<td class="dato-lin-sub">${subototal}</td>
+										<c:set var="totalFactura" value="${totalFactura + subototal}" />										
+									</c:otherwise>									
+								</c:choose>								
 							</tr>
-						</c:forEach>					    
+						</c:forEach>	
+						<c:if test="${gremiosConCero eq true}">
+							<tr>
+								<td class="dato-lin-desc">${subtotales[contador.index][0]}</td>
+								<td class="dato-lin-prec">${subtotales[contador.index][1]}</td>
+								<td class="dato-lin-porc">${subtotales[contador.index][2]}</td>												
+								<td class="dato-lin-iva">${subtotales[contador.index][3]}</td>												
+								<td class="dato-lin-sub">${subtotales[contador.index][4]}</td>
+							</tr>
+						</c:if>				    
 					</c:forEach>
 					<%-- fin lineas --%>
 					<%-- Linea de totales --%>
@@ -224,7 +258,17 @@
 						<td colspan="4" class="tipo-oficio">
 							<div style="width:100%; text-align: right;">TOTAL:&#160;</div>
 						</td>						
-						<td class="tipo-oficio" style="text-align: center;">${totalFactura}</td>
+						<c:choose>
+							<%-- caso especial cuando es presupuesto con importes a 0 --%>
+							<c:when test="${gremiosConCero eq true}">
+								<td class="tipo-oficio" style="text-align: center;">
+									<fmt:formatNumber value="${totalGremios}" pattern="#.00" />
+								</td>
+							</c:when>
+							<c:otherwise>
+								<td class="tipo-oficio" style="text-align: center;">${totalFactura}</td>
+							</c:otherwise>
+						</c:choose>						
 					</tr>
 					<%-- Fin linea de totales --%>
 				</tbody>

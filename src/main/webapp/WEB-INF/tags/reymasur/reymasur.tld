@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+  <description>Custom library para aplicacion Reymasur Gestion</description>
+  <display-name>JSTL fmt</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>reymasur</short-name>
+  <uri>/WEB-INF/tags/reymasur</uri>  
+
+  <tag>
+    <description>
+       	Formateo con redondeo de dos decimales usando suelo como modo de redondeo
+    </description>
+    <name>formatearSuelo</name>
+    <tag-class>com.reyma.gestion.ui.FormatearValorSuelo</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+        <description>
+			Valor a formatear
+        </description>
+        <name>valor</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+</taglib>
