@@ -6,13 +6,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -155,16 +153,16 @@ public class UtilsFactura {
 			}
 		});
 		
-		Map<String, Set<LineaFactura>> mapa = new HashMap<String, Set<LineaFactura>>();
+		Map<String, List<LineaFactura>> mapa = new LinkedHashMap<String, List<LineaFactura>>();
 		Iterator<LineaFactura> it = _lineasFac.iterator();
 				
 		LineaFactura lineaFactura;
-		Set<LineaFactura> listaLineasMismoOfi; 
+		List<LineaFactura> listaLineasMismoOfi; 
 		while ( it.hasNext() ) {
 			lineaFactura = it.next();
-			listaLineasMismoOfi = mapa.get(lineaFactura.getLinOficioId().getOfiDescripcion());
+			listaLineasMismoOfi = (List<LineaFactura>) mapa.get(lineaFactura.getLinOficioId().getOfiDescripcion());
 			if ( listaLineasMismoOfi == null ){
-				listaLineasMismoOfi = new HashSet<LineaFactura>();
+				listaLineasMismoOfi = new ArrayList<LineaFactura>();
 				mapa.put(lineaFactura.getLinOficioId().getOfiDescripcion(), listaLineasMismoOfi);					
 			}
 			listaLineasMismoOfi.add(lineaFactura);

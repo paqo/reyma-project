@@ -928,9 +928,10 @@
 			
 			dialogFactura = $( "#formulario-facturas" ).dialog({
 			      autoOpen: false,
-			      height: 400,
+			      height: 500,
 			      width: 890,
 			      modal: true,
+			      resizable: true,
 			      buttons: {
 			        "Guardar factura": function() {
 			        	var nueva = $("#idFacturaAbierta").val() == ''? true : false;			        	

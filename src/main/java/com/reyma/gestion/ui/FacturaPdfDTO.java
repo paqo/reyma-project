@@ -1,8 +1,8 @@
 package com.reyma.gestion.ui;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.reyma.gestion.dao.LineaFactura;
 
@@ -22,7 +22,7 @@ public class FacturaPdfDTO implements Serializable {
 	private String cp;
 	private String nif;	
 	// lineas factura
-	private Map<String, Set<LineaFactura>> lineasFactura;
+	private Map<String, List<LineaFactura>> lineasFactura;
 	// datos reymasur
 	private String nombreR;
 	private String domicilioR;
@@ -111,12 +111,12 @@ public class FacturaPdfDTO implements Serializable {
 	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
-
-	public Map<String, Set<LineaFactura>> getLineasFactura() {
+	
+	public Map<String, List<LineaFactura>> getLineasFactura() {
 		return lineasFactura;
 	}
 
-	public void setLineasFactura(Map<String, Set<LineaFactura>> lineasFactura) {
+	public void setLineasFactura(Map<String, List<LineaFactura>> lineasFactura) {
 		this.lineasFactura = lineasFactura;
 	}
 
