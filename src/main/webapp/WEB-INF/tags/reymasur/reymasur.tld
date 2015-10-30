@@ -15,14 +15,14 @@
     <description>
        	Formateo con redondeo de dos decimales usando suelo como modo de redondeo
     </description>
-    <name>formatearSuelo</name>
-    <tag-class>com.reyma.gestion.ui.FormatearValorSuelo</tag-class>
+    <name>getSubTotal</name>
+    <tag-class>com.reyma.gestion.ui.customtags.ObtenerValorSubtotalRedondeoSuelo</tag-class>
     <body-content>scriptless</body-content>
     <attribute>
         <description>
-			Valor a formatear
+			linea de factura
         </description>
-        <name>valor</name>
+        <name>linea</name>
         <required>true</required>
         <rtexprvalue>true</rtexprvalue>
     </attribute>

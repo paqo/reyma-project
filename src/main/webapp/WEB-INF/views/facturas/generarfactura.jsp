@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="rey" uri="/WEB-INF/tags/reymasur/reymasur.tld"%>
+<%@ taglib prefix="reyma" uri="/WEB-INF/tags/reymasur/reymasur.tld"%>
 
 <!DOCTYPE html>
 <html>
@@ -223,8 +223,9 @@
 												<td class="dato-lin-prec">${linea.linImporte}</td>
 												<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
 												<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
-												<td class="dato-lin-iva">${porcaplicado}</td>
-												<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />
+												<td class="dato-lin-iva">${porcaplicado}</td>												
+												<%-- <c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" /> --%>
+												<c:set var="subototal"><reyma:getSubTotal linea="${linea}" /></c:set>
 												<td class="dato-lin-sub">${subototal}</td>
 												<c:set var="totalFactura" value="${totalFactura + subototal}" />
 											</c:otherwise>
@@ -235,7 +236,7 @@
 										<td class="dato-lin-porc">${linea.linIvaId.ivaValor}%</td>
 										<c:set var="porcaplicado" value="${(linea.linIvaId.ivaValor * linea.linImporte)/100}" />
 										<td class="dato-lin-iva">${porcaplicado}</td>
-										<c:set var="subototal" value="${linea.linImporte + (linea.linIvaId.ivaValor * linea.linImporte)/100}" />										
+										<c:set var="subototal"><reyma:getSubTotal linea="${linea}" /></c:set>
 										<td class="dato-lin-sub">${subototal}</td>
 										<c:set var="totalFactura" value="${totalFactura + subototal}" />										
 									</c:otherwise>									

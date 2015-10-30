@@ -144,7 +144,7 @@ public class UtilsFactura {
 		return res.setScale(2, RoundingMode.FLOOR).toString();
 	}
 	
-	private static String obtenerSubtotal(LineaFactura linea) {		
+	public static String obtenerSubtotal(LineaFactura linea) {		
 		BigDecimal res = new BigDecimal(
 								linea.getLinImporte().doubleValue() + 
 								(linea.getLinImporte().doubleValue() * linea.getLinIvaId().getIvaValor()) / 100 );
