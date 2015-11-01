@@ -35,8 +35,8 @@ public class ResultadoBusqueda implements Serializable {
 		fecha = Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
 				siniestro.getSinFechaEncargo().getTime());
 		estado = siniestro.getSinEstId().getEstDescripcion();
-		fechaOcurrencia = Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
-				siniestro.getSinFechaOcurrencia().getTime());
+		fechaOcurrencia = siniestro.getSinFechaOcurrencia() != null? Fechas.FORMATEADOR_DDMMYYYYHHMM.format(
+				siniestro.getSinFechaOcurrencia().getTime()) : "";
 		tipo = siniestro.getSinTsiId().getTsiDescripcion();
 		descripcion = siniestro.getSinDescripcion();
 		this.domicilio = domicilio != null? domicilio.getDomDireccion() : "";
