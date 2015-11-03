@@ -883,11 +883,12 @@
 		    	event.preventDefault();
 		    	//Dar de alta nueva factura
 		    	$("#formulario-facturas").dialog( "option", "title", "Dar de alta nueva factura" );
-		    	// deseleccionar si hubiera alguna factura seleccionada
+		    	// deseleccionar si hubiera alguna factura abierta
 		    	// para no sobrescribir
 		    	$("#contenedor-facturas").
 		    			find("input[type='radio']").
 		    			prop('checked', false);
+		    	$("#idFacturaAbierta").val('');		    	
 		    	// cargar linea inicial
 		    	var oficiosJson = JSON.parse($("#valoresCboOficios").val());
 		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
@@ -1070,8 +1071,8 @@
 				    		initFormularioFactura(ffac, nfac, afac);				    		
 				    		// abrir formulario modal de factura con lineas cargadas
 					    	dialogFactura.dialog( "open" );
-				    		// asignar la id de factura que se esta editando
-				    		$("#idFacturaAbierta").val(idFactura);				    		
+					    	// asignar la id de factura que se esta editando
+				    		$("#idFacturaAbierta").val(idFactura);
 					    	// recargar tabla			        	
 				        	$("#tablaFactura").editableTableWidget().formularioFactura();
 				      	} else {
