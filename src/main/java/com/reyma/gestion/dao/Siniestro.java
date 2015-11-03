@@ -443,7 +443,8 @@ public class Siniestro {
 				return !StringUtils.isEmpty(sin.getSinNumero() ) || 
 						!StringUtils.isEmpty(sin.getSinPoliza() ) || 
 						(sin.getSinEstId() != null && sin.getSinEstId().getEstId() != null ) ||
-						(sin.getSinComId() != null && sin.getSinComId().getComId() != null ) || 
+						(sin.getSinComId() != null && sin.getSinComId().getComId() != null ) ||
+						!StringUtils.isEmpty(sin.getSinMediador() ) ||
 						parametrosAdicionales.containsKey("fechaIni");
 			} else if ( dao.getClass().isAssignableFrom(Domicilio.class) ){
 				Domicilio dom = (Domicilio) dao;
@@ -523,6 +524,12 @@ public class Siniestro {
 		if ( !StringUtils.isEmpty(siniestroCondiciones.getSinNumero()) ){
 			exp = siniestroRoot.get("sinNumero");			
 			condicion = cb.like( exp, "%" + siniestroCondiciones.getSinNumero() + "%");
+			condiciones.add(condicion);
+		}
+		
+		if ( !StringUtils.isEmpty(siniestroCondiciones.getSinMediador()) ){
+			exp = siniestroRoot.get("sinMediador");			
+			condicion = cb.like( exp, "%" + siniestroCondiciones.getSinMediador() + "%");
 			condiciones.add(condicion);
 		}
 		

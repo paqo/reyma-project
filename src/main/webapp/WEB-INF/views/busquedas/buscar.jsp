@@ -72,9 +72,13 @@
 					    </select>
 	    			</div>
     			</div>
-    			<%--
-    			
-    			 --%>	
+    			<div style="height: 0.7em; float: left; width: 100%;">&nbsp;</div>
+    			<div class="fila-formulario-busqueda">
+    				<div class="celda-formulario-busqueda">
+	    				<label for="agente">Agente:&nbsp;</label>
+	    				<input id="agente" name="agente" value="" />	    				
+	    			</div>
+    			</div>
     			<div style="height: 1.4em; float: left; width: 100%;">&nbsp;</div>
     			<div>    				
     				<button id="btnBuscar">Buscar</button>
@@ -141,7 +145,8 @@
 									domDireccion : $("#direccion").val(),
 									perTlf1 : $("#tlf").val(),
 									sinComId : $("#compania").val(),
-									sinEstId : $("#estado").val()
+									sinEstId : $("#estado").val(),
+									sinMediador : $("#agente").val()
 					 			 };
 					$.post(action, params, function( data ) {	
 						if ( data.excedido ){
