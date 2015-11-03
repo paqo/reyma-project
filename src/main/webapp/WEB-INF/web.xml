@@ -30,14 +30,12 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-    
-    
+      
     
     <filter>
         <filter-name>HttpMethodFilter</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
     </filter>
-    
     
     
     <filter>
@@ -91,7 +89,7 @@
     </servlet-mapping>
     
     <session-config>
-        <session-timeout>20</session-timeout>
+        <session-timeout>50</session-timeout>
     </session-config>
     
     <error-page>
