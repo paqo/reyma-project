@@ -407,6 +407,12 @@ public class SiniestroController {
         Provincia prov = provinciaService.findProvinciaByDescripcion("Sevilla", false); 
         Municipio mun = municipioService.findMunicipioByIdProvinciaAndDesc(prov.getPrvId(), "Sevilla");
         
+        //TODO: temporal para evitar error cuando se duplican municipios
+        // ver porque se pueden duplicar y controlar bien por codigo
+        if ( mun == null ){
+        	mun = municipioService.findMunicipio(757); // -> Sevilla
+        }
+        
         domicilio.setDomMunId(mun);
         domicilio.setDomProvId(mun.getMunPrvId());        
         uiModel.addAttribute("domicilio", domicilio);
