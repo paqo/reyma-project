@@ -651,3 +651,36 @@ th.ui-state-default > div {
 #tablaFactura > tbody > tr > td:first-child > select {
   width: 95%;
 }
+
+/* ############ PRESUPUESTOS ############# */
+
+#pres-cont > div {
+    border-top-left-radius: 0 !important;
+    margin:4px;
+}
+
+#pres-cont textarea {
+	resize: vertical;
+	width: 95%;
+	font-size: 14px;
+}
+
+.presConcepto {
+	float: left;
+	width: 75%;
+}
+
+.presCoste {
+	float: left;
+	width: 15%;
+	text-align: center;
+}
+
+.presIva {
+	float: left;
+	width: 10%;
+}
+
+div.presCoste > input {
+	text-align: center;
+}

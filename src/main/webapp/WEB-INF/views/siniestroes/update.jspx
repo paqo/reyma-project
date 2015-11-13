@@ -38,6 +38,7 @@
 	    <li><a href="#tabs-1">Afectados</a></li>
 	    <li><a href="#tabs-2">Trabajadores</a></li>
 	    <li><a href="#tabs-3">Facturas</a></li>
+	    <li><a href="#tabs-4">Presupuestos</a></li>
 	  </ul>
 	  <div id="tabs-1">	  
 	  	<jsp:include page="afectado.jsp" />
@@ -47,6 +48,9 @@
 	  </div>
 	  <div id="tabs-3">
 	    <jsp:include page="facturas.jsp" />  
+	  </div>
+	  <div id="tabs-4">
+	    <jsp:include page="../presupuestos/presupuestos.jsp" />  
 	  </div>		  
 	</div>
 		
@@ -568,7 +572,7 @@
 	
 	//############################ FIN TEMPORAL
 	
-		var dialogFactura, formFactura;
+		var dialogFactura, dialogPresupuesto;
 	
 		$(function() {
 			
@@ -623,7 +627,7 @@
 	    	        }
 	    	    }
 	    	});
-	    	
+				    	
 	    	// mensajes de confirmacion
 	    	$( "#mensajeConfirmacion" ).dialog({
                     autoOpen: false,
@@ -947,19 +951,6 @@
 								});
 			        	} else { // editar
 			        		var datosFactura = obtenerDatosFacturaJSON( "formulario-facturas" );
-			        		/*peticion = $.ajax( {
-					 				   dataType: "json",
-									   contentType: "application/json; charset=UTF-8",
-									   type: "POST",
-									   url: action,
-									   data: datosFactura,
-									   success:  function (data) {
-									       console.log(data);
-									   },
-									   error : function (e) {
-									       alert (e);
-									   }
-									} );*/
 			        		peticion = $.ajax( {
 				 				   dataType: "json",
 								   contentType: "application/json; charset=UTF-8",
@@ -996,13 +987,15 @@
 			        }
 			      },
 			      close: function() {
-			        //algo para limpiar
+			        //algo para limpiar?
 			      }
 			});
-
+			
 			// --- tabla formulario de la factura			
-			$('#tablaFactura').editableTableWidget().
-							  formularioFactura().find('td:first').focus();
+			$('#tablaFactura').editableTableWidget()
+							  	 .formularioFactura()
+							  	 .find('td:first')
+							  	 .focus();
 			
 			$( "#addLineaFactura").button({		    	
 	 	        icons: {	 	        	
@@ -1040,7 +1033,7 @@
 		    });				
 						
 			// --- fin formulario de la factura
-						
+									
 			$( "#verFactura").button({		    	
 	 	        icons: {	 	        	
 	 	            primary: "ui-icon-search"
@@ -1100,15 +1093,72 @@
 		    });
 			
 			// <-------- fin facturas
-						
-			// eventos de cambiar seleccionado
-			/* $( "#listaFacturas li > a").click(function(event) {
-		    	event.preventDefault();
-		    	$(this).closest("ul").find("li > a").removeClass( "current" );
-		    	$(this).addClass( "current" );
-		    }); */	
-				
 			
+			
+			// Presupuesto
+			
+			// boton crear nuevo presupuesto 
+			$( "#generarPresupuesto").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-clipboard"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
+		    	cargarLineaInicialPresupuesto(ivasJson);
+		    	// datepicker para fecha del presupuesto		    	
+		    	initFecPresupDatePicker();    	
+		    	// abrir ventana modal
+		    	dialogPresupuesto.dialog( "open" );		    	
+		    });
+			
+			// ---------> formulario presupuestos
+			
+			// sortable para presupuestos
+			$('#pres-cont').sortable({
+				placeholder: "ui-state-highlight", 
+				helper:'clone',
+				axis: 'y'
+			});
+			
+			dialogPresupuesto = $( "#formulario-presupuesto" ).dialog({
+			      autoOpen: false,
+			      height: 500,
+			      width: 900,
+			      modal: true,
+			      resizable: true,
+			      buttons: {
+			        "Guardar presupuesto": function() {
+			        	console.log("=> guardar presupuesto");
+			        },
+			        "Cancelar": function() {
+			        	dialogPresupuesto.dialog( "close" );			       		
+			        }
+			      },
+			      close: function() {
+			        //algo para limpiar?
+			      }
+			});
+			
+			$( "#addLineaPresupuesto").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-circle-plus"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	var index = $( "#pres-cont" ).sortable( "toArray" ).length;
+		    	addLineaPresupuesto( index + 1, JSON.parse($("#valoresCboIva").val()) );
+		    });	
+			
+			$( "#addCabeceraPresupuesto").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-circle-plus"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    });	
+				
+			// <-------- fin presupuestos
 			
 		});
 	//]]>

@@ -348,6 +348,17 @@ function initFecFacDatePicker() {
 	});
 }
 
+function initFecPresupDatePicker() {
+	$( "#presFecha" ).datepicker({
+		dateFormat: 'dd/mm/yy',
+		constrainInput: false,
+		showOn: "button",
+	    buttonImage: "/reymasur/images/calendar.png",
+	    buttonImageOnly: true,
+	    buttonText: "Seleccionar fecha"
+	});
+}
+
 /* function obtenerParametroLineaFactura(contenedor, idFactura) {
 	var filas = contenedor.find("tbody tr");
 	var res = [];
@@ -438,6 +449,27 @@ function cargarLineaFacturaInicial(oficios, iva) {
 	$("#tablaFactura").editableTableWidget().formularioFactura();
 }
 
+function cargarLineaInicialPresupuesto(iva){
+	// limpiar posibles lineas de anteriores 
+	// facturas
+	//$("#pres-cont").empty();
+	// limpiar fecha y numero
+	$("#presFecha, #presNumero").val('');
+	
+	var cbIva = cargarOpcionesCombo(iva);
+	addLineaPresupuesto(1, cbIva);
+	
+}
+
+function addLineaPresupuesto(index, comboIva) {
+	$('<div style="float: left; width: 100%; border: 2px solid #C1D5C9; padding: 1em;">' +
+			'<div class="presConcepto"><textarea placeholder="Escribir concepto de la factura"></textarea></div>' +
+			'<div class="presCoste"><input type="text" value="0" name="pres-coste-"' + index + '" id="pres-coste-"' + index + '" /></div>' +
+			'<div class="presIva"><select style="height: 2em;" name="cbIva-"' + index + '" id="cbIva-"' + index + '">' + comboIva + '</select></div>' +
+	'</div>')
+	.appendTo("#pres-cont");
+}
+
 function cargarOpcionesCombo(opciones) {
 	var res = "";
 	$.each(opciones, function(index, opcion) {
@@ -518,6 +550,7 @@ function initBotonEliminarLinea() {
 		}
 	});
 }
+
 
 function obtenerDatosFacturaJSON( idDivFormulario ) {
 	var divForm = $("#" + idDivFormulario); 
