@@ -43,12 +43,20 @@
 						<%-- lineas del presupuesto  --%>
 					</div> 	
 														
-					<div style="float: left; width: 100%; margin-top: 3em;">
-						<button id="addCabeceraPresupuesto">A&ntilde;adir Cabecera</button>
+					<div style="float: left; width: 100%; margin-top: 3em;">						
 						<button id="addLineaPresupuesto">A&ntilde;adir Concepto</button>
-					</div>			        
+					</div>
+					<div style="float: left; width: 100%; margin-top: 0.7em;">
+						<div style="float: left;">
+							<button id="addCabeceraPresupuesto">A&ntilde;adir Cabecera</button>
+						</div>
+						<div style="float: left;">
+							<form:select cssStyle="width: 14em;" path="oficios" id="presOficios">
+					        	<form:options itemLabel="ofiDescripcion" itemValue="ofiId" items="${oficios}" />
+							</form:select>
+						</div>						
+					</div>
 				</div>
-			</div>
-			
+			</div>			
 	  	</div>	<!-- fin contenedor general -->
 	  	

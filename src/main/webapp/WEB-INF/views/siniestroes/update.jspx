@@ -1107,7 +1107,10 @@
 		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
 		    	cargarLineaInicialPresupuesto(ivasJson);
 		    	// datepicker para fecha del presupuesto		    	
-		    	initFecPresupDatePicker();    	
+		    	initFecPresupDatePicker();
+		    	// combo de oficios para cabeceras
+		    	$( "#presOficios" ).selectmenu();
+		    	//addCabeceraPresupuesto
 		    	// abrir ventana modal
 		    	dialogPresupuesto.dialog( "open" );		    	
 		    });
@@ -1147,7 +1150,9 @@
 			}).click(function(event) {
 		    	event.preventDefault();
 		    	var index = $( "#pres-cont" ).sortable( "toArray" ).length;
-		    	addLineaPresupuesto( index + 1, JSON.parse($("#valoresCboIva").val()) );
+		    	addLineaPresupuesto( index + 1,  
+		    					cargarOpcionesCombo( JSON.parse($("#valoresCboIva").val()) )
+		    				);
 		    });	
 			
 			$( "#addCabeceraPresupuesto").button({		    	

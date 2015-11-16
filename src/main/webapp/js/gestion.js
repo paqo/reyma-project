@@ -452,7 +452,7 @@ function cargarLineaFacturaInicial(oficios, iva) {
 function cargarLineaInicialPresupuesto(iva){
 	// limpiar posibles lineas de anteriores 
 	// facturas
-	//$("#pres-cont").empty();
+	$("#pres-cont").empty();
 	// limpiar fecha y numero
 	$("#presFecha, #presNumero").val('');
 	
@@ -464,8 +464,8 @@ function cargarLineaInicialPresupuesto(iva){
 function addLineaPresupuesto(index, comboIva) {
 	$('<div style="float: left; width: 100%; border: 2px solid #C1D5C9; padding: 1em;">' +
 			'<div class="presConcepto"><textarea placeholder="Escribir concepto de la factura"></textarea></div>' +
-			'<div class="presCoste"><input type="text" value="0" name="pres-coste-"' + index + '" id="pres-coste-"' + index + '" /></div>' +
-			'<div class="presIva"><select style="height: 2em;" name="cbIva-"' + index + '" id="cbIva-"' + index + '">' + comboIva + '</select></div>' +
+			'<div class="presCoste"><input type="text" value="0" name="pres-coste-' + index + '" id="pres-coste-' + index + '" /></div>' +
+			'<div class="presIva"><select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select></div>' +
 	'</div>')
 	.appendTo("#pres-cont");
 }
