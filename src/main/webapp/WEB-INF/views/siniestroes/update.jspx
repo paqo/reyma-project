@@ -1105,12 +1105,11 @@
 			}).click(function(event) {
 		    	event.preventDefault();
 		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
-		    	cargarLineaInicialPresupuesto(ivasJson);
+		    	// cargarLineaInicialPresupuesto(ivasJson);
 		    	// datepicker para fecha del presupuesto		    	
 		    	initFecPresupDatePicker();
 		    	// combo de oficios para cabeceras
-		    	$( "#presOficios" ).selectmenu();
-		    	//addCabeceraPresupuesto
+		    	$( "#presOficios" ).selectmenu();		    
 		    	// abrir ventana modal
 		    	dialogPresupuesto.dialog( "open" );		    	
 		    });
@@ -1160,8 +1159,17 @@
 	 	            primary: "ui-icon-circle-plus"
 	 	        }
 			}).click(function(event) {
-		    	event.preventDefault();
-		    });	
+		    	event.preventDefault();		    	
+		    	$('<div class="cabeceraPresupuesto">' + 
+		    		'<div style="float:right;" class="close">&times;</div>' +
+		    		$('#presOficios option:selected').text() + 
+		    	 '</div>')
+		    	.appendTo("#pres-cont");
+		    	$("div.close").click(function(event) {
+		    		event.stopPropagation();
+		    		$(this).parent().remove();
+				});
+		    });
 				
 			// <-------- fin presupuestos
 			

@@ -449,7 +449,7 @@ function cargarLineaFacturaInicial(oficios, iva) {
 	$("#tablaFactura").editableTableWidget().formularioFactura();
 }
 
-function cargarLineaInicialPresupuesto(iva){
+/* function cargarLineaInicialPresupuesto(iva){
 	// limpiar posibles lineas de anteriores 
 	// facturas
 	$("#pres-cont").empty();
@@ -459,15 +459,20 @@ function cargarLineaInicialPresupuesto(iva){
 	var cbIva = cargarOpcionesCombo(iva);
 	addLineaPresupuesto(1, cbIva);
 	
-}
+} */
 
 function addLineaPresupuesto(index, comboIva) {
-	$('<div style="float: left; width: 100%; border: 2px solid #C1D5C9; padding: 1em;">' +
+	$('<div class="lineaPresupuesto">' +
+			'<div style="float:right;" class="close">&times;</div>' +
 			'<div class="presConcepto"><textarea placeholder="Escribir concepto de la factura"></textarea></div>' +
 			'<div class="presCoste"><input type="text" value="0" name="pres-coste-' + index + '" id="pres-coste-' + index + '" /></div>' +
 			'<div class="presIva"><select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select></div>' +
-	'</div>')
+	  '</div>')
 	.appendTo("#pres-cont");
+	$("div.close").click(function(event) {
+		event.stopPropagation();
+	    $(this).parent().remove();
+	});
 }
 
 function cargarOpcionesCombo(opciones) {

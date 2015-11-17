@@ -24,7 +24,7 @@ public class LineaPresupuestoServiceImpl implements LineaPresupuestoService {
         return LineaPresupuesto.findLineaPresupuesto(id);
     }
 
-	public List<LineaPresupuesto> findAllLineaFacturas() {
+	public List<LineaPresupuesto> findAllLineasPresupuesto() {
         return LineaPresupuesto.findAllLineasPresupuesto();
     }
 

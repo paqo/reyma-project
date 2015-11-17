@@ -17,6 +17,7 @@ import com.reyma.gestion.dao.Estado;
 import com.reyma.gestion.dao.Factura;
 import com.reyma.gestion.dao.Iva;
 import com.reyma.gestion.dao.LineaFactura;
+import com.reyma.gestion.dao.LineaPresupuesto;
 import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Oficio;
 import com.reyma.gestion.dao.Operario;
@@ -625,5 +626,23 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         super.afterPropertiesSet();
         installLabelConverters(getObject());
     }
+
+	public Converter<String, List<LineaPresupuesto>> getLineaPresupuestoJsonStringToLineasPresupuestoConverter() {
+		return new org.springframework.core.convert.converter.Converter<java.lang.String, List<LineaPresupuesto>>() {
+            public List<LineaPresupuesto>convert(String lineasJsonStr) {            
+            	List<LineaPresupuesto> lineas = new JSONDeserializer<ArrayList<LineaPresupuesto>>()
+       				 .use("values", LineaPresupuesto.class).deserialize(lineasJsonStr, ArrayList.class);
+            	Iva auxIva;
+            	Oficio auxOficio;
+            	for (LineaPresupuesto lineaPresupuesto : lineas) {
+            		auxIva = ivaService.findIva( lineaPresupuesto.getLinIvaId().getIvaId() );
+            		auxOficio = oficioService.findOficio(lineaPresupuesto.getLinOficioId().getOfiId() );
+            		lineaPresupuesto.setLinIvaId(auxIva);
+            		lineaPresupuesto.setLinOficioId(auxOficio);
+				}
+            	return lineas;
+            }
+        };
+	}
 
 }

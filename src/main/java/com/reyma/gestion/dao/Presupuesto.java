@@ -136,19 +136,6 @@ public class Presupuesto {
     @Column(name = "pres_id")
     private Integer presId;
 
-	/*
-	 * explicacion diferencia entre orphanRemoval=true, cascade=CascadeType.REMOVE
-	 * http://nsinfra.blogspot.in/2013/03/jpa-20-hibernate-orphanremoval-true.html
-	 * 
-	 * (basicamente: con cascade=CascadeType.REMOVE, al borrar de la colección de
-	 * objetos de entidades hijas que tiene el objeto de la entidad padre, no 
-	 * borraría las entidades hijas, solamente se borrarían al borrar el propio padre, 
-	 * mientras que con orphanremoval=true, al borrar de la colección del padre, 
-	 * se borrarían también las entidades hijas
-	 * 
-	 * NOTA: es necesario poner CascadeType.ALL para que funcione con todas las operaciones, 
-	 * con CascadeType.PERSIST, por ejemplo, no valdría para los merge
-	 */
 	@OneToMany(mappedBy = "linPresId",  orphanRemoval=true, cascade=CascadeType.ALL)
     private Set<LineaPresupuesto> lineaPresupuesto;
 

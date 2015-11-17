@@ -17,7 +17,7 @@ public interface LineaPresupuestoService {
 	public abstract List<LineaPresupuesto> findLineasPresupuestoByIdPresupuesto(Integer idPresupuesto);
 
 
-	public abstract List<LineaPresupuesto> findAllLineaFacturas();
+	public abstract List<LineaPresupuesto> findAllLineasPresupuesto();
 
 
 	public abstract List<LineaPresupuesto> findLineaPresupuestoEntries(int firstResult, int maxResults);

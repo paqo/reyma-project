@@ -20,6 +20,7 @@
 			</div>			
 					
 			<div id="formulario-presupuesto" title="Crar un nuevo presupuesto">
+				<input type="hidden" id="idPresupuesto" name="idPresupuesto" value="" />
 				<input type="hidden" id="valoresCboIva" name="valoresCboIva" value='${valoresCboIva}' />
 				<input type="hidden" id="valoresCboOficios" name="valoresCboOficios" value='${valoresCboOficios}' />
 				
@@ -39,13 +40,10 @@
 						</div>
 					</div>
 					
-					<div id="pres-cont" style="float: left; width: 95%; margin-top: 1.8em;">
+					<div id="pres-cont">
 						<%-- lineas del presupuesto  --%>
 					</div> 	
-														
-					<div style="float: left; width: 100%; margin-top: 3em;">						
-						<button id="addLineaPresupuesto">A&ntilde;adir Concepto</button>
-					</div>
+					
 					<div style="float: left; width: 100%; margin-top: 0.7em;">
 						<div style="float: left;">
 							<button id="addCabeceraPresupuesto">A&ntilde;adir Cabecera</button>
@@ -55,7 +53,11 @@
 					        	<form:options itemLabel="ofiDescripcion" itemValue="ofiId" items="${oficios}" />
 							</form:select>
 						</div>						
+					</div>														
+					<div style="float: left; width: 100%; margin-top: 3em;">						
+						<button id="addLineaPresupuesto">A&ntilde;adir Concepto</button>
 					</div>
+					
 				</div>
 			</div>			
 	  	</div>	<!-- fin contenedor general -->
