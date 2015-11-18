@@ -34,6 +34,7 @@ import com.reyma.gestion.dao.Iva;
 import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Oficio;
 import com.reyma.gestion.dao.Persona;
+import com.reyma.gestion.dao.Presupuesto;
 import com.reyma.gestion.dao.Provincia;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.Trabajo;
@@ -45,6 +46,7 @@ import com.reyma.gestion.service.IvaService;
 import com.reyma.gestion.service.MunicipioService;
 import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.service.OperarioService;
+import com.reyma.gestion.service.PresupuestoService;
 import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
@@ -53,6 +55,7 @@ import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 import com.reyma.gestion.ui.listados.ElementoComboDTO;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
+import com.reyma.gestion.ui.listados.PresupuestoListadoDTO;
 import com.reyma.gestion.ui.listados.SiniestroListadoDataTablesDTO;
 import com.reyma.gestion.util.Fechas;
 
@@ -96,6 +99,9 @@ public class SiniestroController {
 
 	@Autowired
     FacturaService facturaService;
+	
+	@Autowired
+	PresupuestoService presupuestoService;
 
 	@Autowired
     TipoSiniestroService tipoSiniestroService;
@@ -354,7 +360,8 @@ public class SiniestroController {
 		uiModel.addAttribute("siniestro", siniestro);
         addDateTimeFormatPatterns(uiModel);
         ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();
-		Converter<Factura, FacturaListadoDTO> converter = acsf.getFacturaToFacturaListadoDTOConverter();
+		Converter<Factura, FacturaListadoDTO> facConverter = acsf.getFacturaToFacturaListadoDTOConverter();
+		Converter<Presupuesto, PresupuestoListadoDTO> presConverter = acsf.getPresupuestoToPresupuestoListadoDTOConverter();		
         
         List<AfectadoDomicilioSiniestro> afectados = 
         		afectadoDomicilioSiniestroService.findAfectadosDomicilioByIdSiniestro(siniestro.getSinId());
@@ -388,12 +395,23 @@ public class SiniestroController {
         List<Factura> facturas = facturaService.findFacturasByIdSiniestro(siniestro.getSinId());        
         List<FacturaListadoDTO> facturasListado = new ArrayList<FacturaListadoDTO>();        
         for (Factura fac : facturas) {
-        	facturasListado.add(converter.convert(fac));
+        	facturasListado.add(facConverter.convert(fac));
 		}
         uiModel.addAttribute("facturas", facturasListado);     
         // combo ivas
         uiModel.addAttribute("ivas", ivas );        
         //############### fin facturas
+        
+        //############### presupuestos
+        // (combos de oficios e ivas ya están de factura)
+        // listado de presupuestos del siniestro 
+        List<Presupuesto> presupuestos = presupuestoService.findPresupuestoByIdSiniestro(siniestro.getSinId());  
+        List<PresupuestoListadoDTO> presupuestosListado = new ArrayList<PresupuestoListadoDTO>();        
+        for (Presupuesto pres : presupuestos) {
+        	presupuestosListado.add(presConverter.convert(pres));
+		}
+        uiModel.addAttribute("presupuestos", presupuestosListado);        
+        //############### fin presupuestos
         
         // desplegables
         uiModel.addAttribute("companias", companiaService.findAllCompanias());

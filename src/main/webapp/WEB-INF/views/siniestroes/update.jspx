@@ -1100,7 +1100,7 @@
 			// boton crear nuevo presupuesto 
 			$( "#generarPresupuesto").button({		    	
 	 	        icons: {	 	        	
-	 	            primary: "ui-icon-clipboard"
+	 	            primary: "ui-icon-circle-plus"
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
@@ -1170,6 +1170,20 @@
 		    		$(this).parent().remove();
 				});
 		    });
+			
+			$( "[id^='btn-pres-']").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-wrench"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();
+		    	// datepicker para fecha del presupuesto		    	
+		    	initFecPresupDatePicker();
+		    	// combo de oficios para cabeceras
+		    	$( "#presOficios" ).selectmenu();
+		    	var idPres = $(this).parent().data("id");
+		    	cargarLineasPresupuesto(idPres, dialogPresupuesto);		    		
+		    });	
 				
 			// <-------- fin presupuestos
 			

@@ -42,7 +42,8 @@ public class LineaPresupuesto {
     }
 	
 	public static List<LineaPresupuesto> findLineaPresupuestoByIdPresupuesto(Integer idPresupuesto) {
-        return entityManager().createQuery("SELECT o FROM LineaFactura o WHERE o.linFacId = " + idPresupuesto + " ORDER BY o.linId ", LineaPresupuesto.class).getResultList();
+        return entityManager().createQuery("SELECT o FROM LineaPresupuesto o WHERE o.linPresId = " + 
+        			   idPresupuesto + " ORDER BY o.linId ", LineaPresupuesto.class).getResultList();
     }
 
 	public static List<LineaPresupuesto> findAllLineasPresupuesto(String sortFieldName, String sortOrder) {

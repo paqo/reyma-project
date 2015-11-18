@@ -10,13 +10,28 @@
     	<div><!-- contenedor general -->
     	
 	  		<div id="contenedor-presupuestos">	  	
-	  			<ul>
-	  				<li>presupuesto 1</li>
-	  				<li>presupuesto 2</li>
-	  			</ul>
+	  			<c:choose>
+	  				<c:when test="${fn:length(presupuestos) gt 0}">
+			  			<c:forEach items="${presupuestos}" var="item" varStatus="num">							
+							<div data-id="${item.id}" style="float: left; width: 100%; margin-bottom: 1.3em;">
+								<c:set var="labelBoton" value="" />
+								<c:if test="${not empty item.numPresupuesto}">
+									<c:set var="labelBoton" value="${item.numPresupuesto}" />
+								</c:if>
+								<c:if test="${not empty item.fechaPresupuesto}">
+									<c:set var="labelBoton" value="${labelBoton} ${item.fechaPresupuesto}" />
+								</c:if>
+								<button id="btn-pres-${item.id}">Prespuesto ${labelBoton}</button>							
+							</div>
+						</c:forEach>
+	  				</c:when>
+	  				<c:otherwise>
+	  					No se ha generado ning&uacute;n presupuesto
+	  				</c:otherwise>
+	  			</c:choose>
 			</div>
 			<div style="margin-top: 2em; text-align: right;">
-				<button id="generarPresupuesto">Crear Prespuesto</button>
+				<button id="generarPresupuesto">Nuevo Prespuesto</button>
 			</div>			
 					
 			<div id="formulario-presupuesto" title="Crar un nuevo presupuesto">

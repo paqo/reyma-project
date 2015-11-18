@@ -47,7 +47,6 @@ public class PresupuestoServiceImpl implements PresupuestoService {
 
 	@Override
 	public List<Presupuesto> findPresupuestoByIdSiniestro(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return Presupuesto.findPresupuestoParaSiniestro(id);
 	}
 }

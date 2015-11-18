@@ -461,6 +461,9 @@ function cargarLineaFacturaInicial(oficios, iva) {
 	
 } */
 
+/**
+ * añadir linea vacia al formulario de presupuesto (concepto)
+ */
 function addLineaPresupuesto(index, comboIva) {
 	$('<div class="lineaPresupuesto">' +
 			'<div style="float:right;" class="close">&times;</div>' +
@@ -475,10 +478,59 @@ function addLineaPresupuesto(index, comboIva) {
 	});
 }
 
-function cargarOpcionesCombo(opciones) {
+/**
+ * Cargar una linea en el formulario del presupuesto correspondiente
+ * @param index
+ * @param linea
+ */
+function cargarLineaPresupuesto(index, linea) {
+	var comboIva = cargarOpcionesCombo( JSON.parse($("#valoresCboIva").val(), linea.iva) );
+	$('<div class="lineaPresupuesto">' +
+			'<div style="float:right;" class="close">&times;</div>' +
+			'<div class="presConcepto"><textarea>' + linea.concepto + '</textarea></div>' +
+			'<div class="presCoste"><input type="text" value="' + linea.coste + '" name="pres-coste-' + index + '" id="pres-coste-' + index + '" /></div>' +
+			'<div class="presIva"><select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select></div>' +
+	  '</div>')
+	.appendTo("#pres-cont");
+	$("div.close").click(function(event) {
+		event.stopPropagation();
+	    $(this).parent().remove();
+	});
+}
+
+
+
+function cargarLineasPresupuesto(idPresupuesto, dialogo) {
+	console.log("=> idPresupuesto: " + idPresupuesto);
+	var action = "/reymasur/lineaspresupuesto/cargarpres";
+	var peticion = $.getJSON( action, { idPres: idPresupuesto } );
+
+	peticion
+	.done(function( data ) {
+		$.each(data, function( index, lineapres ) {
+			if ( lineapres.oficio != null ){
+				cargarLineaPresupuesto(index, lineapres);
+			} else {
+				//TODO: hacer funcion que cargue cabeceras
+			}			
+		});
+		// abrir ventana modal
+		dialogo.dialog( "open" );
+	}).fail(function() {
+	    alert( "No se ha podido obtener el presupuesto" );
+	});
+}
+
+function cargarOpcionesCombo(opciones, seleccionado) {
 	var res = "";
 	$.each(opciones, function(index, opcion) {
-	     res += "<option value='" + opcion.valor + "'>" + opcion.label + "</option>";
+		 if ( !isNaN(seleccionado) ){			 
+			 res += index == seleccionado? 
+				"<option selected='selected' value='" + opcion.valor + "'>" + opcion.label + "</option>" :
+				"<option value='" + opcion.valor + "'>" + opcion.label + "</option>";
+		 } else {
+			 res += "<option value='" + opcion.valor + "'>" + opcion.label + "</option>";
+		 }
     });
 	return res;
 }

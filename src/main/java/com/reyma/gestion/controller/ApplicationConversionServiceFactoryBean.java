@@ -22,6 +22,7 @@ import com.reyma.gestion.dao.Municipio;
 import com.reyma.gestion.dao.Oficio;
 import com.reyma.gestion.dao.Operario;
 import com.reyma.gestion.dao.Persona;
+import com.reyma.gestion.dao.Presupuesto;
 import com.reyma.gestion.dao.Provincia;
 import com.reyma.gestion.dao.Siniestro;
 import com.reyma.gestion.dao.TipoAfectacion;
@@ -44,7 +45,9 @@ import com.reyma.gestion.service.TipoAfectacionService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
 import com.reyma.gestion.ui.LineaFacturaDTO;
+import com.reyma.gestion.ui.LineaPresupuestoDTO;
 import com.reyma.gestion.ui.listados.FacturaListadoDTO;
+import com.reyma.gestion.ui.listados.PresupuestoListadoDTO;
 import com.reyma.gestion.ui.listados.SiniestroListadoDataTablesDTO;
 import com.reyma.gestion.util.Fechas;
 import com.reyma.gestion.util.Utils;
@@ -289,6 +292,34 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             }
         };
     }
+	
+	public Converter<String, List<LineaPresupuesto>> getLineaPresupuestoJsonStringToLineasPresupuestoConverter() {
+		return new org.springframework.core.convert.converter.Converter<java.lang.String, List<LineaPresupuesto>>() {
+            public List<LineaPresupuesto>convert(String lineasJsonStr) {            
+            	List<LineaPresupuesto> lineas = new JSONDeserializer<ArrayList<LineaPresupuesto>>()
+       				 .use("values", LineaPresupuesto.class).deserialize(lineasJsonStr, ArrayList.class);
+            	Iva auxIva;
+            	Oficio auxOficio;
+            	for (LineaPresupuesto lineaPresupuesto : lineas) {
+            		auxIva = ivaService.findIva( lineaPresupuesto.getLinIvaId().getIvaId() );
+            		auxOficio = oficioService.findOficio(lineaPresupuesto.getLinOficioId().getOfiId() );
+            		lineaPresupuesto.setLinIvaId(auxIva);
+            		lineaPresupuesto.setLinOficioId(auxOficio);
+				}
+            	return lineas;
+            }
+        };
+	}
+
+	public Converter<Presupuesto, PresupuestoListadoDTO> getPresupuestoToPresupuestoListadoDTOConverter() {
+		 return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Presupuesto, com.reyma.gestion.ui.listados.PresupuestoListadoDTO>() {
+	            public PresupuestoListadoDTO convert(Presupuesto presupuesto) {
+	            	String fecha = Fechas.formatearFechaDDMMYYYY( presupuesto.getPresFecha().getTime() );
+	                return new PresupuestoListadoDTO(presupuesto.getPresId(), 
+	                		presupuesto.getPresAdsId().getAdsId(), presupuesto.getPresNumPresupuesto(), fecha);
+	            }
+	        };
+	}
 
 	public Converter<String, Factura> getStringToFacturaConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reyma.gestion.dao.Factura>() {
@@ -627,22 +658,22 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         installLabelConverters(getObject());
     }
 
-	public Converter<String, List<LineaPresupuesto>> getLineaPresupuestoJsonStringToLineasPresupuestoConverter() {
-		return new org.springframework.core.convert.converter.Converter<java.lang.String, List<LineaPresupuesto>>() {
-            public List<LineaPresupuesto>convert(String lineasJsonStr) {            
-            	List<LineaPresupuesto> lineas = new JSONDeserializer<ArrayList<LineaPresupuesto>>()
-       				 .use("values", LineaPresupuesto.class).deserialize(lineasJsonStr, ArrayList.class);
-            	Iva auxIva;
-            	Oficio auxOficio;
-            	for (LineaPresupuesto lineaPresupuesto : lineas) {
-            		auxIva = ivaService.findIva( lineaPresupuesto.getLinIvaId().getIvaId() );
-            		auxOficio = oficioService.findOficio(lineaPresupuesto.getLinOficioId().getOfiId() );
-            		lineaPresupuesto.setLinIvaId(auxIva);
-            		lineaPresupuesto.setLinOficioId(auxOficio);
-				}
-            	return lineas;
+	public Converter<LineaPresupuesto, LineaPresupuestoDTO> getLineaPresupuestoToLineaPresupuestoListadoDTOConverter() {
+		return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.LineaPresupuesto, com.reyma.gestion.ui.LineaPresupuestoDTO>() {
+            public LineaPresupuestoDTO convert(LineaPresupuesto lineaPresupuesto) {            	        	
+                // distinguir entre cabeceras y conceptos
+            	return lineaPresupuesto.getLinOficioId() != null?
+            			new LineaPresupuestoDTO( // linea con cabecera
+            					lineaPresupuesto.getLinId(), 
+            					lineaPresupuesto.getLinOficioId().getOfiId()            					
+            			) : 
+            			new LineaPresupuestoDTO( // linea real de concepto
+            					lineaPresupuesto.getLinId(), lineaPresupuesto.getLinConcepto(), 
+            					lineaPresupuesto.getLinIvaId().getIvaId(), 
+            					lineaPresupuesto.getLinImporte().doubleValue()
+            			);
             }
         };
-	}
+	}	
 
 }
