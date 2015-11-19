@@ -1,39 +1,37 @@
 package com.reyma.gestion.controller;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
-import com.reyma.gestion.controller.validators.UtilsValidacion;
-import com.reyma.gestion.dao.LineaPresupuesto;
+import com.reyma.gestion.dao.AfectadoDomicilioSiniestro;
 import com.reyma.gestion.dao.Presupuesto;
 import com.reyma.gestion.service.AfectadoDomicilioSiniestroService;
 import com.reyma.gestion.service.LineaPresupuestoService;
 import com.reyma.gestion.service.PresupuestoService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.ui.MensajeErrorJson;
-import com.reyma.gestion.ui.MensajeErrorValidacionJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
+import com.reyma.gestion.ui.PresupuestoDTO;
 
 import flexjson.JSONSerializer;
 
@@ -55,56 +53,45 @@ public class PresupuestoController {
 
 	private static final Logger LOG = Logger.getLogger(PresupuestoController.class);
 	
-	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
-    public String create(@Valid Presupuesto presupuesto, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, presupuesto);
-            return "presupuestos/create";
-        }
-        uiModel.asMap().clear();
-        presupuestoService.savePresupuesto(presupuesto);
-        return "redirect:/presupuestos/" + encodeUrlPathSegment(presupuesto.getPresId().toString(), httpServletRequest);
-    }
-	
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String alta(@Valid Presupuesto presupuesto, BindingResult bindingResult, Model uiModel, HttpServletRequest request) {		
-		List<FieldError> errores = new ArrayList<FieldError>();	
-		errores = UtilsValidacion.getErroresValidacion(bindingResult.getFieldErrors());
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String alta(@RequestBody PresupuestoDTO presupuestoDto ) {		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");		
+		Calendar cal = new GregorianCalendar();
 		
-		MensajeErrorValidacionJson mensajeError = null;
+		//ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();					
+		//Converter<LineaPresupuestoDTO, LineaPresupuesto> converter = acsf.getLineaPresupuestoDTOToLineaPresupuestoConverter();
 		JSONSerializer serializer = new JSONSerializer();
+		MensajeErrorJson mensajeError;
 		
-		if ( errores.size() == 0 ){
-			if ( bindingResult.getFieldErrors().size() > 0 ){				
-				mensajeError =  new MensajeErrorValidacionJson( bindingResult.getFieldErrors() );				
-			} else {
-				try {					
-					ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();					
-					Converter<String, List<LineaPresupuesto>> converter = acsf.getLineaPresupuestoJsonStringToLineasPresupuestoConverter();
-					List<LineaPresupuesto> lineas = converter.convert( request.getParameter("presFac") );
-					// TODO: generar el numero de factura
-					// grabamos presupuesto
-					presupuestoService.savePresupuesto(presupuesto);
-					for (LineaPresupuesto lineaPresupuesto : lineas) {						
-						lineaPresupuesto.setLinPresId(presupuesto);
-						lineaPresupuestoService.saveLineaPresupuesto(lineaPresupuesto);
-					}					
-					Map<String, Boolean> res = new HashMap<String, Boolean>();
-					res.put("recargar", Boolean.TRUE);
-					return serializer.exclude("class").serialize(res);				
-				} catch (Exception e) {						
-					//TODO: que cuando falle en lineas, borre la factura
-					e.printStackTrace();
-				}
-			}
+		Presupuesto pres = presupuestoService.findPresupuesto(presupuestoDto.getIdPresupuesto());
+		if ( pres == null ){
+			mensajeError = new MensajeErrorJson("No se ha podido encontrar el presupuesto para modificar");
+			mensajeError.setTitulo("Error actualizando presupuesto");
+			return serializer.exclude("class").serialize(mensajeError);
 		} else {
-			// tiene errores de validacion
-			mensajeError = new MensajeErrorValidacionJson(errores);
-		}
-		mensajeError.setRecargar(false);
-		return serializer.exclude("class").serialize(mensajeError);
-    }	
+			try {
+				// campos generales de fecha, num pres y afectado
+				cal.setTime( sdf.parse( presupuestoDto.getFechaPresupuesto() ) );
+				pres.setPresFecha(cal);
+				pres.setPresNumPresupuesto(presupuestoDto.getNumPresupuesto());
+				AfectadoDomicilioSiniestro afectado = adsService.findAfectadoDomicilioSiniestro(presupuestoDto.getIdAfectado());
+				pres.setPresAdsId(afectado);			
+				// grabar factura
+				presupuestoService.savePresupuesto(pres);
+			} catch (ParseException e) {				
+				mensajeError = new MensajeErrorJson("No se ha podido modificar la fecha del presupuesto");
+				mensajeError.setTitulo("Error actualizando presupuesto");
+				LOG.error("error parseando fecha:\n", e);
+				return serializer.exclude("class").serialize(mensajeError);
+			} catch (Exception e) {
+				LOG.error("error grabando presupuesto:\n", e); 
+			}			
+		}		
+		Map<String, Boolean> res = new HashMap<String, Boolean>();
+		res.put("exito", Boolean.TRUE);
+		return serializer.exclude("class").serialize(res);
+    }
 		
 	@ResponseBody
 	@RequestMapping(value = "/{presId}", params = "eliminar", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")	

@@ -449,18 +449,6 @@ function cargarLineaFacturaInicial(oficios, iva) {
 	$("#tablaFactura").editableTableWidget().formularioFactura();
 }
 
-/* function cargarLineaInicialPresupuesto(iva){
-	// limpiar posibles lineas de anteriores 
-	// facturas
-	$("#pres-cont").empty();
-	// limpiar fecha y numero
-	$("#presFecha, #presNumero").val('');
-	
-	var cbIva = cargarOpcionesCombo(iva);
-	addLineaPresupuesto(1, cbIva);
-	
-} */
-
 /**
  * añadir linea vacia al formulario de presupuesto (concepto)
  */
@@ -469,12 +457,15 @@ function addLineaPresupuesto(index, comboIva) {
 			'<div style="float:right;" class="close">&times;</div>' +
 			'<div class="presConcepto"><textarea placeholder="Escribir concepto de la factura"></textarea></div>' +
 			'<div class="presCoste"><input type="text" value="0" name="pres-coste-' + index + '" id="pres-coste-' + index + '" /></div>' +
-			'<div class="presIva"><select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select></div>' +
+			'<div class="presIva"> ' + 
+				'<select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select>' + 
+			'</div>' +
 	  '</div>')
-	.appendTo("#pres-cont");
-	$("div.close").click(function(event) {
+	.appendTo("#pres-cont")
+	.find("div.close")
+	.click(function(event) {
 		event.stopPropagation();
-	    $(this).parent().remove();
+		$(this).parent().remove();
 	});
 }
 
@@ -483,25 +474,52 @@ function addLineaPresupuesto(index, comboIva) {
  * @param index
  * @param linea
  */
-function cargarLineaPresupuesto(index, linea) {
-	var comboIva = cargarOpcionesCombo( JSON.parse($("#valoresCboIva").val(), linea.iva) );
+function cargarLinPresConcepto(index, linea) {	
+	var comboIva = cargarOpcionesCombo( JSON.parse($("#valoresCboIva").val()), linea.iva );
 	$('<div class="lineaPresupuesto">' +
 			'<div style="float:right;" class="close">&times;</div>' +
 			'<div class="presConcepto"><textarea>' + linea.concepto + '</textarea></div>' +
 			'<div class="presCoste"><input type="text" value="' + linea.coste + '" name="pres-coste-' + index + '" id="pres-coste-' + index + '" /></div>' +
 			'<div class="presIva"><select style="height: 2em;" name="cbIva-' + index + '" id="cbIva-' + index + '">' + comboIva + '</select></div>' +
 	  '</div>')
-	.appendTo("#pres-cont");
-	$("div.close").click(function(event) {
+	.appendTo("#pres-cont")
+	.find("div.close")
+	.click(function(event) {
 		event.stopPropagation();
-	    $(this).parent().remove();
+		$(this).parent().remove();
 	});
 }
 
 
+function cargarLinPresCabecera(idOficio) {
+		$('<div data-id="' + idOficio + '" class="cabeceraPresupuesto">' + 
+    		'<div style="float:right;" class="close">&times;</div>' +
+    		 $('#presOficios option[value="' + idOficio + '"]').text() + 
+    	 '</div>')
+    	.appendTo("#pres-cont")
+    	.find("div.close")
+    	.click(function(event) {
+    		event.stopPropagation();
+    		$(this).parent().remove();
+		});
+}
 
-function cargarLineasPresupuesto(idPresupuesto, dialogo) {
-	console.log("=> idPresupuesto: " + idPresupuesto);
+function limpiarFormPresupuesto() {	
+	$("#presFecha").datepicker( "destroy" );
+	$("#idPresupuesto").val("");
+	$("#presNumero").val("");	
+	$("#pres-cont").empty();
+}
+
+function cargarPresupuesto(idPresupuesto, dialogo) {	
+	$("#idPresupuesto").val(idPresupuesto);
+	// datepicker para fecha del presupuesto		    	
+	initFecPresupDatePicker();
+	// combo de oficios para cabeceras
+	$( "#presOficios" ).selectmenu();
+	// limpiar posibles lineas anteriores
+	$("#pres-cont").empty();
+	
 	var action = "/reymasur/lineaspresupuesto/cargarpres";
 	var peticion = $.getJSON( action, { idPres: idPresupuesto } );
 
@@ -509,23 +527,94 @@ function cargarLineasPresupuesto(idPresupuesto, dialogo) {
 	.done(function( data ) {
 		$.each(data, function( index, lineapres ) {
 			if ( lineapres.oficio != null ){
-				cargarLineaPresupuesto(index, lineapres);
+				cargarLinPresCabecera(lineapres.oficio);
 			} else {
-				//TODO: hacer funcion que cargue cabeceras
+				cargarLinPresConcepto(index, lineapres);
 			}			
 		});
-		// abrir ventana modal
+		// abrir ventana del presupuesto
 		dialogo.dialog( "open" );
 	}).fail(function() {
 	    alert( "No se ha podido obtener el presupuesto" );
 	});
 }
 
+function guardarPresupuesto() {
+	var peticion;
+	var datosPresupuesto = obtenerDatosFormPresupuestoJSON();	
+	var action = datosPresupuesto.idPresupuesto != null ? 
+				"/reymasur/presupuestos/actualizar" : 
+				"/reymasur/presupuestos/add";
+	
+	peticion = $.ajax( {
+			   dataType: "json",
+		   contentType: "application/json; charset=UTF-8",
+		   type: "POST",
+		   url: action,
+		   data: datosPresupuesto
+		} );	
+	// tratar respuesta
+	peticion
+    	.done(function( data ) {		
+        	if ( data.exito || data.recargar ){        		
+        		dialogFactura.dialog( "close" );
+        		// mostrar aviso de espera
+				$("#cargando").show();
+				// recargar datos siniestro
+				document.location.reload(true);
+				$( "#tabs" ).tabs( "option", "active", 3 );
+			} else {
+        		$( "#mensajesUsuario" ).dialog( "option", "title", "Error guardando el presupuesto" );
+				$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+				$( "#mensajesUsuario" ).dialog( "open" );
+        	}
+    	
+		})
+		.fail(function() {
+		    alert( "No se ha podido crear el presupuesto." );
+		});
+}
+
+function obtenerDatosFormPresupuestoJSON() {	
+	var divForm = $("#formulario-presupuesto");	
+	// campos generales
+	var idAfectado = parseInt( divForm.find("#presAfectado").val() );
+	var numPresupuesto = divForm.find("#presNumero").val();
+	var fechaPresupuesto = divForm.find("#presFecha").val();
+	// lineas presupuesto
+	var lineasPresupuesto = [];
+	divForm.find("#pres-cont > div").each(function( index ) {
+		if ( $( this ).hasClass( "cabeceraPresupuesto" ) ){
+			lineasFactura.push({			 
+				oficio: parseInt( $( this ).data("id") ),
+				concepto: '', 
+				coste: 0,
+				iva: 0, 			
+				id: null
+			});
+		} else {
+			lineasFactura.push({			 
+				oficio: parseInt( $( this ).data("id") ),
+				concepto: $(this).find("textarea").val() , 
+				coste: parseFloat( $(this).find("[id^='pres-coste']").val() ),
+				iva: parseInt( $(this).find("[id^='cbIva']").val() ), 			
+				id: null
+			});
+		}
+	});	
+	
+	return JSON.stringify({ 'idPresupuesto': parseInt(divForm.find("#idPresupuesto").val()), 
+							'numPresupuesto': numPresupuesto, 
+							'fechaPresupuesto': fechaPresupuesto,
+							'idAfectado': idAfectado,
+							'lineasPresupuesto' : lineasPresupuesto });
+}
+
 function cargarOpcionesCombo(opciones, seleccionado) {
 	var res = "";
 	$.each(opciones, function(index, opcion) {
 		 if ( !isNaN(seleccionado) ){			 
-			 res += index == seleccionado? 
+			 res += opcion.valor == seleccionado? 
 				"<option selected='selected' value='" + opcion.valor + "'>" + opcion.label + "</option>" :
 				"<option value='" + opcion.valor + "'>" + opcion.label + "</option>";
 		 } else {

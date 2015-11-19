@@ -320,6 +320,38 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 	            }
 	        };
 	}
+	
+	public Converter<LineaPresupuesto, LineaPresupuestoDTO> getLineaPresupuestoToLineaPresupuestoListadoDTOConverter() {
+		return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.LineaPresupuesto, com.reyma.gestion.ui.LineaPresupuestoDTO>() {
+            public LineaPresupuestoDTO convert(LineaPresupuesto lineaPresupuesto) {            	        	
+                // distinguir entre cabeceras y conceptos
+            	return lineaPresupuesto.getLinOficioId() != null?
+            			new LineaPresupuestoDTO( // linea con cabecera
+            					lineaPresupuesto.getLinId(), 
+            					lineaPresupuesto.getLinOficioId().getOfiId()            					
+            			) : 
+            			new LineaPresupuestoDTO( // linea real de concepto
+            					lineaPresupuesto.getLinId(), lineaPresupuesto.getLinConcepto(), 
+            					lineaPresupuesto.getLinIvaId().getIvaId(), 
+            					lineaPresupuesto.getLinImporte().doubleValue()
+            			);
+            }
+        };
+	}
+
+	public Converter<LineaPresupuestoDTO, LineaPresupuesto> getLineaPresupuestoDTOToLineaPresupuestoConverter() {
+		return new org.springframework.core.convert.converter.Converter<LineaPresupuestoDTO, LineaPresupuesto>() {
+            public LineaPresupuesto convert(LineaPresupuestoDTO lineaDto) {   
+            	LineaPresupuesto res = new LineaPresupuesto();
+            	res.setLinId(lineaDto.getId());
+            	res.setLinConcepto( lineaDto.getConcepto() );
+            	res.setLinImporte( new BigDecimal(lineaDto.getCoste()) );            	
+            	res.setLinIvaId( ivaService.findIva(lineaDto.getIva()) );         
+            	res.setLinOficioId(oficioService.findOficio(lineaDto.getOficio())); 
+                return res;
+            }
+        };
+	}	
 
 	public Converter<String, Factura> getStringToFacturaConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reyma.gestion.dao.Factura>() {
@@ -657,23 +689,5 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         super.afterPropertiesSet();
         installLabelConverters(getObject());
     }
-
-	public Converter<LineaPresupuesto, LineaPresupuestoDTO> getLineaPresupuestoToLineaPresupuestoListadoDTOConverter() {
-		return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.LineaPresupuesto, com.reyma.gestion.ui.LineaPresupuestoDTO>() {
-            public LineaPresupuestoDTO convert(LineaPresupuesto lineaPresupuesto) {            	        	
-                // distinguir entre cabeceras y conceptos
-            	return lineaPresupuesto.getLinOficioId() != null?
-            			new LineaPresupuestoDTO( // linea con cabecera
-            					lineaPresupuesto.getLinId(), 
-            					lineaPresupuesto.getLinOficioId().getOfiId()            					
-            			) : 
-            			new LineaPresupuestoDTO( // linea real de concepto
-            					lineaPresupuesto.getLinId(), lineaPresupuesto.getLinConcepto(), 
-            					lineaPresupuesto.getLinIvaId().getIvaId(), 
-            					lineaPresupuesto.getLinImporte().doubleValue()
-            			);
-            }
-        };
-	}	
 
 }

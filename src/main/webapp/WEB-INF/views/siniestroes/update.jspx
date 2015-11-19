@@ -1104,7 +1104,6 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	var ivasJson = JSON.parse($("#valoresCboIva").val());
 		    	// cargarLineaInicialPresupuesto(ivasJson);
 		    	// datepicker para fecha del presupuesto		    	
 		    	initFecPresupDatePicker();
@@ -1130,16 +1129,13 @@
 			      modal: true,
 			      resizable: true,
 			      buttons: {
-			        "Guardar presupuesto": function() {
-			        	console.log("=> guardar presupuesto");
-			        },
+			        "Guardar presupuesto": 
+			        	guardarPresupuesto,
 			        "Cancelar": function() {
 			        	dialogPresupuesto.dialog( "close" );			       		
 			        }
 			      },
-			      close: function() {
-			        //algo para limpiar?
-			      }
+			      close: limpiarFormPresupuesto
 			});
 			
 			$( "#addLineaPresupuesto").button({		    	
@@ -1160,15 +1156,7 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();		    	
-		    	$('<div class="cabeceraPresupuesto">' + 
-		    		'<div style="float:right;" class="close">&times;</div>' +
-		    		$('#presOficios option:selected').text() + 
-		    	 '</div>')
-		    	.appendTo("#pres-cont");
-		    	$("div.close").click(function(event) {
-		    		event.stopPropagation();
-		    		$(this).parent().remove();
-				});
+		    	cargarLinPresCabecera($('#presOficios option:selected').text());
 		    });
 			
 			$( "[id^='btn-pres-']").button({		    	
@@ -1177,12 +1165,8 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
-		    	// datepicker para fecha del presupuesto		    	
-		    	initFecPresupDatePicker();
-		    	// combo de oficios para cabeceras
-		    	$( "#presOficios" ).selectmenu();
 		    	var idPres = $(this).parent().data("id");
-		    	cargarLineasPresupuesto(idPres, dialogPresupuesto);		    		
+		    	cargarPresupuesto(idPres, dialogPresupuesto);		    		
 		    });	
 				
 			// <-------- fin presupuestos
