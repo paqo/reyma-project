@@ -1,0 +1,727 @@
+/* main elements */
+
+body,div,td {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+}
+
+body {
+	background-color: #fff;
+	text-align: center;
+}
+
+#header {
+	margin-bottom: 1em;
+}
+
+#wrapper {
+	width:1024px;
+	min-width: 1024px;
+	max-width: 1024px;
+	margin-right: auto;
+	margin-left: auto;
+
+	/* fix max-width incompatibility in IE6 */
+	width:expression(document.body.clientWidth > 800? "800px": "auto" );
+	
+	overflow:hidden;
+	display:block;
+}
+
+/* header and footer elements */
+
+#main {
+	overflow:hidden;
+	display:box;
+	min-height: 18em;
+}
+
+#menu {
+	background: #eee;
+	position:relative;
+	float:left;  	
+	left:0px;
+	width:220px;
+	margin-right:15px;
+}
+
+#menu ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#menu ul li{
+	padding: 0px;
+}
+
+
+#menu a, #menu h2 {
+	display: block;
+	margin: 0;
+	padding: 2px 6px;
+	color:#FFFFFF;
+}
+
+#menu h2 {
+	color: #fff;
+	/* background: #648C1D; */
+	background: #61A023;
+	text-transform: uppercase;
+	font-weight:bold;
+	font-size: 12px;
+}
+
+#menu a {
+	color: #666666;
+	background: #efefef;
+	text-decoration: none;
+	padding: 2px 12px;
+}
+
+#menu a:hover {
+	color: #648C1D;
+	background: #fff;
+}
+
+#footer {
+	background:#fff;
+	border:none;
+	margin-top:15px;
+	margin-bottom:15px;
+	/* border-top:1px solid #999999; */
+}
+
+#footer .new {
+	float:left;
+}
+
+#footer a:link {color: #7db223;}
+
+.quicklinks {
+	clear:both; 
+	padding-bottom: 15px
+}
+.quicklinks span {
+	float: right;
+}
+
+table.navigation {
+	border: 0px;
+}
+
+label {
+	width:120px;
+	float:left;
+	margin-left: 5px;
+	margin-top: 0px;
+}
+
+input {
+	height:20px;
+}
+
+input, textarea, select {
+	border:1px solid #B3B3B3;
+}
+
+input.image {
+	border: none;
+	height: auto;
+	vertical-align: middle;
+}
+
+submit {
+	height:25px;
+}
+
+div {
+	text-align: left;
+}
+
+div .box {
+	display:block;
+	margin-left:105px;
+}
+
+/* menu elements*/
+
+a.menu, a.menu:link, a.menu:visited {display:block; width:150px; height:25px;} 
+	
+/* text styles */
+
+h1,h2,h3 {
+	font-family: Helvetica, sans-serif;
+	color: #7db223;
+}
+
+h1 {
+	font-size: 20px;
+	line-height: 26px;
+}
+
+h2 {
+	font-size: 18px;
+	line-height: 20px;
+}
+
+h3 {
+	font-size: 15px;
+	line-height: 21px;
+	color:#555;
+}
+
+h4 {
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.errors {
+	color: red;
+	font-weight: bold;
+	display: block;
+	margin-left: 105px;
+}
+
+a {
+	text-decoration: underline;
+	font-size: 12px;
+}
+
+a img {
+	border: 0 none;
+	vertical-align: middle;
+}
+
+tr:nth-child(odd) {
+	background-color: #FFFFFF;
+}
+
+tr:nth-child(even) {
+	background-color: #EFEFEF;
+}
+
+a:link {
+	color: #7db223;
+}
+
+a:hover {
+	color: #456314;
+}
+
+a:active {
+	color: #7db223;
+}
+
+a:visited {
+	color: #7db223;
+}
+
+li {
+	padding-top: 5px;
+	text-align: left;
+}
+
+ul li {
+	margin:0 0 0.25em 0;
+	padding:0;
+}
+/* table elements */
+
+table {
+	background: #EEEEEE;
+	margin: 2px 0 0 0;
+	border: 1px solid #BBBBBB;
+	/* border-collapse: collapse; */
+	width: 100%
+}
+
+table table {
+	margin: -5px 0;
+	border: 0px solid #e0e7d3;
+	width: 100%;
+}
+
+table td,table th {
+	padding: 2px;
+	/* border: 1px solid #CCCCCC; */
+}
+
+table td form {
+	text-align:center;
+	vertical-align: middle;
+	margin: 0px;
+}
+
+table th {
+	font-size: 0.9em;
+	text-align: left;
+	font-weight: bold;
+	/*color: #FFF;
+	background: #999;*/
+	color: #FFF;
+	background: #61A023;
+}
+
+table thead {
+	font-weight: bold;
+	font-style: italic;
+	background-color: #BBBBBB;
+}
+
+table a:link {color: #303030;}
+
+.utilbox {width: 18px;}
+
+caption {
+	caption-side: top;
+	width: auto;
+	text-align: left;
+	font-size: 12px;
+	color: #848f73;
+	padding-bottom: 4px;
+}
+
+fieldset {
+	background: #e0e7d3;
+	padding: 8px;
+	padding-bottom: 22px;
+	border: none;
+	width: 560px;
+}
+
+fieldset label {
+	width: 70px;
+	float: left;
+	margin-top: 1.7em;
+	margin-left: 20px;
+}
+
+fieldset textfield {
+	margin: 3px;
+	height: 20px;
+	background: #e0e7d3;
+}
+
+fieldset textarea {
+	margin: 3px;
+	height: 165px;
+	background: #e0e7d3;
+}
+
+fieldset input {
+	margin: 3px;
+	height: 20px;
+	background: #e0e7d3;
+}
+
+fieldset table {
+	width: 100%;
+}
+
+fieldset th {
+	padding-left: 25px;
+}
+
+.table-buttons {
+	background-color:#fff;
+	border:none;
+}
+
+.table-buttons td {
+	border:none;
+}
+
+.submit input {
+	border: 1px solid #BBBBBB;
+	color:#777777;
+	padding:2px 7px;
+	font-size:11px;
+	text-transform:uppercase;
+	font-weight:bold;
+	height:24px;
+}
+
+.updated {
+	background:#ecf1e5;
+	font-size:11px;
+	margin-left:2px;
+	border:4px solid #ecf1e5;
+}
+
+.updated td {
+	padding:2px 8px;
+	font-size:11px;
+	color:#888888;
+}
+
+.dijitArrowButton {
+	height: 20px;
+}
+
+.dijitTextArea{
+	min-height:5.5em !important;
+	max-height:22em !important;
+	overflow-y: auto !important;
+	max-width: 175px;
+}
+
+.RichTextEditable{
+	min-height:18em !important;
+	max-height:18em !important;
+}
+
+.flag {
+	height: 11px;
+	width: 16px;
+}
+
+/* ####### ESTILOS FORMULARIO AFECTADOS ######### */
+
+.formafec-label-izq {
+	width: 18%;
+}
+
+.formafec-label-der {
+	width: 20%;
+}
+
+.formafec-input-izq {
+	width: 80%;
+}
+
+.formafec-separador-filas {
+	float:left; margin-top: 1em; width: 99%;
+}
+
+.formafec-separador-col-izq {
+	float:left; width: 60%;
+}
+
+.formafec-separador-col-der {
+	float:left; margin-left: 3%; width: 35%;
+}
+
+.formafec-separador-3col-izq {
+	float: left; width: 30%;
+}
+
+.formafec-separador-3col-der {
+	float: left; margin-left:3%; width: 30%;
+}
+
+.formafec-botonera {
+	float: left; text-align:center; width: 33%;
+}
+
+.formafec-separador-3col-label {
+	width: 50%;
+}
+
+/* ####### ESTILOS FORMULARIO TRABAJOS ######### */
+.formtra-label-izq {
+	width: 18%;
+}
+
+.formtra-label-der {
+	width: 20%;
+}
+
+.formtra-input-izq {
+	width: 80%;
+}
+
+.formtra-separador-filas {
+	float:left; margin-top: 1em; width: 99%;
+}
+
+.formtra-separador-col-izq {
+	float:left; width: 60%;
+}
+
+.formtra-separador-col-der {
+	float:left; margin-left: 3%; width: 35%;
+}
+
+.formtra-separador-3col-izq {
+	float: left; width: 30%;
+}
+
+.formtra-separador-3col-der {
+	float: left; margin-left:3%; width: 30%;
+}
+
+.formtra-botonera {
+	float: left; text-align:center; width: 33%;
+}
+
+.formtra-separador-3col-label {
+	width: 50%;
+}
+
+.pie-contenedor {
+	background-color: #61A023; height: 4em; margin-top: 1em;  padding: 0.4em
+}
+
+.pie {
+	margin-top: 1.6em; text-align: right; font-weight:bold; color: white;
+}
+
+div.espaciador {
+	width: 100%; 
+	float: left;
+	height: 0.7em;
+}
+
+/* ########## ESTILOS PARA TABLA DE RESULTADOS ########## */
+
+#resultados, #sin-hoy, #sin-fecha { border-collapse:collapse;}
+#resultados h4, #sin-hoy h4, #sin-fecha h4 { margin:0px; padding:0px;}
+#resultados img, #sin-hoy img, #sin-fecha img { float:right;}
+#resultados ul, #sin-hoy ul, #sin-fecha ul { margin:10px 0 10px 40px; padding:0px;}
+#resultados th, #sin-hoy th, #sin-fecha th { background:#7CB8E2 url(images/buscador/header_bkg.png) repeat-x scroll center left; color:#fff; padding:7px 15px; text-align:left;}
+#resultados td, #sin-hoy td, #sin-fecha td { background:#73DA5A none repeat-x scroll center left; color:#000; padding:7px 15px; }
+#resultados tr.odd td, #sin-hoy tr.odd td, #sin-fecha tr.odd td { background:#fff url(images/buscador/row_bkg.png) repeat-x scroll center left; cursor:pointer; }
+#resultados div.arrow, #sin-hoy div.arrow, #sin-fecha div.arrow { background:transparent url(images/buscador/arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;}
+#resultados div.up, #sin-hoy div.up, #sin-fecha div.up { background-position:0px 0px;} 
+
+
+/* ########## ESTILOS PARA PAGINA DE BUSQUEDAS ########## */
+
+div.fila-formulario-busqueda {
+	width: 100%; 
+	float:left;
+}
+
+div.celda-formulario-busqueda {
+	width: 50%; 
+	float:left;
+}
+
+div.celda-formulario-busqueda label {
+	padding-top: 0.3em;
+	width: 9.7em;
+	float: left;
+	margin-left: 5px;
+	margin-top: 0px;
+}
+
+/* ESTILOS LISTADO DE SINIESTRO */
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Com {
+	width: 10%;
+}
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Num {
+	width: 15%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Dir {
+	width: 35%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Per {
+	width: 25%;
+}
+
+
+#_title_pl_com_reyma_gestion_dao_AfectadoDomicilioSiniestro_id_pane #Fec {
+	width: 10%;
+}
+
+/* ESTILOS LOGIN */
+
+#contenedor-login {
+	border: 1px solid #BFBFBF;
+}
+
+#contenido-login {
+	padding: 1.6em;
+}
+
+#titulo-login {
+	background-color: #61A023;
+	padding:0.3em;
+}
+
+#titulo-login #titulo {
+	color: white; 
+	text-transform: uppercase; 
+	font-weight: bold;
+}
+
+.titulo-logo {
+  	float: left;
+	color: white;
+	font-size: 25px;
+	font-weight: bold;
+	padding-top: 0.5em;
+}
+
+/* ######### DETALLE DE SINIESTRO ######## */
+
+#contenedor-sin {
+	border: 1px solid #BFBFBF;
+}
+
+#contenido-sin {
+	padding: 1.6em;
+}
+
+#titulo-sin {
+	background-color: #61A023;
+	padding:0.3em;
+}
+
+#titulo-sin #titulo {
+	color: white; 
+	text-transform: uppercase; 
+	font-weight: bold;
+}
+
+#btnCancelar {
+	width: 7em;
+	height: inherit;
+	font-size: 12px;
+	margin-left: 1.2em;
+}
+
+.elemPosicionado {
+	position: absolute;
+}
+
+.cargando {
+	background-color: orange; 
+	color: white; 
+	width: 10em; 
+	text-align: center; 
+	padding: 0.3em;	
+	font-weight: bold;
+	font-size: 14px;
+	display: none;
+}
+
+#_c_com_reyma_gestion_dao_Siniestro_sinMediador_id > div {
+	width: 65%;	
+}
+
+.diasCaducidad {
+	border:0; 
+	width: 2em; 
+	/* color:#f6931f; */
+	color: #538F33; 
+	font-weight:bold;
+}
+
+.alertas {
+	width: 100%; 
+	text-align: center; 
+	height:1.5em; 
+	padding-top:1em; 
+	padding-bottom:0.25em; 
+	margin-bottom: 0.8em; 
+	background-color: #D83F3F;
+	display: none;
+}
+
+/*############## DATATABLES ################ */
+
+/* anular estilo general de labels para filtros de data tables */
+div.dataTables_filter > label, 
+div.dataTables_length > label {
+	width: inherit;
+}
+
+/* cabecera datatables */
+th.ui-state-default > div {
+	color: white !important;
+}
+
+/* ############## FACTURA ################ */
+
+#tablaFactura > tbody > tr > td:first-child > select {
+  width: 95%;
+}
+
+/* ############ PRESUPUESTOS ############# */
+
+#pres-cont {
+	float: left; 
+	width: 95%; 
+	margin-top: 1.8em; 
+	min-height: 15em;
+}
+
+#pres-cont > div {
+    /* border-top-left-radius: 0 !important; */
+    margin:4px;
+}
+
+#pres-cont textarea {
+	resize: vertical;
+	width: 95%;
+	font-size: 14px;
+}
+
+.presConcepto {
+	float: left;
+	width: 75%;
+}
+
+.presCoste {
+	float: left;
+	width: 13%;
+	text-align: center;
+}
+
+.presIva {
+	float: left;
+	width: 7%;
+}
+
+div.presCoste > input {
+	text-align: center;
+}
+
+.lineaPresupuesto {
+	float: left; 
+	width: 100%; 
+	border: 2px solid #C1D5C9; 
+	padding: 1em 1em 1em .55em;
+}
+
+.cabeceraPresupuesto {
+	float: left; 
+	width: 100%;
+	color: white;
+	background-color: #327E04;
+	padding: 1em;
+}
+
+.cabeceraPresupuesto .close,
+.lineaPresupuesto .close { 
+    z-index: 100;
+    background-color: white;
+    padding: 5px 2px 2px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: .1;
+    text-align: center;
+    font-size: 22px;
+    line-height: 10px;
+    border-radius: 50%;
+}
+.cabeceraPresupuesto:hover .close,
+.lineaPresupuesto:hover .close {
+    opacity: 1;
+}

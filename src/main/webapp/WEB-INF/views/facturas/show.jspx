@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_com_reyma_gestion_dao_Factura" object="${factura}" path="/facturas" z="1uC2kVte0YPJ12FeJsGCN4JOdWk=">
-        <field:display field="facSinId" id="s_com_reyma_gestion_dao_Factura_facSinId" object="${factura}" z="NnY6YzaHehMJyvoB3BH8pDIBdbY="/>
-        <field:display calendar="true" dateTimePattern="${factura_facfecha_date_format}" field="facFecha" id="s_com_reyma_gestion_dao_Factura_facFecha" object="${factura}" z="SinbfF5vKrVF1XJStEABJtLpE8M="/>
-    </page:show>
-</div>

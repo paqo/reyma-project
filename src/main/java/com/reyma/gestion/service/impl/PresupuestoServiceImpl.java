@@ -29,16 +29,16 @@ public class PresupuestoServiceImpl implements PresupuestoService {
         return Presupuesto.findPresupuestoEntries(firstResult, maxResults);
     }
 
-	public void savePresupuesto(Presupuesto factura) {
-        factura.persist();
+	public void savePresupuesto(Presupuesto prespuesto) {
+		prespuesto.persist();
     }
 
-	public Presupuesto updatePresupuesto(Presupuesto factura) {
-        return factura.merge();
+	public Presupuesto updatePresupuesto(Presupuesto prespuesto) {
+        return prespuesto.merge();
     }
 
 	public List<Presupuesto> findPresupuestosByIdSiniestro(Integer id) {
-		return Presupuesto.findPresupuestoParaSiniestro(id);
+		return Presupuesto.findPresupuestosParaSiniestro(id);
 	}
 
 	public long countAllpresupuestos() {
@@ -47,6 +47,6 @@ public class PresupuestoServiceImpl implements PresupuestoService {
 
 	@Override
 	public List<Presupuesto> findPresupuestoByIdSiniestro(Integer id) {
-		return Presupuesto.findPresupuestoParaSiniestro(id);
+		return Presupuesto.findPresupuestosParaSiniestro(id);
 	}
 }

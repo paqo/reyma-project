@@ -41,13 +41,13 @@
 	    <li><a href="#tabs-4">Presupuestos</a></li>
 	  </ul>
 	  <div id="tabs-1">	  
-	  	<jsp:include page="afectado.jsp" />
+	  	<jsp:include page="../afectadodomiciliosiniestroes/afectado.jsp" />
 	  </div>
 	  <div id="tabs-2">
-	   <jsp:include page="trabajos.jsp" />    
+	   <jsp:include page="../trabajoes/trabajos.jsp" />    
 	  </div>
 	  <div id="tabs-3">
-	    <jsp:include page="facturas.jsp" />  
+	    <jsp:include page="../facturas/facturas.jsp" />  
 	  </div>
 	  <div id="tabs-4">
 	    <jsp:include page="../presupuestos/presupuestos.jsp" />  
@@ -1156,7 +1156,7 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();		    	
-		    	cargarLinPresCabecera($('#presOficios option:selected').text());
+		    	cargarLinPresCabecera($('#presOficios').val());
 		    });
 			
 			$( "[id^='btn-pres-']").button({		    	

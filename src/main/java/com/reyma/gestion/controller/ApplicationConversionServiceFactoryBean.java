@@ -314,7 +314,8 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 	public Converter<Presupuesto, PresupuestoListadoDTO> getPresupuestoToPresupuestoListadoDTOConverter() {
 		 return new org.springframework.core.convert.converter.Converter<com.reyma.gestion.dao.Presupuesto, com.reyma.gestion.ui.listados.PresupuestoListadoDTO>() {
 	            public PresupuestoListadoDTO convert(Presupuesto presupuesto) {
-	            	String fecha = Fechas.formatearFechaDDMMYYYY( presupuesto.getPresFecha().getTime() );
+	            	String fecha = presupuesto.getPresFecha() != null? 
+	            			Fechas.formatearFechaDDMMYYYY( presupuesto.getPresFecha().getTime() ) : "";
 	                return new PresupuestoListadoDTO(presupuesto.getPresId(), 
 	                		presupuesto.getPresAdsId().getAdsId(), presupuesto.getPresNumPresupuesto(), fecha);
 	            }

@@ -547,12 +547,12 @@ function guardarPresupuesto() {
 				"/reymasur/presupuestos/add";
 	
 	peticion = $.ajax( {
-			   dataType: "json",
-		   contentType: "application/json; charset=UTF-8",
-		   type: "POST",
-		   url: action,
-		   data: datosPresupuesto
-		} );	
+				   	dataType: "json",
+				   	contentType: "application/json; charset=UTF-8",
+				   	type: "POST",
+				   	url: action,
+				   	data: JSON.stringify(datosPresupuesto)
+			   });	
 	// tratar respuesta
 	peticion
     	.done(function( data ) {		
@@ -578,14 +578,15 @@ function guardarPresupuesto() {
 function obtenerDatosFormPresupuestoJSON() {	
 	var divForm = $("#formulario-presupuesto");	
 	// campos generales
+	var idSiniestro = parseInt( $("[name='sinId']").val() );
 	var idAfectado = parseInt( divForm.find("#presAfectado").val() );
 	var numPresupuesto = divForm.find("#presNumero").val();
-	var fechaPresupuesto = divForm.find("#presFecha").val();
+	var fechaPresupuesto = divForm.find("#presFecha").val();	
 	// lineas presupuesto
 	var lineasPresupuesto = [];
 	divForm.find("#pres-cont > div").each(function( index ) {
 		if ( $( this ).hasClass( "cabeceraPresupuesto" ) ){
-			lineasFactura.push({			 
+			lineasPresupuesto.push({			 
 				oficio: parseInt( $( this ).data("id") ),
 				concepto: '', 
 				coste: 0,
@@ -593,7 +594,7 @@ function obtenerDatosFormPresupuestoJSON() {
 				id: null
 			});
 		} else {
-			lineasFactura.push({			 
+			lineasPresupuesto.push({			 
 				oficio: parseInt( $( this ).data("id") ),
 				concepto: $(this).find("textarea").val() , 
 				coste: parseFloat( $(this).find("[id^='pres-coste']").val() ),
@@ -603,11 +604,12 @@ function obtenerDatosFormPresupuestoJSON() {
 		}
 	});	
 	
-	return JSON.stringify({ 'idPresupuesto': parseInt(divForm.find("#idPresupuesto").val()), 
-							'numPresupuesto': numPresupuesto, 
-							'fechaPresupuesto': fechaPresupuesto,
-							'idAfectado': idAfectado,
-							'lineasPresupuesto' : lineasPresupuesto });
+	return { 'idPresupuesto': parseInt(divForm.find("#idPresupuesto").val()), 
+			 'numPresupuesto': numPresupuesto, 
+			 'fechaPresupuesto': fechaPresupuesto,
+			 'idSiniestro' : idSiniestro,
+			 'idAfectado': idAfectado,
+			 'lineasPresupuesto' : lineasPresupuesto };
 }
 
 function cargarOpcionesCombo(opciones, seleccionado) {

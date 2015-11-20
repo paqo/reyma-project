@@ -145,7 +145,7 @@ public class Factura {
 	 * objetos de entidades hijas que tiene el objeto de la entidad padre, no 
 	 * borraría las entidades hijas, solamente se borrarían al borrar el propio padre, 
 	 * mientras que con orphanremoval=true, al borrar de la colección del padre, 
-	 * se borrarían también las entidades hijas
+	 * se borrarían también las entidades hijas)
 	 * 
 	 * NOTA: es necesario poner CascadeType.ALL para que funcione con todas las operaciones, 
 	 * con CascadeType.PERSIST, por ejemplo, no valdría para los merge

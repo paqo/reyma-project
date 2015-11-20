@@ -6,6 +6,7 @@ public class PresupuestoDTO implements Serializable {
 	
 	private Integer idPresupuesto;
 	private Integer idAfectado;
+	private Integer idSiniestro;
 	private String numPresupuesto;
 	private String fechaPresupuesto;
 	private LineaPresupuestoDTO[] lineasPresupuesto;
@@ -54,6 +55,14 @@ public class PresupuestoDTO implements Serializable {
 
 	public void setIdAfectado(Integer idAfectado) {
 		this.idAfectado = idAfectado;
+	}
+
+	public Integer getIdSiniestro() {
+		return idSiniestro;
+	}
+
+	public void setIdSiniestro(Integer idSiniestro) {
+		this.idSiniestro = idSiniestro;
 	}
 	
 }

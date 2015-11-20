@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_com_reyma_gestion_dao_TipoSiniestro" object="${tiposiniestro}" path="/tiposiniestroes" z="TR/zHJH6WlldcMF7F5XaepR6soA=">
-        <field:display field="tsiDescripcion" id="s_com_reyma_gestion_dao_TipoSiniestro_tsiDescripcion" object="${tiposiniestro}" z="ayVznQa6qyTQOeeTozagNDZ6zUE="/>
-    </page:show>
-</div>

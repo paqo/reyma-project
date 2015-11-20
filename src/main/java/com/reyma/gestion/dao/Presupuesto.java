@@ -1,7 +1,6 @@
 package com.reyma.gestion.dao;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,7 +50,7 @@ public class Presupuesto {
         return entityManager().createQuery("SELECT o FROM Presupuesto o", Presupuesto.class).getResultList();
     }
 
-	public static List<Presupuesto> findAllPresupuesto(String sortFieldName, String sortOrder) {
+	public static List<Presupuesto> findAllPresupuestos(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Presupuesto o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
             jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
@@ -126,7 +125,7 @@ public class Presupuesto {
         				.setExcludeFieldNames("lineaPresupuestos", "presSinId").toString();
     }
 	
-	public static List<Presupuesto> findPresupuestoParaSiniestro(Integer id) {
+	public static List<Presupuesto> findPresupuestosParaSiniestro(Integer id) {
 		 String jpaQuery = "SELECT o FROM Presupuesto o WHERE o.presSinId = " + id;	        
 	     return entityManager().createQuery(jpaQuery, Presupuesto.class).getResultList();
 	}	
@@ -137,7 +136,7 @@ public class Presupuesto {
     private Integer presId;
 
 	@OneToMany(mappedBy = "linPresId",  orphanRemoval=true, cascade=CascadeType.ALL)
-    private Set<LineaPresupuesto> lineaPresupuesto;
+    private List<LineaPresupuesto> lineasPresupuesto;
 
 	@ManyToOne
     @JoinColumn(name = "pres_sin_id", referencedColumnName = "sin_id", nullable = false)
@@ -155,12 +154,12 @@ public class Presupuesto {
 	@Column(name = "pres_num_presupuesto")	
 	private String presNumPresupuesto;
 	
-	public Set<LineaPresupuesto> getLineaPresupuesto() {
-		return lineaPresupuesto;
+	public List<LineaPresupuesto> getLineasPresupuesto() {
+		return lineasPresupuesto;
 	}
 
-	public void setLineaPresupuesto(Set<LineaPresupuesto> lineaPresupuesto) {
-		this.lineaPresupuesto = lineaPresupuesto;
+	public void setLineasPresupuesto(List<LineaPresupuesto> lineasPresupuesto) {
+		this.lineasPresupuesto = lineasPresupuesto;
 	}
 
 	public String getPresNumPresupuesto() {

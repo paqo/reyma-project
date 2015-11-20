@@ -1,7 +1,9 @@
 package com.reyma.gestion.controller;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Controller;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.reyma.gestion.dao.LineaPresupuesto;
+import com.reyma.gestion.dao.Presupuesto;
 import com.reyma.gestion.service.IvaService;
 import com.reyma.gestion.service.LineaPresupuestoService;
 import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.service.PresupuestoService;
 import com.reyma.gestion.ui.LineaPresupuestoDTO;
 import com.reyma.gestion.ui.MensajeErrorJson;
+import com.reyma.gestion.ui.PresupuestoDTO;
 
 import flexjson.JSONSerializer;
 
@@ -55,10 +59,20 @@ public class LineaPresupuestoController {
 		Converter<LineaPresupuesto, LineaPresupuestoDTO> converter = acsf.getLineaPresupuestoToLineaPresupuestoListadoDTOConverter();		
 		
 		List<LineaPresupuesto> lineas = lineaPresupuestoService.findLineasPresupuestoByIdPresupuesto(idPresupuesto);
-		for (LineaPresupuesto linea : lineas) {
-			lineasDto.add(converter.convert(linea));
+		
+		PresupuestoDTO res = new PresupuestoDTO();
+		if ( lineas.size() > 0 ){
+			Presupuesto pres = lineas.get(0).getLinPresId();
+			for (LineaPresupuesto linea : lineas) {
+				lineasDto.add(converter.convert(linea));
+			}
+			res.setFechaPresupuesto( pres.getPresFecha() );
+			res.setLineasPresupuesto( lineasDto.toArray(new LineaPresupuestoDTO[0]));
 		}		
-		return serializer.exclude("*.class").serialize(lineasDto);
+		 
+		return serializer.exclude("*.class").serialize(res);
+		
+		//return serializer.exclude("*.class").serialize(lineasDto);
     }
 	
 	private void cargarCombos(Model uiModel) {		
