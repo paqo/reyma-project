@@ -434,7 +434,7 @@
 	function confirmarEliminacionAfec(elem) {
 		var idAds = $(elem).closest("div.cont-afectados").children("input[name='adsId']").val();		
 		if ( idAds ){
-			var funcAceptar = function(){ eliminarDatosAfec(idAds) };
+			var funcAceptar = function(){ eliminarDatosAfec(idAds); };
 			$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar los datos del afectado?" );                        
 			// abrir confirmacion
 			$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
@@ -1165,9 +1165,27 @@
 	 	        }
 			}).click(function(event) {
 		    	event.preventDefault();
+		    	event.stopPropagation();
 		    	var idPres = $(this).parent().data("id");
 		    	cargarPresupuesto(idPres, dialogPresupuesto);		    		
 		    });	
+			
+			$( "[id^='btn-elim-pres-']").button({		    	
+	 	        icons: {	 	        	
+	 	            primary: "ui-icon-trash"
+	 	        }
+			}).click(function(event) {
+		    	event.preventDefault();	
+		    	var idPres = $(this).parent().data("id");
+		    	var funcAceptar = function(){ eliminarPresupuesto(idPres); };
+				$( "#mensajeConfirmacion" ).children("p").html( "¿Desea eliminar el presupuesto?" );                        
+				// abrir confirmacion
+				$( "#mensajeConfirmacion" ).dialog("option", "buttons", {
+				     	"Aceptar": funcAceptar,
+				        "Cancelar": function() { $( this ).dialog( "close" ); }
+				});
+				$( "#mensajeConfirmacion" ).dialog( "open" );
+		    }).parent().buttonset(); // juntar con el boton de abrir			
 				
 			// <-------- fin presupuestos
 			

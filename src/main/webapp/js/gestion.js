@@ -547,9 +547,9 @@ function cargarPresupuesto(idPresupuesto, dialogo) {
 function guardarPresupuesto() {
 	var peticion;
 	var datosPresupuesto = obtenerDatosFormPresupuestoJSON();	
-	var action = datosPresupuesto.idPresupuesto != null ? 
-				"/reymasur/presupuestos/actualizar" : 
-				"/reymasur/presupuestos/add";
+	var action = isNaN(datosPresupuesto.idPresupuesto)? 
+					"/reymasur/presupuestos/add" : 
+					"/reymasur/presupuestos/actualizar";
 	
 	peticion = $.ajax( {
 				   	dataType: "json",
@@ -578,6 +578,35 @@ function guardarPresupuesto() {
 		.fail(function() {
 		    alert( "No se ha podido crear el presupuesto." );
 		});
+}
+
+function eliminarPresupuesto(presId) {
+	var action = "/reymasur/presupuestos/" + presId + "?eliminar";
+	var params = {"presId" : presId};
+	$( "#mensajeConfirmacion" ).dialog( "close" );
+	$.post(action, params, function( data ) {				
+		// informar del resultado
+		$( "#mensajesUsuario" ).dialog( "option", "title", data.titulo );
+		$( "#mensajesUsuario" ).children("p").html( data.mensaje );
+		$( "#mensajesUsuario" ).dialog( "open" );
+		if ( data.recargar ){
+			$( "#mensajesUsuario" )
+			.off( "dialogclose" )
+			.on( "dialogclose", 
+					function( event, ui ) {
+						$( "#mensajesUsuario" ).dialog( "close" );
+						// mostrar aviso de espera
+						$("#cargando").show();
+						// recargar datos siniestro
+						document.location.reload(true);
+					} 
+			);
+		}
+	}).error(function() {
+		$( "#mensajesUsuario" ).dialog( "option", "title", "Error" );
+		$( "#mensajesUsuario" ).children("p").html( "Se ha producido un error eliminando el presupuesto" );
+		$( "#mensajesUsuario" ).dialog( "open" );				 
+	})	
 }
 
 function obtenerDatosFormPresupuestoJSON() {	

@@ -38,7 +38,8 @@ public class LineaPresupuesto {
     }
 
 	public static List<LineaPresupuesto> findAllLineasPresupuesto() {
-        return entityManager().createQuery("SELECT o FROM LineaPresupuesto o", LineaPresupuesto.class).getResultList();
+        return entityManager().createQuery("SELECT o FROM LineaPresupuesto o "
+        								 + " ORDER BY o.linId ", LineaPresupuesto.class).getResultList();
     }
 	
 	public static List<LineaPresupuesto> findLineaPresupuestoByIdPresupuesto(Integer idPresupuesto) {

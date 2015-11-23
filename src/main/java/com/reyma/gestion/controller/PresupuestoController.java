@@ -168,11 +168,11 @@ public class PresupuestoController {
 		Presupuesto presupuesto = presupuestoService.findPresupuesto(idPresupuesto);
 		try {
 			presupuesto.remove();
-			MensajeExitoJson mensajeExito = new MensajeExitoJson("El presupuesto se ha eliminado con &eacute;xito");
+			MensajeExitoJson mensajeExito = new MensajeExitoJson("El presupuesto se ha eliminado con &eacute;xito", true);
 			return serializer.exclude("class").serialize(mensajeExito);
 		} catch (Exception e) {			
 			LOG.error("error eliminando el presupuesto:\n", e);
-			mensajeError = new MensajeErrorJson("Se ha producido un error inesperado elimianando el presupuesto");
+			mensajeError = new MensajeErrorJson("Se ha producido un error inesperado eliminando el presupuesto");
 			mensajeError.setTitulo("Error eliminando presupuesto");
 		}
 		return serializer.exclude("class").serialize(mensajeError);

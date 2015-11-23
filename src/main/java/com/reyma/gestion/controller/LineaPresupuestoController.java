@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.reyma.gestion.dao.LineaPresupuesto;
 import com.reyma.gestion.dao.Presupuesto;
 import com.reyma.gestion.service.IvaService;
+import com.reyma.gestion.service.LineaPresupuestoService;
 import com.reyma.gestion.service.OficioService;
 import com.reyma.gestion.service.PresupuestoService;
 import com.reyma.gestion.ui.LineaPresupuestoDTO;
@@ -27,6 +28,9 @@ import flexjson.JSONSerializer;
 @Controller
 public class LineaPresupuestoController {
 
+	@Autowired
+	LineaPresupuestoService lineaPresupuestoService;
+	
 	@Autowired
 	PresupuestoService presupuestoService;
 
@@ -53,8 +57,8 @@ public class LineaPresupuestoController {
 		ApplicationConversionServiceFactoryBean acsf = new ApplicationConversionServiceFactoryBean();		
 		Converter<LineaPresupuesto, LineaPresupuestoDTO> converterLineas = acsf.getLineaPresupuestoToLineaPresupuestoListadoDTOConverter();
 						
-		Presupuesto presupuesto = presupuestoService.findPresupuesto(idPresupuesto);
-		List<LineaPresupuesto> lineas = presupuesto.getLineasPresupuesto();
+		Presupuesto presupuesto = presupuestoService.findPresupuesto(idPresupuesto);		
+		List<LineaPresupuesto> lineas = lineaPresupuestoService.findLineasPresupuestoByIdPresupuesto(idPresupuesto);
 		
 		String fecha = presupuesto.getPresFecha() != null? 
             	Fechas.formatearFechaDDMMYYYY( presupuesto.getPresFecha().getTime() ) : "";

@@ -21,7 +21,8 @@
 								<c:if test="${not empty item.fechaPresupuesto}">
 									<c:set var="labelBoton" value="${labelBoton} ${item.fechaPresupuesto}" />
 								</c:if>
-								<button id="btn-pres-${item.id}">Prespuesto ${labelBoton}</button>							
+								<button id="btn-pres-${item.id}">Prespuesto ${labelBoton}</button>
+								<button id="btn-elim-pres-${item.id}">&nbsp;</button>							
 							</div>
 						</c:forEach>
 	  				</c:when>
