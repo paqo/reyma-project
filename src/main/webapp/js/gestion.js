@@ -525,7 +525,12 @@ function cargarPresupuesto(idPresupuesto, dialogo) {
 
 	peticion
 	.done(function( data ) {
-		$.each(data, function( index, lineapres ) {
+		// datos generales
+		$("#presFecha").val(data.fechaPresupuesto);
+		$("#presNumero").val(data.numPresupuesto);
+		$("#presAfectado").val(data.idAfectado);		
+		//lineas		
+		$.each(data.lineasPresupuesto, function( index, lineapres ) {
 			if ( lineapres.oficio != null ){
 				cargarLinPresCabecera(lineapres.oficio);
 			} else {

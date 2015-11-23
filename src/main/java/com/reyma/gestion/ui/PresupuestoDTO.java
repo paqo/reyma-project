@@ -16,7 +16,7 @@ public class PresupuestoDTO implements Serializable {
 	public PresupuestoDTO() {
 		super();
 	}
-
+	
 	public Integer getIdPresupuesto() {
 		return idPresupuesto;
 	}
