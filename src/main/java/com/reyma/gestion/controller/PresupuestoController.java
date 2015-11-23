@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
@@ -177,6 +178,15 @@ public class PresupuestoController {
 		}
 		return serializer.exclude("class").serialize(mensajeError);
     }
+	
+	@RequestMapping(value = "/{presId}", params = "pdf", method = RequestMethod.GET)
+	public ModelAndView generarPresupuestoPDF(@PathVariable("presId") Integer idPresupuesto, Model uiModel) {
+				
+		Presupuesto presupuesto = presupuestoService
+				.findPresupuesto(idPresupuesto);
+				
+		return new ModelAndView("pdfView", "presupuesto", presupuesto);
+	}
 		
 	void addDateTimeFormatPatterns(Model uiModel) {
         uiModel.addAttribute("presupuesto_presfecha_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));
