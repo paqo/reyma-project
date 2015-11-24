@@ -66,10 +66,17 @@
     	<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
   	</bean>
   	
-  	<bean id="viewResolver1" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+  	<!-- <bean id="viewResolver1" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
         <property name="order" value="1"/>
         <property name="basename" value="views"/>
-    </bean>
+    </bean> -->
+    
+    <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+	   <property name="location">
+	       <value>/WEB-INF/spring/pdf-views.xml</value>
+	   </property>
+	   <property name="order" value="0" />
+	</bean>
   	
     <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer" id="tilesConfigurer">	    
 	    <property name="definitions">
