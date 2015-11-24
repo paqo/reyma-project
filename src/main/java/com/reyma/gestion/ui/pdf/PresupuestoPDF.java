@@ -1,5 +1,7 @@
 package com.reyma.gestion.ui.pdf;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +23,16 @@ public class PresupuestoPDF extends AbstractPdfView {
 			PdfWriter writer, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		Presupuesto pres = (Presupuesto) modelo.get("presupuesto");
-		
+		Presupuesto pres = (Presupuesto) modelo.get("presupuesto");		
 		List<LineaPresupuesto> lineas = pres.getLineasPresupuesto();
+		// ordenar las lineas por id
+		Collections.sort(lineas, new Comparator<LineaPresupuesto>() {
+			@Override
+			public int compare(LineaPresupuesto linea1, LineaPresupuesto linea2) {				
+				return linea1.getLinId() < linea2.getLinId()? -1 :
+						linea1.getLinId() > linea2.getLinId() ? 1 : 0;				
+			}
+		});
 				
 		Table table = new Table(3);
 		table.addCell("Concepto");
