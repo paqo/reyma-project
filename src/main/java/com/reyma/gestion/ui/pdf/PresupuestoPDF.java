@@ -11,18 +11,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfWriter;
 import com.reyma.gestion.dao.LineaPresupuesto;
 import com.reyma.gestion.dao.Presupuesto;
+import com.reyma.gestion.tests.CabeceraPie;
 
 public class PresupuestoPDF extends AbstractPdfView {
-
+	
+	@Override
+	protected void prepareWriter(Map<String, Object> model, PdfWriter writer,
+			HttpServletRequest request) throws DocumentException {
+		writer.setPageEvent( new CabeceraPie( 435f ) );		
+	}
+	
 	@Override
 	protected void buildPdfDocument(Map<String, Object> modelo, Document document,
 			PdfWriter writer, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+
 		Presupuesto pres = (Presupuesto) modelo.get("presupuesto");		
 		List<LineaPresupuesto> lineas = pres.getLineasPresupuesto();
 		// ordenar las lineas por id
@@ -48,5 +56,5 @@ public class PresupuestoPDF extends AbstractPdfView {
 		document.add(table);
 
 	}
-
+	
 }
