@@ -99,6 +99,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/iText-2.1.7.jar" sourcepath="C:/Users/Fcamarena/.m2/repository/com/lowagie/itext/2.1.7/itext-2.1.7-sources.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/itext-2.1.7.jar" sourcepath="C:/Users/Fcamarena/.m2/repository/com/lowagie/itext/2.1.7/itext-2.1.7-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -16,14 +16,14 @@ import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfWriter;
 import com.reyma.gestion.dao.LineaPresupuesto;
 import com.reyma.gestion.dao.Presupuesto;
-import com.reyma.gestion.tests.CabeceraPie;
+import com.reyma.gestion.tests.CabeceraPie2;
 
 public class PresupuestoPDF extends AbstractPdfView {
 	
 	@Override
 	protected void prepareWriter(Map<String, Object> model, PdfWriter writer,
 			HttpServletRequest request) throws DocumentException {
-		writer.setPageEvent( new CabeceraPie( 435f ) );		
+		writer.setPageEvent( new CabeceraPie2( 435f ) );		
 	}
 	
 	@Override

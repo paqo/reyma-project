@@ -1,21 +1,18 @@
 package com.reyma.gestion.tests;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
@@ -24,70 +21,81 @@ import com.lowagie.text.pdf.PdfWriter;
 public class CabeceraPie extends PdfPageEventHelper {
 		 
 	protected PdfPTable pie;
-	private static final Font FUENTE_PIE = FontFactory.getFont(FontFactory.TIMES, 8, Font.NORMAL);
-	private static final Chunk SALTO_LINEA = Chunk.NEWLINE;
-	private String img_logo = "C:/Users/Fcamarena/git/reyma-project/src/main/webapp/images/logo.png";
-	private String pie_linea_1 = "";
+	protected PdfPTable cabecera;	
+	private String img_logo;	
 	private static Logger logger = Logger.getLogger( CabeceraPie.class );
+	
+	 public static final Font FUENTE_CABECERA = 
+	    		FontFactory.getFont(FontFactory.HELVETICA, 12, Font.BOLD, new Color(255, 255, 255));
+	 public static final Font FUENTE_PIE = 
+	    		FontFactory.getFont(FontFactory.HELVETICA, 11, Font.BOLD, new Color(255, 255, 255));
 
-	public CabeceraPie( float w ) {
-		
-		inicializaParametrosPie();
-		
-		float[] anchos = { 50f, 300f, 85f };
-		pie = new PdfPTable( anchos );		
-		pie.setTotalWidth( w );
-		Image logo = null;
-		
-		try {
-			logo = Image.getInstance(img_logo);
-		} catch (BadElementException e) {
-			logger.error(e);
-		} catch (MalformedURLException e) {
-			logger.error("ruta del logo de cabecera mal formada: " + img_logo + "\n", e);
-		} catch (IOException e) {
-			logger.error("error I/O:\n",e);
-		}
-		PdfPCell celda = new PdfPCell();
-		celda.setBorderWidth(0f);
-		pie.addCell(celda);
-		Paragraph p = new Paragraph();
-		p.setFont( FUENTE_PIE ); 
-		p.add( new Phrase(pie_linea_1));
-		p.add(SALTO_LINEA);		
-		celda = new PdfPCell( p );
-		celda.setHorizontalAlignment(Element.ALIGN_CENTER);
-		celda.setBorderWidth(0f);
-		pie.addCell(celda);
-		if ( logo != null ){
-			celda = new PdfPCell( logo );
-			celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
-			celda.setBorderWidth(0f);
-			pie.addCell( celda );
-		}else {
-			logger.warn("AVISO: no se ha podido incluir la imagen del logo AENOR en el pie");
-		}
-					
+	public CabeceraPie() {
+		// parametros
+		inicializaParametros();
 	}
 	
-	private void inicializaParametrosPie(){		
-		img_logo = "";
-		pie_linea_1 = "este es el pie";
+	private void inicializaParametros(){		
+		img_logo = "C:/Users/Fcamarena/git/reyma-project/src/main/webapp/images/logo.png";
 	}
 	
 	@Override
 	public void onStartPage(PdfWriter writer, Document document) {
+		cabecera = new PdfPTable(new float[]{15,85});
+		cabecera.setWidthPercentage(100f);
 		try {
-			document.add(new Paragraph("Prueba"));
+			// imagen
+			Image img = Image.getInstance(img_logo);
+			PdfPCell cell = new PdfPCell(img);
+			cell.setBackgroundColor(Color.decode("#69A322"));
+	        cell.setBorder(PdfPCell.NO_BORDER);
+	        cell.setPaddingLeft(10f);
+	        cell.setHorizontalAlignment(Rectangle.ALIGN_CENTER | Rectangle.ALIGN_MIDDLE);
+	        cabecera.addCell(cell);
+	        // nombre
+	        cell = new PdfPCell();
+	        cell.setBorder(PdfPCell.NO_BORDER);
+	        cell.setBackgroundColor(Color.decode("#69A322"));
+	        cell.setPaddingLeft(5f);
+	        cell.setPaddingTop(10f);
+	        cell.setHorizontalAlignment(Rectangle.ALIGN_LEFT | Rectangle.ALIGN_MIDDLE);
+	        cell.addElement(new Phrase("TEST", FUENTE_CABECERA));
+	        cabecera.addCell(cell);
+			document.add(cabecera);
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
+		} catch (MalformedURLException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
 		}
 	}
-	
+		
 	public void onEndPage(PdfWriter writer, Document document) {
-		PdfContentByte cb = writer.getDirectContent();
-		pie.writeSelectedRows(0, -1,
-				(document.right() - document.left() - 400) / 2, document.bottom()-15, cb);
+		pie = new PdfPTable(new float[]{30,40,30});
+		pie.setWidthPercentage(100f);
+		try {
+	        PdfPCell cell = new PdfPCell();
+	        cell.setBorder(PdfPCell.NO_BORDER);
+	        cell.setBackgroundColor(Color.decode("#69A322"));	        
+	        cell.setHorizontalAlignment(Rectangle.ALIGN_RIGHT | Rectangle.ALIGN_MIDDLE);
+	        cell.addElement(new Phrase("REYMASUR13", FUENTE_PIE));
+	        pie.addCell(cell);
+	        cell = new PdfPCell();
+	        cell.setBorder(PdfPCell.NO_BORDER);
+	        cell.setBackgroundColor(Color.decode("#69A322"));	        
+	        cell.setHorizontalAlignment(Rectangle.ALIGN_CENTER | Rectangle.ALIGN_MIDDLE);
+	        cell.addElement(new Phrase("• reymasur@reymasur13.com •", FUENTE_PIE));
+	        pie.addCell(cell);
+	        cell = new PdfPCell();
+	        cell.setBorder(PdfPCell.NO_BORDER);
+	        cell.setBackgroundColor(Color.decode("#69A322"));	        
+	        cell.setHorizontalAlignment(Rectangle.ALIGN_LEFT | Rectangle.ALIGN_MIDDLE);
+	        cell.addElement(new Phrase("WWW.REYMASUR13.COM", FUENTE_PIE));
+	        pie.addCell(cell);
+			document.add(pie);
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
 }

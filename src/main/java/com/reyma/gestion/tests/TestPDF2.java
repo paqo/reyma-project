@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -41,11 +40,10 @@ public class TestPDF2 {
     public void createPdf(String filename) throws DocumentException, IOException {
          
         // step 1
-        Document document = new Document(PageSize.A4.rotate());
+        Document document = new Document(PageSize.A4);
         // step 2
-        /*PdfWriter writer =*/ 
-        PdfWriter.getInstance(document, new FileOutputStream(filename));
-       
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
+        writer.setPageEvent( new CabeceraPie() );       
         // step 3
         document.open();
         // step 4
@@ -58,14 +56,12 @@ public class TestPDF2 {
     }
     
     private List<LineaPresupuesto> getLineas() {	
-		return new ArrayList<LineaPresupuesto>(
-					Arrays.asList(new LineaPresupuesto[]{
-							getLineaRandom(),
-							getLineaRandom(),
-							getLineaRandom(),
-							getLineaRandom()
-					})
-				);
+    	
+    	List<LineaPresupuesto> listaTest = new ArrayList<LineaPresupuesto>();
+    	for ( int i=0; i<50; i++ ){
+    		listaTest.add(getLineaRandom());
+    	}    	
+    	return listaTest;
 	}
 
 
