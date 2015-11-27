@@ -40,9 +40,10 @@ public class TestPDF2 {
     public void createPdf(String filename) throws DocumentException, IOException {
          
         // step 1
-        Document document = new Document(PageSize.A4);
+        Document document = new Document(PageSize.A4);              
         // step 2
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
+        writer.setBoxSize("art", new Rectangle(36, 40, 559, 788));
         writer.setPageEvent( new CabeceraPie() );       
         // step 3
         document.open();
@@ -92,63 +93,65 @@ public class TestPDF2 {
      */
     public PdfPTable getTable(List<LineaPresupuesto> lineas)
         throws DocumentException, IOException {
-        PdfPTable table = new PdfPTable(new float[] { 5, // descripcion
+        PdfPTable tabLineas = new PdfPTable(new float[] { 5, // descripcion
         											  2, // base imp
         											  1, // porcentaje IVA
         											  2, // cant. iva
         											  3  // subtotal 
         											 });        
-        table.setWidthPercentage(100f);
-        // cabecera columnas
-        table.getDefaultCell().setPadding(5); 
-        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.getDefaultCell().setColspan(1);
-        table.getDefaultCell().setBorderColor(Color.WHITE);
-        table.getDefaultCell().setBorderWidth(0.5f);
-        table.getDefaultCell().setBackgroundColor(Color.decode("#20A627"));
-        table.addCell(new Phrase("Descripcion", FUENTE_CABECERA_COLS));
-        table.addCell(new Phrase("Base", FUENTE_CABECERA_COLS));
-        table.addCell(new Phrase("%", FUENTE_CABECERA_COLS));
-        table.addCell(new Phrase("IVA", FUENTE_CABECERA_COLS));
-        table.addCell(new Phrase("Subtotal", FUENTE_CABECERA_COLS));
+        tabLineas.setWidthPercentage(100f);
+        // cabecera columnas        
+        tabLineas.getDefaultCell().setPadding(5); 
+        tabLineas.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tabLineas.getDefaultCell().setColspan(1);        
+        tabLineas.getDefaultCell().setBorderColor(Color.BLACK);        
+        tabLineas.getDefaultCell().setBorderWidth(0.5f);
+        tabLineas.getDefaultCell().setBackgroundColor(Color.decode("#20A627"));
+        tabLineas.addCell(new Phrase("Descripcion", FUENTE_CABECERA_COLS));        
+        tabLineas.addCell(new Phrase("Base", FUENTE_CABECERA_COLS));
+        tabLineas.addCell(new Phrase("%", FUENTE_CABECERA_COLS));
+        tabLineas.addCell(new Phrase("IVA", FUENTE_CABECERA_COLS));
+        tabLineas.addCell(new Phrase("Subtotal", FUENTE_CABECERA_COLS));
         // oficio 1
-        table.getDefaultCell().setPadding(3); 
-        table.getDefaultCell().setUseAscender(true);
-        table.getDefaultCell().setUseDescender(true);
-        table.getDefaultCell().setColspan(5);
-        table.getDefaultCell().setBackgroundColor(Color.decode("#A6EDA9")); 
-        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-        table.addCell("ALBAÑILERIA");
-        table.getDefaultCell().setBackgroundColor(null);  
-        table.getDefaultCell().setColspan(1);
+        tabLineas.getDefaultCell().setBorderColor(Color.BLACK);
+        tabLineas.getDefaultCell().setPadding(5); 
+        tabLineas.getDefaultCell().setUseAscender(true);
+        tabLineas.getDefaultCell().setUseDescender(true);
+        tabLineas.getDefaultCell().setColspan(5);
+        tabLineas.getDefaultCell().setBackgroundColor(Color.decode("#A6EDA9")); 
+        tabLineas.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+        tabLineas.addCell("ALBAÑILERIA");
+        tabLineas.getDefaultCell().setBackgroundColor(null);  
+        tabLineas.getDefaultCell().setColspan(1);
         // 3 lineas especiales
-        table.setHeaderRows(2);
+        tabLineas.setHeaderRows(1);
         // de las cuales, una el pie
         //table.setFooterRows(1);
         // lineas
+        tabLineas.getDefaultCell().setBorderColor(Color.BLACK);
         for (LineaPresupuesto linea : lineas) {
-        	table.getDefaultCell().setBorder(Rectangle.LEFT);
-        	table.addCell(linea.getLinConcepto());
-        	table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-            table.addCell(linea.getLinImporte().toString());
-            table.addCell(String.valueOf(linea.getLinIvaId().getIvaValor()));
-            table.addCell(RandomStringUtils.randomNumeric(2));
-            table.getDefaultCell().setBorder(Rectangle.RIGHT);
-            table.addCell(RandomStringUtils.randomNumeric(4));
+        	tabLineas.getDefaultCell().setBorder(Rectangle.LEFT);
+        	tabLineas.addCell(linea.getLinConcepto());
+        	tabLineas.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            tabLineas.addCell(linea.getLinImporte().toString());
+            tabLineas.addCell(String.valueOf(linea.getLinIvaId().getIvaValor()));
+            tabLineas.addCell(RandomStringUtils.randomNumeric(2));
+            tabLineas.getDefaultCell().setBorder(Rectangle.RIGHT);
+            tabLineas.addCell(RandomStringUtils.randomNumeric(4));
 		}    
         // total
-        table.getDefaultCell().setBorder(Rectangle.TOP|Rectangle.BOTTOM|Rectangle.LEFT|Rectangle.RIGHT);
-        table.getDefaultCell().setPadding(3);
-        table.getDefaultCell().setUseAscender(true);
-        table.getDefaultCell().setUseDescender(true);
-        table.getDefaultCell().setColspan(4);
-        table.getDefaultCell().setBackgroundColor(Color.decode("#20A627")); 
-        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell("TOTAL: ");
-        table.getDefaultCell().setColspan(1); 
-        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell("9999.99");
-        return table;
+        tabLineas.getDefaultCell().setBorder(Rectangle.TOP|Rectangle.BOTTOM|Rectangle.LEFT|Rectangle.RIGHT);
+        tabLineas.getDefaultCell().setPadding(3);
+        tabLineas.getDefaultCell().setUseAscender(true);
+        tabLineas.getDefaultCell().setUseDescender(true);
+        tabLineas.getDefaultCell().setColspan(4);
+        tabLineas.getDefaultCell().setBackgroundColor(Color.decode("#20A627")); 
+        tabLineas.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+        tabLineas.addCell("TOTAL: ");
+        tabLineas.getDefaultCell().setColspan(1); 
+        tabLineas.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        tabLineas.addCell("9999.99");
+        return tabLineas;
     }
   
     /**

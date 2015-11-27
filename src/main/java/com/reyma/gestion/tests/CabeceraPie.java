@@ -6,13 +6,17 @@ import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
@@ -33,6 +37,7 @@ public class CabeceraPie extends PdfPageEventHelper {
 	public CabeceraPie() {
 		// parametros
 		inicializaParametros();
+		System.out.println("=> entra en constructor");
 	}
 	
 	private void inicializaParametros(){		
@@ -72,6 +77,18 @@ public class CabeceraPie extends PdfPageEventHelper {
 	}
 		
 	public void onEndPage(PdfWriter writer, Document document) {
+		
+		/*  DIMENSIONES PARA A4 sin margenes iniciales
+     	anchura: 559
+		márgenes: 36 (laterales y verticales)
+		altura: 806.0
+        */
+		
+		/*if ( writer.getVerticalPosition(false) >= 756.0 ){
+			return;
+		}
+		//System.out.println("=> " + writer.getVerticalPosition(false));
+		
 		pie = new PdfPTable(new float[]{30,40,30});
 		pie.setWidthPercentage(100f);
 		try {
@@ -94,8 +111,34 @@ public class CabeceraPie extends PdfPageEventHelper {
 	        cell.addElement(new Phrase("WWW.REYMASUR13.COM", FUENTE_PIE));
 	        pie.addCell(cell);
 			document.add(pie);
+	        // PdfContentByte cb = writer.getDirectContent();
+	        // pie.writeSelectedRows(0, -1, document.left(), document.bottom() + 140, cb);	        
+	        
 		} catch (Exception e) {
 			logger.error(e);
 		}
+		*/
+		
+		/*Rectangle rect = writer.getBoxSize("art");
+        ColumnText.showTextAligned(writer.getDirectContent(),
+                Element.ALIGN_CENTER, new Phrase("texto pie"),
+                (rect.getLeft() + rect.getRight()) / 2, rect.getBottom() - 30, 0);*/
+		
+		
+		Chunk c = new Chunk("texto pie");
+		c.setBackground(Color.GREEN);
+		
+		
+		
+		Paragraph _pie = new Paragraph(c);
+		
+		_pie.setSpacingAfter(50);
+		_pie.setSpacingBefore(50);
+		
+		Rectangle rect = writer.getBoxSize("art");
+        ColumnText.showTextAligned(writer.getDirectContent(),
+                Element.ALIGN_CENTER, _pie,
+                (rect.getLeft() + rect.getRight()) / 2, rect.getBottom() - 30, 0);
+		
 	}
 }
