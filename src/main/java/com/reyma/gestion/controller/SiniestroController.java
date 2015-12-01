@@ -1,4 +1,5 @@
 package com.reyma.gestion.controller;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
+import com.lowagie.text.DocumentException;
 import com.reyma.gestion.busqueda.BusquedaHelper;
 import com.reyma.gestion.busqueda.dto.ResultadoBusqueda;
 import com.reyma.gestion.busqueda.dto.ResultadoBusquedaCaducados;
@@ -51,6 +53,7 @@ import com.reyma.gestion.service.ProvinciaService;
 import com.reyma.gestion.service.SiniestroService;
 import com.reyma.gestion.service.TipoSiniestroService;
 import com.reyma.gestion.service.TrabajoService;
+import com.reyma.gestion.tests.TestPDF2;
 import com.reyma.gestion.ui.MensajeErrorJson;
 import com.reyma.gestion.ui.MensajeExitoJson;
 import com.reyma.gestion.ui.listados.ElementoComboDTO;
@@ -149,8 +152,8 @@ public class SiniestroController {
     }
 
 	@RequestMapping(value = "/{sinId}", produces = "text/html")
-    public String show(@PathVariable("sinId") Integer sinId, Model uiModel) {
-       		
+    public String show(@PathVariable("sinId") Integer sinId, Model uiModel) throws DocumentException, IOException {
+       	
 		addDateTimeFormatPatterns(uiModel);
         Siniestro siniestro = siniestroService.findSiniestro(sinId);
         uiModel.addAttribute("siniestro", siniestro);

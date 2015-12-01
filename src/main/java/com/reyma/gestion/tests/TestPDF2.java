@@ -10,14 +10,17 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.reyma.gestion.dao.Iva;
@@ -28,8 +31,31 @@ public class TestPDF2 {
 	/** The resulting PDF file. */
     public static final String RESULT = "c:/temp/test_c.pdf";
     
+   /* public static Font FUENTE_CABECERA_AFECTADOS_TITULO = // "Presupuesto/Factura" 
+    		FontFactory.getFont(FontFactory.HELVETICA, 15, Color.BLACK); */
+    public static Font FUENTE_CABECERA_AFECTADOS_TITULO;
+    public static final Font FUENTE_CABECERA_AFECTADOS_DATOS_PRES = // "num prresupuesto/Factura.." 
+    		FontFactory.getFont(FontFactory.HELVETICA, 11, Font.BOLD, new Color(255, 255, 255));
+    public static final Font FUENTE_CABECERA_AFECTADOS_DATOS_AFEC = // "nombre,direccion.." 
+    		FontFactory.getFont(FontFactory.HELVETICA, 11, Font.BOLD, new Color(255, 255, 255));
     public static final Font FUENTE_CABECERA_COLS = 
     		FontFactory.getFont(FontFactory.HELVETICA, 12, Font.BOLD, new Color(255, 255, 255));
+    
+    static {
+    	try {
+    		FUENTE_CABECERA_AFECTADOS_TITULO = 
+    				new Font(BaseFont.createFont("C:/Users/Fcamarena/git/reyma-project/src/main/java/" +
+    			    "com/reyma/gestion/tests/arial.ttf", 
+					BaseFont.WINANSI, BaseFont.EMBEDDED), 
+					14, Font.NORMAL, Color.BLACK);
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
  
     /**
      * Creates a PDF document.
@@ -48,15 +74,20 @@ public class TestPDF2 {
         // step 3
         document.open();
         // step 4
-        PdfPTable table = getTable(getLineas());
-        document.add(table);        
+        PdfPTable tabla = getTablaDatosAfectado();
+        tabla.setSpacingBefore(15);
+        tabla.setSpacingAfter(10);   
+        document.add(tabla);                
         // step 5
+        PdfPTable tablaLineas = getTable(getLineas());
+        document.add(tablaLineas);        
+        // step 6
         document.close();
         System.out.println("terminado!");
         System.exit(0);
     }
     
-    private List<LineaPresupuesto> getLineas() {	
+	private List<LineaPresupuesto> getLineas() {	
     	
     	List<LineaPresupuesto> listaTest = new ArrayList<LineaPresupuesto>();
     	for ( int i=0; i<50; i++ ){
@@ -82,18 +113,49 @@ public class TestPDF2 {
 		return res;
 	}
 	
-	/**
-     * Creates a table with film festival screenings.
-     * @param connection a database connection
-     * @param day a film festival day
-     * @return a table with screenings.
-     * @throws SQLException
-     * @throws DocumentException
-     * @throws IOException
-     */
+
+	private PdfPTable getTablaDatosAfectado() {
+		PdfPTable tabDatosAfectados = new PdfPTable(new float[] { 1, 1});
+		
+		tabDatosAfectados.setWidthPercentage(100f);
+		
+		Paragraph datosTitulo = new Paragraph();		
+		datosTitulo.add(new Chunk("PRESUPUESTO", FUENTE_CABECERA_AFECTADOS_TITULO));
+		datosTitulo.add(Chunk.NEWLINE); 
+		datosTitulo.add(Chunk.NEWLINE); 
+		datosTitulo.add(Chunk.NEWLINE); 
+		datosTitulo.add(Chunk.NEWLINE); 
+		datosTitulo.add(new Chunk("Núm. encargo: 9927085528"));
+		datosTitulo.add(Chunk.NEWLINE); 
+		datosTitulo.add(new Chunk("Núm. presupuesto: 1427211305555"));
+		
+    	tabDatosAfectados.getDefaultCell().setBorder(Rectangle.NO_BORDER);		
+    	tabDatosAfectados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT|Element.ALIGN_TOP);
+    	tabDatosAfectados.addCell(datosTitulo);
+    	
+    	tabDatosAfectados.getDefaultCell().setPadding(5);
+    	tabDatosAfectados.getDefaultCell().setBorderWidth(1);
+    	tabDatosAfectados.getDefaultCell().setBorder(Rectangle.TOP|Rectangle.BOTTOM|Rectangle.LEFT|Rectangle.RIGHT);
+    	tabDatosAfectados.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+    	
+    	Paragraph datosAfectado = new Paragraph();
+    	datosAfectado.add(new Chunk("My Cousin Sister"));
+    	datosAfectado.add(Chunk.NEWLINE); 
+    	datosAfectado.add(new Chunk("C/ My Precious, Sevilla, (Sevilla)")); 
+    	datosAfectado.add(Chunk.NEWLINE);  
+    	datosAfectado.add(new Chunk("CP: 23456"));
+    	datosAfectado.add(Chunk.NEWLINE);  
+    	datosAfectado.add(new Chunk("NIF: 12345678P"));    	
+    	tabDatosAfectados.addCell(datosAfectado);
+    	
+		return tabDatosAfectados;
+	}
+	
     public PdfPTable getTable(List<LineaPresupuesto> lineas)
         throws DocumentException, IOException {
-        PdfPTable tabLineas = new PdfPTable(new float[] { 5, // descripcion
+            	
+    	
+    	PdfPTable tabLineas = new PdfPTable(new float[] { 5, // descripcion
         											  2, // base imp
         											  1, // porcentaje IVA
         											  2, // cant. iva
@@ -161,7 +223,7 @@ public class TestPDF2 {
      * @throws IOException 
      * @throws SQLException
      */
-    public static void main(String[] args) throws SQLException, DocumentException, IOException {
+    public static void main(String[] args) throws SQLException, DocumentException, IOException {    	
         new TestPDF2().createPdf(RESULT);
     }
 }
