@@ -1,12 +1,13 @@
-package com.reyma.gestion.tests;
+package com.reyma.gestion.ui.pdf;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -39,9 +40,13 @@ public class CabeceraPie extends PdfPageEventHelper {
 
 	static {	 
 		try {
+			Resource resource = new ClassPathResource("com/reyma/gestion/tests/arial.ttf");
 			FUENTE_CABECERA  = 
-					new Font(BaseFont.createFont("C:/Users/Fcamarena/git/reyma-project/src/main/java/" +
+					/*new Font(BaseFont.createFont("C:/Users/Fcamarena/git/reyma-project/src/main/java/" +
 							"com/reyma/gestion/tests/arial.ttf", 
+							BaseFont.WINANSI, BaseFont.EMBEDDED), 
+							13, Font.BOLD, new Color(255, 255, 255));*/
+					new Font(BaseFont.createFont(resource.getFile().getAbsolutePath(), 
 							BaseFont.WINANSI, BaseFont.EMBEDDED), 
 							13, Font.BOLD, new Color(255, 255, 255));
 		} catch (DocumentException e) {
@@ -70,11 +75,12 @@ public class CabeceraPie extends PdfPageEventHelper {
 		try { 
 
 			//-- Spring way:
-			/*Resource resource = new ClassPathResource("com/reyma/gestion/tests/logo.png");
-			Image img = Image.getInstance(resource.getURL());*/
+			Resource resource = new ClassPathResource("com/reyma/gestion/tests/logo.png");
+			Image img = Image.getInstance(resource.getURL());
 
-			File logo = new File("C:/Users/Fcamarena/git/reyma-project/src/main/java/com/reyma/gestion/tests/logo.png");			
-			Image img = Image.getInstance(logo.getPath());
+			// --local
+			/*File logo = new File("C:/Users/Fcamarena/git/reyma-project/src/main/java/com/reyma/gestion/tests/logo.png");			
+			Image img = Image.getInstance(logo.getPath());*/
 
 			PdfPCell cell = new PdfPCell(img);
 			cell.setBackgroundColor(Color.decode("#69A322"));
@@ -95,7 +101,6 @@ public class CabeceraPie extends PdfPageEventHelper {
 	        Font font = new Font(bf, 13, Font.BOLD, new Color(255, 255, 255));*/
 
 			cell.addElement(new Phrase("REYMASUR", FUENTE_CABECERA));
-			//cell.addElement(new Phrase("REYMASUR", font));
 			cabecera.addCell(cell);
 			document.add(cabecera);
 		} catch (DocumentException e) {

@@ -1,5 +1,6 @@
 package com.reyma.gestion.ui.pdf;
 
+import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -12,18 +13,26 @@ import org.springframework.web.servlet.view.document.AbstractPdfView;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.reyma.gestion.dao.LineaPresupuesto;
 import com.reyma.gestion.dao.Presupuesto;
-import com.reyma.gestion.tests.CabeceraPie2;
 
 public class PresupuestoPDF extends AbstractPdfView {
+	
+	private CabeceraPie cabeceraPie;
 	
 	@Override
 	protected void prepareWriter(Map<String, Object> model, PdfWriter writer,
 			HttpServletRequest request) throws DocumentException {
-		writer.setPageEvent( new CabeceraPie2( 435f ) );		
+		
+		cabeceraPie = new CabeceraPie();
+		
+		writer.setBoxSize("art", new Rectangle(36, 40, 559, 788));
+		writer.setPageEvent( cabeceraPie );		
 	}
 	
 	@Override
@@ -40,21 +49,25 @@ public class PresupuestoPDF extends AbstractPdfView {
 				return linea1.getLinId() < linea2.getLinId()? -1 :
 						linea1.getLinId() > linea2.getLinId() ? 1 : 0;				
 			}
-		});
-				
-		Table table = new Table(3);
-		table.addCell("Concepto");
-		table.addCell("Importe");
-		table.addCell("Iva");
+		});				
 		
-		for (LineaPresupuesto linea : lineas) {
-			table.addCell(linea.getLinConcepto());
-			table.addCell(linea.getLinImporte().toString());
-			table.addCell(linea.getLinIvaId().getIvaValor().toString());
-		}
+        // step 1
+        //document = new Document(PageSize.A4);              
+        // step 3
+        document.open();
+        // step 4
+        PdfPTable tabla = getTablaDatosAfectado();
+        tabla.setSpacingBefore(15);
+        tabla.setSpacingAfter(10);   
+        document.add(tabla);                
+        // step 5
+        PdfPTable tablaLineas = getTable(lineas);
+        document.add(tablaLineas);        
+        // step 6
+        cabeceraPie.setContentLeft(false);
+        document.close();
+        System.out.println("terminado!");
 		
-		document.add(table);
-
 	}
 	
 }

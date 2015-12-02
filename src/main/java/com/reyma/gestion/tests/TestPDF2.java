@@ -65,12 +65,13 @@ public class TestPDF2 {
      */
     public void createPdf(String filename) throws DocumentException, IOException {
          
+    	CabeceraPie cabeceraPie = new CabeceraPie();
         // step 1
         Document document = new Document(PageSize.A4);              
         // step 2
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
         writer.setBoxSize("art", new Rectangle(36, 40, 559, 788));
-        writer.setPageEvent( new CabeceraPie() );       
+        writer.setPageEvent(cabeceraPie);       
         // step 3
         document.open();
         // step 4
@@ -82,21 +83,19 @@ public class TestPDF2 {
         PdfPTable tablaLineas = getTable(getLineas());
         document.add(tablaLineas);        
         // step 6
+        cabeceraPie.setContentLeft(false);
         document.close();
         System.out.println("terminado!");
         System.exit(0);
     }
     
-	private List<LineaPresupuesto> getLineas() {	
-    	
+	private List<LineaPresupuesto> getLineas() {
     	List<LineaPresupuesto> listaTest = new ArrayList<LineaPresupuesto>();
-    	for ( int i=0; i<50; i++ ){
+    	for ( int i=0; i<5; i++ ){
     		listaTest.add(getLineaRandom());
     	}    	
     	return listaTest;
 	}
-
-
 
 	private LineaPresupuesto getLineaRandom() {
 		Iva iva = new Iva();
