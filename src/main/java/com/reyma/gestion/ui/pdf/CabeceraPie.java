@@ -3,7 +3,7 @@ package com.reyma.gestion.ui.pdf;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
+import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
@@ -33,6 +33,7 @@ public class CabeceraPie extends PdfPageEventHelper {
 	protected PdfPTable cabecera;	
 	private static Logger logger = Logger.getLogger( CabeceraPie.class );
 	private boolean contentLeft;
+	private Calendar fecha;
 
 	public static Font FUENTE_CABECERA;
 	public static final Font FUENTE_PIE = 
@@ -58,6 +59,13 @@ public class CabeceraPie extends PdfPageEventHelper {
 	public CabeceraPie() {
 		contentLeft = true;		
 	}
+	
+	public CabeceraPie(Calendar fecha) {
+		contentLeft = true;		
+		this.fecha = fecha;
+	}
+	
+	
 
 	public boolean isContentLeft() {
 		return contentLeft;
@@ -167,7 +175,7 @@ public class CabeceraPie extends PdfPageEventHelper {
     		datosFecha.add(Chunk.NEWLINE);
     		datosFecha.add(Chunk.NEWLINE);
     		datosFecha.add(Chunk.NEWLINE);
-    		datosFecha.add(new Chunk("FECHA: " + Fechas.formatearFechaDDMMYYYY(new Date()) ));
+    		datosFecha.add(new Chunk("FECHA: " + Fechas.formatearFechaDDMMYYYY( fecha.getTime() ) ));
     		
         	tabDatosEmp.getDefaultCell().setBorder(Rectangle.NO_BORDER);		
         	tabDatosEmp.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
