@@ -4,7 +4,7 @@
 //params en la URL (GET)
 //#####################################
 
-###### CORS con POST:
+//###### CORS con POST:
 
 // ==UserScript==
 // @name       Cross Domain Test
@@ -34,7 +34,7 @@ GM_xmlhttpRequest({
 });
 
 
-###### CORS con GET:
+//###### CORS con GET:
 	
 	// ==UserScript==
 	// @name       Cross Domain Test
